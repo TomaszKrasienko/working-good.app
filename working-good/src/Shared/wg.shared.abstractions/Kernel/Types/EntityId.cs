@@ -16,4 +16,6 @@ public sealed record EntityId : EntityId<Guid>
     {
         
     }
+
+    public bool IsEmpty() => Value == Guid.NewGuid();
 } 

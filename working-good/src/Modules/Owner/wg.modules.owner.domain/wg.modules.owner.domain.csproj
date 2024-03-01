@@ -3,11 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.owner.domain.tests"/>
     </ItemGroup>
 
 </Project>

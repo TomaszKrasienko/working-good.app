@@ -1,3 +1,4 @@
+using wg.modules.owner.domain.ValueObjects.User;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.owner.domain.Entities;
@@ -5,10 +6,32 @@ namespace wg.modules.owner.domain.Entities;
 public sealed class User
 {
     public EntityId Id { get; }
-    public string Email { get; set; }
-    public string FullName { get; set; }
-    public string Password { get; set; }
-    public string Role { get; set; }
-    public string VerificationToken { get; set; }
-    public string ResetToken { get; set; }
+    public Email Email { get; }
+    public FullName FullName { get; }
+    public Password Password { get; }
+    public Role Role { get; }
+    public VerificationToken VerificationToken { get; }
+    public ResetPasswordToken ResetPasswordToken { get; }
+
+    private User(EntityId id, Email email, FullName fullName, Password password, Role role, 
+        VerificationToken verificationToken, ResetPasswordToken resetPasswordToken)
+    {
+        Id = id;
+        Email = email;
+        FullName = fullName;
+        Password = password;
+        Role = role;
+        VerificationToken = verificationToken;
+        ResetPasswordToken = resetPasswordToken;
+    }
+
+    private User(EntityId id, Email email, FullName fullName, Password password, Role role, VerificationToken verificationToken)
+    {
+        Id = id;
+        Email = email;
+        FullName = fullName;
+        Password = password;
+        Role = role;
+        VerificationToken = verificationToken;
+    }
 }
