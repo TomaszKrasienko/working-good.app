@@ -25,7 +25,8 @@ public sealed class User
         ResetPasswordToken = resetPasswordToken;
     }
 
-    private User(EntityId id, Email email, FullName fullName, Password password, Role role, VerificationToken verificationToken)
+    private User(EntityId id, Email email, FullName fullName, Password password, Role role,
+        VerificationToken verificationToken)
     {
         Id = id;
         Email = email;
@@ -33,5 +34,11 @@ public sealed class User
         Password = password;
         Role = role;
         VerificationToken = verificationToken;
+    }
+
+    internal User Create(Guid id, string email, string firstName, string lastName, string password,
+        string role)
+    {
+        
     }
 }
