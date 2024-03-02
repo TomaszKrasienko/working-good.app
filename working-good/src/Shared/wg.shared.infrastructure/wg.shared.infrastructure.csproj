@@ -8,6 +8,9 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="CQRS\" />
+      <ProjectReference Include="..\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Scrutor" Version="4.2.2" />
     </ItemGroup>
 </Project>
