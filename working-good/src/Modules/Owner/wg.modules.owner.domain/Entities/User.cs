@@ -41,4 +41,7 @@ public sealed class User
     internal static User Create(Guid id, string email, string firstName, string lastName, string password,
         string role)
         => new User(id, email, new FullName(firstName, lastName), password, role, VerificationToken.Create());
+
+    public void Verify(DateTime verificationDateTime)
+        => VerificationToken.Verify(verificationDateTime);
 }

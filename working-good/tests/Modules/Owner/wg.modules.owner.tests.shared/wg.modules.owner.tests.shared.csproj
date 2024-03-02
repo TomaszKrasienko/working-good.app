@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.owner.domain.tests"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.domain\wg.modules.owner.domain.csproj" />
+    </ItemGroup>
+</Project>

@@ -5,7 +5,7 @@ namespace wg.modules.owner.domain.ValueObjects.User;
 public sealed record VerificationToken
 {
     public string Token { get; }
-    public DateTime? VerificationDate { get; set; }
+    public DateTimeOffset? VerificationDate { get; set; }
 
     private VerificationToken()
     {
@@ -14,5 +14,7 @@ public sealed record VerificationToken
 
     internal static VerificationToken Create()
         => new VerificationToken();
-    
+
+    internal void Verify(DateTime dateTime)
+        => VerificationDate = dateTime;
 }

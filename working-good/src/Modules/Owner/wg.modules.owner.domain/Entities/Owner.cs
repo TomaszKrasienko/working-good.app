@@ -12,19 +12,21 @@ public sealed class Owner : AggregateRoot
     private readonly HashSet<User> _users = new HashSet<User>();
     public IEnumerable<User> Users => _users;
 
-    private Owner(string name)
+    private Owner(Guid id, Name name, IEnumerable<User> users)
     {
-        Name = name;
-    }
-
-    public Owner(Name name, IEnumerable<User> users)
-    {
+        Id = id;
         Name = name;
         _users = users.ToHashSet();
     }
 
-    public static Owner Create(string name)
-        => new Owner(name);
+    public Owner(Guid id, Name name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    public static Owner Create(Guid id, string name)
+        => new Owner(id, name);
 
     public void AddUser(Guid id, string email, string firstName, string lastName, string password,
         string role)
@@ -46,4 +48,16 @@ public sealed class Owner : AggregateRoot
 
         _users.Add(User.Create(id, email, firstName, lastName, password, role));
     }
+
+    public void VerifyUser(string token, DateTime verificationDateTime)
+    {
+        var user = _users.FirstOrDefault(x => x.VerificationToken.Token == token);
+        if (user is null)
+        {
+            throw new VerificationTokenNotFoundException(token);
+        }
+
+        user.Verify(verificationDateTime);
+    }
+
 }
