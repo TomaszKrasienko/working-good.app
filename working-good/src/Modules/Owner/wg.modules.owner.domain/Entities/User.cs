@@ -12,9 +12,10 @@ public sealed class User
     public Role Role { get; }
     public VerificationToken VerificationToken { get; }
     public ResetPasswordToken ResetPasswordToken { get; }
+    public State State { get; }
 
     private User(EntityId id, Email email, FullName fullName, Password password, Role role, 
-        VerificationToken verificationToken, ResetPasswordToken resetPasswordToken)
+        VerificationToken verificationToken, ResetPasswordToken resetPasswordToken, State state)
     {
         Id = id;
         Email = email;
@@ -34,6 +35,7 @@ public sealed class User
         Password = password;
         Role = role;
         VerificationToken = verificationToken;
+        State = State.Registered();
     }
 
     internal static User Create(Guid id, string email, string firstName, string lastName, string password,

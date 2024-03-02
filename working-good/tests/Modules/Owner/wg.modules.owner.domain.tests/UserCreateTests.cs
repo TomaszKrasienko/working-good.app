@@ -84,7 +84,7 @@ public sealed class UserCreateTests
     }
 
     [Fact]
-    public void Create_GivenValidArguments_ShouldReturnUserWithFilledProperties()
+    public void Create_GivenValidArguments_ShouldReturnUserWithFilledPropertiesAndRegisteredState()
     {
         //arrange
         var id = Guid.NewGuid();
@@ -107,5 +107,6 @@ public sealed class UserCreateTests
         user.Role.Value.ShouldBe(role);
         user.VerificationToken?.Token.ShouldNotBeNullOrWhiteSpace();
         user.VerificationToken?.VerificationDate.ShouldBeNull();
+        user.State.Value.ShouldBe("Registered");
     }
 }
