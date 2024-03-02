@@ -12,7 +12,7 @@ public sealed class User
     public Role Role { get; }
     public VerificationToken VerificationToken { get; }
     public ResetPasswordToken ResetPasswordToken { get; }
-    public State State { get; }
+    public State State { get; private set; }
 
     private User(EntityId id, Email email, FullName fullName, Password password, Role role, 
         VerificationToken verificationToken, ResetPasswordToken resetPasswordToken, State state)
@@ -43,5 +43,9 @@ public sealed class User
         => new User(id, email, new FullName(firstName, lastName), password, role, VerificationToken.Create());
 
     public void Verify(DateTime verificationDateTime)
-        => VerificationToken.Verify(verificationDateTime);
+    {
+        VerificationToken.Verify(verificationDateTime);
+        State = State.Activate();
+    }
+    
 }

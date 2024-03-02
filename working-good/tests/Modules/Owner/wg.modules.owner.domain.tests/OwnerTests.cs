@@ -104,8 +104,8 @@ public sealed class OwnerTests
         
         //assert
         var user = owner.Users.Single();
-        user.State.Value.ShouldBe("Activated");
-        user.VerificationToken.VerificationDate.ShouldBeNull();
+        user.State.Value.ShouldBe("Active");
+        user.VerificationToken.VerificationDate.ShouldNotBeNull();
     }
 
     [Fact]
