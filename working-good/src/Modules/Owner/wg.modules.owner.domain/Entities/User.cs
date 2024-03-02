@@ -36,7 +36,7 @@ public sealed class User
         VerificationToken = verificationToken;
     }
 
-    internal User Create(Guid id, string email, string firstName, string lastName, string password,
+    internal static User Create(Guid id, string email, string firstName, string lastName, string password,
         string role)
     {
         

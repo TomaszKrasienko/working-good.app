@@ -4,7 +4,7 @@ namespace wg.modules.owner.domain.ValueObjects.User;
 
 public sealed record Role
 {
-    private static IEnumerable<string> AvailableRoles = new[] {"Manager", "Recruiter"};
+    private static IEnumerable<string> AvailableRoles = new[] {"Manager", "User"};
 
     public string Value { get; }
 
@@ -19,7 +19,7 @@ public sealed record Role
 
     public static Role Manager() => new Role("Manager");
 
-    public static Role Recruiter() => new Role("Recruiter");
+    public static Role User() => new Role("User");
 
     public static implicit operator string(Role role)
         => role.Value;
