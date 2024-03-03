@@ -10,6 +10,20 @@ namespace wg.modules.owner.domain.tests;
 public sealed class OwnerTests
 {
     [Fact]
+    public void ChangeName_GivenValidName_ShouldChangeName()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var newName = Guid.NewGuid().ToString("N");
+        
+        //act
+        owner.ChangeName(newName);
+        
+        //assert
+        owner.Name.Value.ShouldBe(newName);
+    }
+    
+    [Fact]
     public void AddUser_GivenFirstUserAsManager_ShouldAddToUsers()
     {
         //arrange

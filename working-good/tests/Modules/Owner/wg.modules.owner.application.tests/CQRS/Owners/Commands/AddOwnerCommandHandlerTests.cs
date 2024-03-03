@@ -49,7 +49,6 @@ public sealed class AddOwnerCommandHandlerTests
     }
     
     #region arrange
-
     private readonly IOwnerRepository _ownerRepository;
     private readonly AddOwnerCommandHandler _handler;
 
@@ -58,6 +57,5 @@ public sealed class AddOwnerCommandHandlerTests
         _ownerRepository = Substitute.For<IOwnerRepository>();
         _handler = new AddOwnerCommandHandler(_ownerRepository);
     }
-
     #endregion
 }

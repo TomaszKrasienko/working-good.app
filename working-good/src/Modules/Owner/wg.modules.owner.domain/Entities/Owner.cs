@@ -7,7 +7,7 @@ namespace wg.modules.owner.domain.Entities;
 
 public sealed class Owner : AggregateRoot
 {
-    public Name Name { get; }
+    public Name Name { get; private set; }
     
     private readonly HashSet<User> _users = new HashSet<User>();
     public IEnumerable<User> Users => _users;
@@ -22,11 +22,14 @@ public sealed class Owner : AggregateRoot
     public Owner(Guid id, Name name)
     {
         Id = id;
-        Name = name;
+        ChangeName(name);
     }
 
     public static Owner Create(Guid id, string name)
         => new Owner(id, name);
+    
+    public void ChangeName(string name)
+        => Name = name;
 
     public void AddUser(Guid id, string email, string firstName, string lastName, string password,
         string role)
