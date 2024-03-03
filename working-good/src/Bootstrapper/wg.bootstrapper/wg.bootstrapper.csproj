@@ -12,4 +12,10 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Modules\Owner\wg.modules.owner.api\wg.modules.owner.api.csproj" />
+      <ProjectReference Include="..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

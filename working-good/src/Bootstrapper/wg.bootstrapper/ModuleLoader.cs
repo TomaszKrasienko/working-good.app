@@ -1,10 +1,11 @@
 using System.Reflection;
+using wg.shared.abstractions.Modules;
 
 namespace wg.bootstrapper;
 
 internal static class ModuleLoader
 {
-    internal static IList<Assembly> LoadAssemblies(IConfiguration configuration)
+    internal static IList<Assembly> GetAssemblies(IConfiguration configuration)
     {
         const string modulePartPrefix = "wg.modules";
         var assemblies = AppDomain
@@ -43,4 +44,13 @@ internal static class ModuleLoader
         files.ForEach(x => assemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(x))));
         return assemblies;
     }
+
+    internal static IList<IModule> GetModules(IEnumerable<Assembly> assemblies)
+        => assemblies
+            .SelectMany(x => x.GetTypes())
+            .Where(x => typeof(IModule).IsAssignableFrom(x) && !x.IsInterface)
+            .OrderBy(x => x.Name)
+            .Select(Activator.CreateInstance)
+            .Cast<IModule>()
+            .ToList();
 }
