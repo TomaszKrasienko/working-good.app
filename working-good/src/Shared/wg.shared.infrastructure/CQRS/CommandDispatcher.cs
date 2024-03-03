@@ -12,6 +12,6 @@ internal sealed class CommandDispatcher(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand>>();
-        await handler.Handle(command, cancellationToken);
+        await handler.HandleAsync(command, cancellationToken);
     }
 }

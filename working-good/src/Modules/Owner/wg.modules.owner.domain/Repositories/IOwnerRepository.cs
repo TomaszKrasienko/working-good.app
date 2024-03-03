@@ -6,4 +6,5 @@ public interface IOwnerRepository
 {
     Task AddAsync(Owner owner);
     Task UpdateAsync(Owner owner);
+    Task<bool> ExistsAsync();
 }

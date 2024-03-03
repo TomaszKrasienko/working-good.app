@@ -8,10 +8,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\wg.modules.owner.domain\wg.modules.owner.domain.csproj" />
     </ItemGroup>
-
     <ItemGroup>
-      <Folder Include="CQRS\Owner\Commands\" />
+        <InternalsVisibleTo Include="wg.modules.owner.application.tests"/>
     </ItemGroup>
-
 </Project>
