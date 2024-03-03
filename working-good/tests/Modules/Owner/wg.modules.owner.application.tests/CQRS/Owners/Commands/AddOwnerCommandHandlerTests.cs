@@ -1,10 +1,12 @@
 using NSubstitute;
 using Shouldly;
-using wg.modules.owner.application.CQRS.Owner.Commands.AddOwner;
+using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
+using wg.modules.owner.application.Exceptions;
+using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Repositories;
 using Xunit;
 
-namespace wg.modules.owner.application.tests.CQRS.Owner.Commands;
+namespace wg.modules.owner.application.tests.CQRS.Owners.Commands;
 
 public sealed class AddOwnerCommandHandlerTests
 {
@@ -25,9 +27,9 @@ public sealed class AddOwnerCommandHandlerTests
         //assert
         await _ownerRepository
             .Received(1)
-            .AddAsync(Arg.Is<domain.Entities.Owner>(arg
-                => arg.Name == command.Name
-                   && arg.Id.Equals(command.Id)));
+            .AddAsync(Arg.Is<Owner>(x 
+                => x.Id.Value == command.Id
+                && x.Name.Value == command.Name));
     }
 
     [Fact]
@@ -37,7 +39,7 @@ public sealed class AddOwnerCommandHandlerTests
         var command = new AddOwnerCommand(Guid.NewGuid(), "WorkingGoodCompany");
         _ownerRepository
             .ExistsAsync()
-            .Returns(false);
+            .Returns(true);
         
         //act
         var exception = await Record.ExceptionAsync(async () => await Act(command));
