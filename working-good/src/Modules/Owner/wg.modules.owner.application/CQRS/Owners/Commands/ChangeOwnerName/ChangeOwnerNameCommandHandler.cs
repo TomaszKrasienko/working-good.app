@@ -9,10 +9,10 @@ public sealed class ChangeOwnerNameCommandHandler(
 {
     public async Task HandleAsync(ChangeOwnerNameCommand command, CancellationToken cancellationToken)
     {
-        var owner = await ownerRepository.GetByIdAsync(command.Id);
+        var owner = await ownerRepository.GetAsync();
         if (owner is null)
         {
-            throw new OwnerNotFoundException(command.Id);
+            throw new OwnerNotFoundException();
         }
         owner.ChangeName(command.Name);
         await ownerRepository.UpdateAsync(owner);

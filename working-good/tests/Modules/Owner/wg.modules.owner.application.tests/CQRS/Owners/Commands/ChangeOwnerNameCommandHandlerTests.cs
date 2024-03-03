@@ -21,7 +21,7 @@ public sealed class ChangeOwnerNameCommandHandlerTests
         var owner = OwnerFactory.Get();
         var command = new ChangeOwnerNameCommand(owner.Id, Guid.NewGuid().ToString("N"));
         _ownerRepository
-            .GetByIdAsync(command.Id)
+            .GetAsync()
             .Returns(owner);
         
         //act
@@ -42,7 +42,7 @@ public sealed class ChangeOwnerNameCommandHandlerTests
         var owner = OwnerFactory.Get();
         var command = new ChangeOwnerNameCommand(owner.Id, Guid.NewGuid().ToString("N"));
         await _ownerRepository
-            .GetByIdAsync(command.Id);
+            .GetAsync();
         
         //act
         var exception = await Record.ExceptionAsync(async() => await Act(command));

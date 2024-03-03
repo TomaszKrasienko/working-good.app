@@ -7,5 +7,5 @@ public interface IOwnerRepository
     Task AddAsync(Owner owner);
     Task UpdateAsync(Owner owner);
     Task<bool> ExistsAsync();
-    Task<Owner> GetByIdAsync(Guid commandId);
+    Task<Owner> GetAsync();
 }

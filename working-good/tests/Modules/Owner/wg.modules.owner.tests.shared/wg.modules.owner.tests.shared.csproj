@@ -11,4 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.domain\wg.modules.owner.domain.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="35.4.1" />
+    </ItemGroup>
 </Project>
