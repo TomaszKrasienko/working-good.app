@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.applicatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.shared.tests.shared", "tests\Shared\wg.shared.tests.shared\wg.shared.tests.shared.csproj", "{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,7 @@ Global
 		{9EF88AF5-E641-44B6-8B20-BB2291F960BD} = {3AD089EF-9811-48EA-B425-FD01A63513BB}
 		{38BA0508-A863-4EFA-9C65-BA05CE2689CD} = {50AAE35A-DF29-455D-8290-069FED15F08F}
 		{EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D} = {5E354159-7261-47D5-8AA7-6B5CE54C8CBA}
+		{3A853327-1EAC-4DE3-AE02-EC06C6359FE3} = {EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -82,5 +85,9 @@ Global
 		{38BA0508-A863-4EFA-9C65-BA05CE2689CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38BA0508-A863-4EFA-9C65-BA05CE2689CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38BA0508-A863-4EFA-9C65-BA05CE2689CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
