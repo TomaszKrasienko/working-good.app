@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.application.tests", "tests\Modules\Owner\wg.modules.owner.application.tests\wg.modules.owner.application.tests.csproj", "{38BA0508-A863-4EFA-9C65-BA05CE2689CD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,7 @@ Global
 		{3D908F3F-E18A-453C-8705-D201BEDA7A72} = {8F859F9D-F3D4-4E5F-98B0-5F8091947EE1}
 		{9EF88AF5-E641-44B6-8B20-BB2291F960BD} = {3AD089EF-9811-48EA-B425-FD01A63513BB}
 		{38BA0508-A863-4EFA-9C65-BA05CE2689CD} = {50AAE35A-DF29-455D-8290-069FED15F08F}
+		{EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D} = {5E354159-7261-47D5-8AA7-6B5CE54C8CBA}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
