@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\wg.modules.owner.application\wg.modules.owner.application.csproj" />
+      <ProjectReference Include="..\wg.modules.owner.infrastructure\wg.modules.owner.infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
