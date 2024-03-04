@@ -31,7 +31,7 @@ public static class Extensions
         return services;
     }
 
-    private static void ConfigureContro(this IServiceCollection services, List<string> disabledModules)
+    private static void ConfigureControllers(this IServiceCollection services, List<string> disabledModules)
     {
         services.AddControllers()
             .ConfigureApplicationPartManager(manager =>
