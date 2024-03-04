@@ -11,4 +11,5 @@ builder.Services.AddModulesConfiguration(modules);
 builder.Services.AddInfrastructure(assemblies);
 var app = builder.Build();
 app.UseHttpsRedirection();
+app.UseInfrastructure();
 app.Run();

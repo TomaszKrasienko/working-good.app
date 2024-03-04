@@ -1,0 +1,4 @@
+@url = https://localhost:7001
+
+###
+GET {{url}}/owner

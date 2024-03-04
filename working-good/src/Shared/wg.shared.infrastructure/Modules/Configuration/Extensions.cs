@@ -22,7 +22,7 @@ public static class Extensions
             .Where(x => x.Key.Contains("module:enabled"));
         foreach (var (key, value) in configuredModules)
         {
-            if (bool.TryParse(value, out var result) || !result)
+            if (!bool.TryParse(value, out var result) || !result)
             {
                 disabledModules.Add(key.Split(':')[0]);
             }
