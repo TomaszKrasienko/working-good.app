@@ -30,6 +30,7 @@ public static class Extensions
 
     public static WebApplication UseInfrastructure(this WebApplication app)
         => app
+            .UseControllers()
             .UseUiDocumentation();
 
     private static WebApplication UseUiDocumentation(this WebApplication app)
@@ -46,6 +47,12 @@ public static class Extensions
             reDoc.SpecUrl("/swagger/v1/swagger.json");
             reDoc.DocumentTitle = "working-good.API";
         });
+        return app;
+    }
+
+    private static WebApplication UseControllers(this WebApplication app)
+    {
+        app.MapControllers();
         return app;
     }
 }

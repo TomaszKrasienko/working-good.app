@@ -1,4 +1,7 @@
 @url = https://localhost:7001
 
 ###
+GET {{url}}/wg
+
+###
 GET {{url}}/owner
