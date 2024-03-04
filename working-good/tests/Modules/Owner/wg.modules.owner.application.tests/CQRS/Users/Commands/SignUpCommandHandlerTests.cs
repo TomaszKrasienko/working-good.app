@@ -1,11 +1,11 @@
 using NSubstitute;
 using Shouldly;
+using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
-using wg.shared.abstractions.Auth;
 using Xunit;
 
 namespace wg.modules.owner.application.tests.CQRS.Users.Commands;

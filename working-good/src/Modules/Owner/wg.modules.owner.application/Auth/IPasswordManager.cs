@@ -1,4 +1,4 @@
-namespace wg.shared.abstractions.Auth;
+namespace wg.modules.owner.application.Auth;
 
 public interface IPasswordManager
 {

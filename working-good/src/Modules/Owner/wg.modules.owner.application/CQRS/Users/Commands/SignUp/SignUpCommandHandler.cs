@@ -1,6 +1,6 @@
+using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
-using wg.shared.abstractions.Auth;
 using wg.shared.abstractions.CQRS.Commands;
 
 namespace wg.modules.owner.application.CQRS.Users.Commands.SignUp;
