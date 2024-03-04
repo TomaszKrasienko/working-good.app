@@ -5,4 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\wg.modules.owner.application\wg.modules.owner.application.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.owner.infrastructure.tests"/>
+    </ItemGroup>
 </Project>
