@@ -6,12 +6,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj" />
       <ProjectReference Include="..\..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>
     
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.owner.application.tests"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2" />
     </ItemGroup>
 
 </Project>

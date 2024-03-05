@@ -16,5 +16,8 @@
       <ProjectReference Include="..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.owner.integration.tests"/>
+        <InternalsVisibleTo Include="wg.shared.tests.shared"/>
+    </ItemGroup>
 </Project>
