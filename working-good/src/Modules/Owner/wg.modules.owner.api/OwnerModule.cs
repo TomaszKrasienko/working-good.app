@@ -7,7 +7,7 @@ namespace wg.modules.owner.api;
 
 internal sealed class OwnerModule : IModule
 {
-    internal const string RoutePath = "owner";
+    internal const string RoutePath = "owner-module";
     public string Name { get; } = "Owner";
     
     public void Register(IServiceCollection services)

@@ -11,7 +11,7 @@ public sealed class HomeControllerTests : BaseTestsController
     public async Task Get_ShouldReturn200OkStatusCode()
     {
         //act
-        var response = await HttpClient.GetAsync("/owner");
+        var response = await HttpClient.GetAsync("/owner-module");
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
