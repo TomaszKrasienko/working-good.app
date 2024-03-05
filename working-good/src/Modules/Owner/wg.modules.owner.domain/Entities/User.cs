@@ -47,5 +47,4 @@ public sealed class User
         VerificationToken.Verify(verificationDateTime);
         State = State.Activate();
     }
-    
 }

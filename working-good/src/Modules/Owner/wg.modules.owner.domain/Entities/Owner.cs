@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using wg.modules.owner.domain.Exceptions;
 using wg.modules.owner.domain.ValueObjects.Owner;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -61,6 +62,22 @@ public sealed class Owner : AggregateRoot
         }
 
         user.Verify(verificationDateTime);
+    }
+
+    public bool IsUserActive(string email)
+    {
+        var user = _users.FirstOrDefault(x => x.Email == email);
+        if (user is null)
+        {
+            return false;
+        }
+
+        if (user.State != State.Activate())
+        {
+            return false;
+        }
+
+        return true;
     }
 
 }

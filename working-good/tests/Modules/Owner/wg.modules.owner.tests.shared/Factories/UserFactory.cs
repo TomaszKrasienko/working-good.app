@@ -5,7 +5,7 @@ namespace wg.modules.owner.tests.shared.Factories;
 
 public static class UserFactory
 {
-    internal static Owner GetUserInOwner(Owner owner, string role)
+    internal static User GetUserInOwner(Owner owner, string role)
     {
         var userFaker = new Faker<User>()
             .CustomInstantiator(f => User.Create(
@@ -18,6 +18,6 @@ public static class UserFactory
         var user = userFaker.Generate(1).Single();
         owner.AddUser(user.Id, user.Email, user.FullName.FirstName,
             user.FullName.LastName, user.Password, user.Role);
-        return owner;
+        return owner.Users.Single(x => x.Id == user.Id);
     }
 }

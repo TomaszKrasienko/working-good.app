@@ -22,7 +22,7 @@ public sealed record State
 
     internal static State Deactivate()
         => new State("Deactivated");
-
+    
     public static implicit operator string(State state)
         => state.Value;
 

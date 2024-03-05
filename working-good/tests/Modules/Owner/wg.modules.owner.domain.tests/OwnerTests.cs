@@ -134,4 +134,46 @@ public sealed class OwnerTests
         //assert
         exception.ShouldBeOfType<VerificationTokenNotFoundException>();
     }
+
+    [Fact]
+    public void IsUserActive_GivenExistingAndVerifiedUser_ShouldReturnTrue()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        owner.VerifyUser(user.VerificationToken.Token, DateTime.Now);
+        
+        //act
+        var result = owner.IsUserActive(user.Email);
+        
+        //assert
+        result.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsUserActive_GivenNotExistingUser_ShouldReturnFalse()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        
+        //act
+        var result = owner.IsUserActive("inveli@email.pl");
+        
+        //assert
+        result.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsUserActive_GivenNotActiveUser_ShouldReturnFalse()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        
+        //act
+        var result = owner.IsUserActive(user.Email);
+        
+        //assert
+        result.ShouldBeFalse();
+    }
 }
