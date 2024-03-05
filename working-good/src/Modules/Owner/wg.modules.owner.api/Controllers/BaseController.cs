@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using wg.shared.abstractions.CQRS.Commands;
-using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.owner.api.Controllers;
 

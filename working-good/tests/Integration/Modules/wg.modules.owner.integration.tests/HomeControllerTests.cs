@@ -5,6 +5,7 @@ using Xunit;
 
 namespace wg.modules.owner.integration.tests;
 
+[Collection("#1")]
 public sealed class HomeControllerTests : BaseTestsController
 {
     [Fact]
