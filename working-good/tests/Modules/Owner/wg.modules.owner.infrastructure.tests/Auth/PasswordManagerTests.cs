@@ -25,6 +25,24 @@ public sealed class PasswordManagerTests
         //assert
         result.ShouldBe(passwords[1]);
     }
+
+    [Fact]
+    public void VerifyPassword_GivenValidPassword_ShouldReturnTrue()
+    {
+        //arrange
+        var passwordFaker = new Faker<string>().CustomInstantiator(f => f.Lorem.Word());
+        var passwords = passwordFaker.Generate(2);
+        _passwordHasher
+            .VerifyHashedPassword(default, passwords[0], passwords[1])
+            .Returns(PasswordVerificationResult.Success);
+        
+        //act
+        var result = _passwordManager.VerifyPassword(passwords[0], passwords[1]);
+        
+        //assert
+        result.ShouldBeTrue();
+    }
+    
     
     #region arrange
 

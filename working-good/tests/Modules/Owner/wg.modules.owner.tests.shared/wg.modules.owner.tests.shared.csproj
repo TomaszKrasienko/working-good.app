@@ -9,6 +9,7 @@
         <InternalsVisibleTo Include="wg.modules.owner.application.tests"/>
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.application\wg.modules.owner.application.csproj" />
       <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.domain\wg.modules.owner.domain.csproj" />
     </ItemGroup>
     <ItemGroup>

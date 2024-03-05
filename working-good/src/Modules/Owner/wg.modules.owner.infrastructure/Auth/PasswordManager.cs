@@ -9,4 +9,8 @@ internal sealed class PasswordManager
 {
     public string Secure(string password)
         => passwordHasher.HashPassword(default!, password);
+
+    public bool VerifyPassword(string securedPassword, string password)
+        => passwordHasher
+               .VerifyHashedPassword(default!, securedPassword, password) == PasswordVerificationResult.Success;
 }
