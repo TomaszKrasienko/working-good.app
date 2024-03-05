@@ -42,6 +42,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.infrastruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.infrastructure.tests", "tests\Modules\Owner\wg.modules.owner.infrastructure.tests\wg.modules.owner.infrastructure.tests.csproj", "{212AF2FA-C1FA-4ED5-8296-7A01C08CCE41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{6C56C11E-2B44-41AD-B67E-4A743B63B563}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{36BA58D3-544B-46E6-BCA2-BDC57EB0E62E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.integration.tests", "tests\Integration\Modules\wg.modules.owner.integration.tests\wg.modules.owner.integration.tests.csproj", "{AF284D2B-53DB-444B-8538-B91DB9987ADE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +73,9 @@ Global
 		{C3901E1D-AC86-42F6-9354-D79096A4C7DB} = {3AD089EF-9811-48EA-B425-FD01A63513BB}
 		{28CC0313-8204-4A2D-9D42-3EEF42D4F45A} = {3AD089EF-9811-48EA-B425-FD01A63513BB}
 		{212AF2FA-C1FA-4ED5-8296-7A01C08CCE41} = {50AAE35A-DF29-455D-8290-069FED15F08F}
+		{6C56C11E-2B44-41AD-B67E-4A743B63B563} = {5E354159-7261-47D5-8AA7-6B5CE54C8CBA}
+		{36BA58D3-544B-46E6-BCA2-BDC57EB0E62E} = {6C56C11E-2B44-41AD-B67E-4A743B63B563}
+		{AF284D2B-53DB-444B-8538-B91DB9987ADE} = {36BA58D3-544B-46E6-BCA2-BDC57EB0E62E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -117,5 +126,9 @@ Global
 		{212AF2FA-C1FA-4ED5-8296-7A01C08CCE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{212AF2FA-C1FA-4ED5-8296-7A01C08CCE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{212AF2FA-C1FA-4ED5-8296-7A01C08CCE41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF284D2B-53DB-444B-8538-B91DB9987ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF284D2B-53DB-444B-8538-B91DB9987ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF284D2B-53DB-444B-8538-B91DB9987ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF284D2B-53DB-444B-8538-B91DB9987ADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
