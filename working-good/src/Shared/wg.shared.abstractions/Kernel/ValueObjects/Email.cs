@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
-using wg.modules.owner.domain.Exceptions;
+using wg.shared.abstractions.Kernel.Exceptions;
 
-namespace wg.modules.owner.domain.ValueObjects.User;
+namespace wg.shared.abstractions.Kernel.ValueObjects;
 
 public sealed record Email
 {
@@ -15,9 +15,9 @@ public sealed record Email
     internal Email(string value)
     {
         if(string.IsNullOrWhiteSpace(value))
-            throw new EmptyUserEmailException();
+            throw new EmptyEmailException();
         if (!(Regex.IsMatch(value)))
-            throw new InvalidUserEmailException(value);
+            throw new InvalidEmailException(value);
         Value = value;
     }
 

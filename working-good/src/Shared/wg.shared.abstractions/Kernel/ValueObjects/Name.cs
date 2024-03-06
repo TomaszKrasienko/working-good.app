@@ -1,6 +1,6 @@
-using wg.modules.owner.domain.Exceptions;
+using wg.shared.abstractions.Kernel.Exceptions;
 
-namespace wg.modules.owner.domain.ValueObjects.Owner;
+namespace wg.shared.abstractions.Kernel.ValueObjects;
 
 public record Name
 {
@@ -10,7 +10,7 @@ public record Name
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new EmptyOwnerNameException();
+            throw new EmptyNameException();
         }
         Value = value;
     }

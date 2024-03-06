@@ -1,6 +1,6 @@
 using wg.shared.abstractions.Exceptions;
 
-namespace wg.modules.owner.domain.Exceptions;
+namespace wg.shared.abstractions.Kernel.Exceptions;
 
-public sealed class EmptyUserEmailException()
+public sealed class EmptyEmailException()
     : WgException("User email can not be null or empty");

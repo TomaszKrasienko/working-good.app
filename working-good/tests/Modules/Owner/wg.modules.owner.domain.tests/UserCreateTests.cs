@@ -3,6 +3,7 @@ using Shouldly;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Exceptions;
 using wg.modules.owner.domain.ValueObjects.User;
+using wg.shared.abstractions.Kernel.Exceptions;
 using Xunit;
 
 namespace wg.modules.owner.domain.tests;
@@ -14,23 +15,23 @@ public sealed class UserCreateTests
             (password ?? "Pass123!"), (role ?? Role.Manager()));
     
     [Fact]
-    public void Create_GivenEmptyEmail_ShouldThrowEmptyUserEmailException()
+    public void Create_GivenEmptyEmail_ShouldThrowEmptyEmailException()
     {
         //act
         var exception = Record.Exception( () => User.Create(Guid.NewGuid(), string.Empty, "Joe", "Doe", "Pass123!",
             Role.User()));
         //assert
-        exception.ShouldBeOfType<EmptyUserEmailException>();
+        exception.ShouldBeOfType<EmptyEmailException>();
     }
     
     [Fact]
-    public void Create_GivenInvalidEmail_ShouldThrowInvalidUserEmailException()
+    public void Create_GivenInvalidEmail_ShouldThrowInvalidEmailException()
     {
         //act
         var exception = Record.Exception( () => User.Create(Guid.NewGuid(), "invalid_email", "Joe", "Doe", "Pass123!",
             Role.User()));
         //assert
-        exception.ShouldBeOfType<InvalidUserEmailException>();
+        exception.ShouldBeOfType<InvalidEmailException>();
     }
     
     [Fact]

@@ -1,7 +1,7 @@
 using wg.modules.owner.domain.Exceptions;
-using wg.modules.owner.domain.ValueObjects.Owner;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.shared.abstractions.Kernel.Types;
+using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.owner.domain.Entities;
 
