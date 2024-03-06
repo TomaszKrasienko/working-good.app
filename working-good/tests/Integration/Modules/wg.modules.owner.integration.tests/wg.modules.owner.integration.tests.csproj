@@ -24,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\wg.shared.tests.shared\wg.shared.tests.shared.csproj" />
+      <ProjectReference Include="..\..\..\Shared\wg.sharedForTests\wg.sharedForTests.csproj" />
+      <ProjectReference Include="..\..\..\wg.sharedForTests\wg.sharedForTests.csproj" />
     </ItemGroup>
 
 </Project>

@@ -10,6 +10,8 @@ internal static class Extensions
     internal static IServiceCollection AddAuth(this IServiceCollection services)
         => services
             .AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>()
-            .AddSingleton<IPasswordManager, PasswordManager>();
+            .AddSingleton<IPasswordManager, PasswordManager>()
+            .AddScoped<ITokenStorage, HttpContextTokenStorage>()
+            .AddHttpContextAccessor();
 
 }

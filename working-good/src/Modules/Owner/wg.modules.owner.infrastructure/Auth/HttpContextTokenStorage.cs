@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using wg.modules.owner.application.Auth;
-using wg.modules.owner.application.DTOs;
+using wg.shared.abstractions.Auth.DTOs;
 
 namespace wg.modules.owner.infrastructure.Auth;
 

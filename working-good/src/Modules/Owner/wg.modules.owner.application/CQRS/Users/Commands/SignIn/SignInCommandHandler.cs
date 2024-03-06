@@ -1,5 +1,6 @@
 using wg.modules.owner.application.Auth;
 using wg.modules.owner.domain.Repositories;
+using wg.shared.abstractions.Auth;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.Exceptions;
 using wg.shared.abstractions.Time;

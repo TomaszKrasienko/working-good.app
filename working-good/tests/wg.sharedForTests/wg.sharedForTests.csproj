@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.owner.application.tests"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="35.4.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj" />
+      <ProjectReference Include="..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>
+    </ItemGroup>
+</Project>

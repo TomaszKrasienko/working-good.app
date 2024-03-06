@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
-using wg.shared.tests.shared.Integration;
+using wg.sharedForTests.Integration;
 using Xunit;
 
 namespace wg.modules.owner.integration.tests;

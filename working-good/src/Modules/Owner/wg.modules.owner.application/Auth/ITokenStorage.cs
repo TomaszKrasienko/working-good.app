@@ -1,4 +1,4 @@
-using wg.modules.owner.application.DTOs;
+using wg.shared.abstractions.Auth.DTOs;
 
 namespace wg.modules.owner.application.Auth;
 

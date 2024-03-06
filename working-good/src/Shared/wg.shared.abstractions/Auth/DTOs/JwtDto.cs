@@ -1,4 +1,4 @@
-namespace wg.modules.owner.application.DTOs;
+namespace wg.shared.abstractions.Auth.DTOs;
 
 public class JwtDto
 {

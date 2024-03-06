@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using Shouldly;
-using wg.modules.owner.application.DTOs;
 using wg.modules.owner.infrastructure.Auth;
 using wg.modules.owner.tests.shared.Factories;
 using Xunit;

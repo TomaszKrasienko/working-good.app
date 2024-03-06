@@ -1,5 +1,5 @@
 using Bogus;
-using wg.modules.owner.application.DTOs;
+using wg.shared.abstractions.Auth.DTOs;
 
 namespace wg.modules.owner.tests.shared.Factories;
 

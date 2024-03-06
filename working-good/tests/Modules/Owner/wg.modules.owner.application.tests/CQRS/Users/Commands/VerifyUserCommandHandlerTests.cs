@@ -6,7 +6,7 @@ using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
 using wg.shared.abstractions.Time;
-using wg.shared.tests.shared.Mocks;
+using wg.sharedForTests.Mocks;
 using Xunit;
 
 namespace wg.modules.owner.application.tests.CQRS.Users.Commands;

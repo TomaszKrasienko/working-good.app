@@ -1,6 +1,6 @@
 using wg.shared.abstractions.Time;
 
-namespace wg.shared.tests.shared.Mocks;
+namespace wg.sharedForTests.Mocks;
 
 public sealed class TestsClock : IClock
 {
@@ -11,10 +11,10 @@ public sealed class TestsClock : IClock
     private TestsClock(DateTime time)
         => _time = time;
 
-    internal static IClock Create()
+    public static IClock Create()
         => new TestsClock();
     
-    internal static IClock Create(DateTime time)
+    public static IClock Create(DateTime time)
         => new TestsClock(time);
 
     public DateTime Now()

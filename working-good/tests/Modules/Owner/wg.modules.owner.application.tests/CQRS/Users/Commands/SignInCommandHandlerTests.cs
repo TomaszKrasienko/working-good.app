@@ -2,12 +2,12 @@ using NSubstitute;
 using Shouldly;
 using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
-using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
+using wg.shared.abstractions.Auth;
 using wg.shared.abstractions.Time;
-using wg.shared.tests.shared.Mocks;
+using wg.sharedForTests.Mocks;
 using Xunit;
 
 namespace wg.modules.owner.application.tests.CQRS.Users.Commands;

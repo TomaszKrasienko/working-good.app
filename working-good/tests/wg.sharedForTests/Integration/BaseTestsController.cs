@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace wg.shared.tests.shared.Integration;
+namespace wg.sharedForTests.Integration;
 
 public abstract class BaseTestsController : IDisposable
 {

@@ -1,6 +1,6 @@
-using wg.modules.owner.application.DTOs;
+using wg.shared.abstractions.Auth.DTOs;
 
-namespace wg.modules.owner.application.Auth;
+namespace wg.shared.abstractions.Auth;
 
 public interface IAuthenticator
 {

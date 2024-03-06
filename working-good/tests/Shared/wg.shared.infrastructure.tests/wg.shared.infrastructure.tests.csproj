@@ -10,9 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.4.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"/>
-        <PackageReference Include="NSubstitute" Version="5.1.0" />
         <PackageReference Include="Shouldly" Version="4.2.1" />
         <PackageReference Include="xunit" Version="2.4.2"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -26,9 +24,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.infrastructure\wg.modules.owner.infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\Shared\wg.sharedForTests\wg.sharedForTests.csproj" />
-      <ProjectReference Include="..\wg.modules.owner.tests.shared\wg.modules.owner.tests.shared.csproj" />
+      <ProjectReference Include="..\..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
+      <ProjectReference Include="..\..\wg.sharedForTests\wg.sharedForTests.csproj" />
     </ItemGroup>
+    
+    
 
 </Project>
