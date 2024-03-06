@@ -1,4 +1,5 @@
 using NSubstitute;
+using Shouldly;
 using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.DTOs;
@@ -43,6 +44,48 @@ public sealed class SignInCommandHandlerTests
             .Set(jwtDto);
     }
     
+    [Fact]
+    public async Task Handle_GivenExistingEmailWithInvalidPassword_ShouldThrowIncorrectPasswordException()
+    {
+        //arrangee
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        owner.VerifyUser(user.VerificationToken.Token, _clock.Now());
+        var command = new SignInCommand(user.Email, user.Password);
+        var jwtDto = JwtDtoFactory.Get();
+        _ownerRepository
+            .GetAsync()
+            .Returns(owner);       
+        _passwordManager
+            .VerifyPassword(user.Password, command.Password)
+            .Returns(false);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<IncorrectPasswordException>();
+    }
+    
+    [Fact]
+    public async Task Handle_GivenExistingEmailNotActiveUser_ShouldThrowUserIsNotActiveException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var command = new SignInCommand(user.Email, user.Password);
+        var jwtDto = JwtDtoFactory.Get();
+        _ownerRepository
+            .GetAsync()
+            .Returns(owner);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<UserIsNotActiveException>();
+    }
+    
     #region arrange
     private readonly IOwnerRepository _ownerRepository;
     private readonly IPasswordManager _passwordManager;
@@ -59,7 +102,7 @@ public sealed class SignInCommandHandlerTests
         _clock = TestsClock.Create();
         _tokenStorage = Substitute.For<ITokenStorage>();
         _handler = new SignInCommandHandler(_ownerRepository, _passwordManager, _authenticator, 
-            _clock, _tokenStorage);
+            _tokenStorage, _clock);
     }
     #endregion
 }
