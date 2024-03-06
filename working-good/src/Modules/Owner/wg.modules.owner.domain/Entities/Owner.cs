@@ -11,22 +11,18 @@ public sealed class Owner : AggregateRoot
     
     private readonly HashSet<User> _users = new HashSet<User>();
     public IEnumerable<User> Users => _users;
-
-    private Owner(AggregateId id, Name name, IEnumerable<User> users)
+    
+    private Owner(AggregateId id)
     {
         Id = id;
-        Name = name;
-        _users = users.ToHashSet();
-    }
-
-    private Owner(AggregateId id, Name name)
-    {
-        Id = id;
-        ChangeName(name);
     }
 
     public static Owner Create(Guid id, string name)
-        => new Owner(id, name);
+    {   
+        var owner = new Owner(id);
+        owner.ChangeName(name);
+        return owner;
+    }
     
     public void ChangeName(string name)
         => Name = name;

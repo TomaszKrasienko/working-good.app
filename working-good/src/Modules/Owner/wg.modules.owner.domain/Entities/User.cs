@@ -7,10 +7,10 @@ namespace wg.modules.owner.domain.Entities;
 public sealed class User
 {
     public EntityId Id { get; }
-    public Email Email { get; }
-    public FullName FullName { get; }
-    public Password Password { get; }
-    public Role Role { get; }
+    public Email Email { get; private set; }
+    public FullName FullName { get; private set; }
+    public Password Password { get; private set; }
+    public Role Role { get; private set; }
     public VerificationToken VerificationToken { get; }
     public ResetPasswordToken ResetPasswordToken { get; }
     public State State { get; private set; }
@@ -27,22 +27,36 @@ public sealed class User
         ResetPasswordToken = resetPasswordToken;
     }
 
-    private User(EntityId id, Email email, FullName fullName, Password password, Role role,
-        VerificationToken verificationToken)
+    private User(EntityId id)
     {
         Id = id;
-        Email = email;
-        FullName = fullName;
-        Password = password;
-        Role = role;
-        VerificationToken = verificationToken;
+        VerificationToken = VerificationToken.Create();
         State = State.Registered();
     }
 
     internal static User Create(Guid id, string email, string firstName, string lastName, string password,
         string role)
-        => new User(id, email, new FullName(firstName, lastName), password, role, VerificationToken.Create());
+    {
+        var user = new User(id);
+        user.ChangeEmail(email);
+        user.ChangeFullName(firstName, lastName);
+        user.ChangePassword(password);
+        user.ChangeRole(role);
+        return user;
+    }
 
+    private void ChangeEmail(string email)
+        => Email = email;
+
+    private void ChangeFullName(string firstName, string lastName)
+        => FullName = new FullName(firstName, lastName);
+
+    private void ChangePassword(string password)
+        => Password = password;
+
+    private void ChangeRole(string role)
+        => Role = role;
+    
     public void Verify(DateTime verificationDateTime)
     {
         VerificationToken.Verify(verificationDateTime);
