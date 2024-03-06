@@ -1,7 +1,9 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
 using wg.shared.infrastructure.Time.Configuration;
@@ -10,12 +12,14 @@ namespace wg.shared.infrastructure.Configuration;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IList<Assembly> assemblies)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IList<Assembly> assemblies,
+        IConfiguration configuration)
         => services
             .AddModules()
             .AddCqrs(assemblies)
             .AddTime()
-            .AddUiDocumentation();
+            .AddUiDocumentation()
+            .AddAuth(configuration);
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
