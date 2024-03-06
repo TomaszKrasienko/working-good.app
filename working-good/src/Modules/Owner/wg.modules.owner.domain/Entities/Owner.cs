@@ -12,14 +12,14 @@ public sealed class Owner : AggregateRoot
     private readonly HashSet<User> _users = new HashSet<User>();
     public IEnumerable<User> Users => _users;
 
-    private Owner(Guid id, Name name, IEnumerable<User> users)
+    private Owner(AggregateId id, Name name, IEnumerable<User> users)
     {
         Id = id;
         Name = name;
         _users = users.ToHashSet();
     }
 
-    public Owner(Guid id, Name name)
+    private Owner(AggregateId id, Name name)
     {
         Id = id;
         ChangeName(name);

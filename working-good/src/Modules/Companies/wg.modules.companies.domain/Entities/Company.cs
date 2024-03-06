@@ -13,4 +13,27 @@ public sealed class Company : AggregateRoot
     public IEnumerable<Employee> Employees => _employees;
     private readonly HashSet<Project> _projects = new HashSet<Project>();
     public IEnumerable<Project> Projects => _projects;
+
+    private Company(AggregateId id)
+    {
+        Id = id;
+    }
+
+    public static Company Create(Guid id, string name, TimeSpan slaTime, string emailDomain)
+    {
+        var company = new Company(id);
+        company.ChangeName(name);
+        company.ChangeSlaTime(slaTime);
+        company.ChangeEmailDomain(emailDomain);
+        return company;
+    }
+
+    private void ChangeName(string name)
+        => Name = name;
+
+    private void ChangeSlaTime(TimeSpan slaTime)
+        => SlaTime = slaTime;
+
+    private void ChangeEmailDomain(string emailDomain)
+        => EmailDomain = emailDomain;
 }
