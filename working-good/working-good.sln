@@ -60,6 +60,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.tests.shared", "tests\Modules\Companies\wg.modules.companies.tests.shared\wg.modules.companies.tests.shared.csproj", "{014EDDD2-D754-4D2F-A192-2F2176273108}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.application", "src\Modules\Companies\wg.modules.companies.application\wg.modules.companies.application.csproj", "{FC96C47A-E562-42DE-A949-B834B85271EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.application.tests", "tests\Modules\Companies\wg.modules.companies.application.tests\wg.modules.companies.application.tests.csproj", "{B0F40EB2-AE1A-4DDC-A916-241801636928}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +98,8 @@ Global
 		{ED0C0608-7C3D-43E1-9E71-8305AFEE3076} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
 		{F713C96C-5FEA-4B6B-9A33-E5D38D527F50} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
 		{014EDDD2-D754-4D2F-A192-2F2176273108} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
+		{FC96C47A-E562-42DE-A949-B834B85271EC} = {FD0CE981-8432-4B57-B654-A91D55B67903}
+		{B0F40EB2-AE1A-4DDC-A916-241801636928} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -164,5 +170,13 @@ Global
 		{014EDDD2-D754-4D2F-A192-2F2176273108}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{014EDDD2-D754-4D2F-A192-2F2176273108}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{014EDDD2-D754-4D2F-A192-2F2176273108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC96C47A-E562-42DE-A949-B834B85271EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC96C47A-E562-42DE-A949-B834B85271EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC96C47A-E562-42DE-A949-B834B85271EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC96C47A-E562-42DE-A949-B834B85271EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0F40EB2-AE1A-4DDC-A916-241801636928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0F40EB2-AE1A-4DDC-A916-241801636928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0F40EB2-AE1A-4DDC-A916-241801636928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0F40EB2-AE1A-4DDC-A916-241801636928}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
