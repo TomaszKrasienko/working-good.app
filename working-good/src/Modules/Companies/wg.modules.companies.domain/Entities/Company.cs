@@ -1,3 +1,4 @@
+using wg.modules.companies.domain.Exceptions;
 using wg.modules.companies.domain.ValueObjects.Company;
 using wg.shared.abstractions.Kernel.Types;
 using wg.shared.abstractions.Kernel.ValueObjects;
@@ -36,4 +37,20 @@ public sealed class Company : AggregateRoot
 
     private void ChangeEmailDomain(string emailDomain)
         => EmailDomain = emailDomain;
+
+    public void AddEmployee(Guid id, string email, string phoneNumber = null)
+    {
+        if (_employees.Any(x => x.Email == email))
+        {
+            throw new EmailAlreadyInUseException(email);
+        }
+
+        if (!email.EndsWith(EmailDomain))
+        {
+            throw new EmailNotMatchToEmailDomainException(email, EmailDomain);
+        }
+
+        var employee = Employee.Create(id, email, phoneNumber);
+        _employees.Add(employee);
+    }
 }

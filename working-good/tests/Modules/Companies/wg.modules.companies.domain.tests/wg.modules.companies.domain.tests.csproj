@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\src\Modules\Companies\wg.modules.companies.domain\wg.modules.companies.domain.csproj" />
+      <ProjectReference Include="..\wg.modules.companies.tests.shared\wg.modules.companies.tests.shared.csproj" />
     </ItemGroup>
 
 </Project>
