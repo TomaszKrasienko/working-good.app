@@ -6,4 +6,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\wg.modules.companies.domain\wg.modules.companies.domain.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.companies.application.tests"/>
+    </ItemGroup>
 </Project>
