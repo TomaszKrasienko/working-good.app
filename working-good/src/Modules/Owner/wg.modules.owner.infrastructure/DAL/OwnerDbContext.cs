@@ -16,5 +16,6 @@ internal sealed class OwnerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("owner");
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 }

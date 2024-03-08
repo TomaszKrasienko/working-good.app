@@ -8,5 +8,6 @@ internal static class Extensions
 {
     internal static IServiceCollection AddDal(this IServiceCollection services)
         => services
-            .AddSingleton<IOwnerRepository, InMemoryOwnerRepository>();
+            .AddSingleton<IOwnerRepository, InMemoryOwnerRepository>()
+            .AddDbContext<OwnerDbContext>();
 }
