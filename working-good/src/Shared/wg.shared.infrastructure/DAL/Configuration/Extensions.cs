@@ -11,7 +11,8 @@ internal static class Extensions
     private const string SectionName = "DAL";
     
     internal static IServiceCollection AddDal(this IServiceCollection services, IConfiguration configuration)
-        => services;
+        => services
+            .AddOptions(configuration);
 
     internal static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
         => services.Configure<DalOptions>(configuration.GetSection(SectionName));

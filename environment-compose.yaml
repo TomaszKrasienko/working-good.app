@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    container_name: SqlServer
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SafePassword123!
+    ports:
+      - 5010:1433
+    volumes:
+      - sqlserver-volume:/var/opt/mssql/data
+
+volumes:
+  sqlserver-volume: 
