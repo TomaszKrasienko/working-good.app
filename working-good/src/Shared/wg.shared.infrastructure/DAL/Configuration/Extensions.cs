@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using wg.shared.infrastructure.Configuration;
 using wg.shared.infrastructure.DAL.Configuration.Models;
 
 namespace wg.shared.infrastructure.DAL.Configuration;
@@ -17,6 +18,8 @@ internal static class Extensions
 
     internal static IServiceCollection AddDbContext<T>(this IServiceCollection services) where T : DbContext
     {
-        var options = 
+        var options = services.GetOptions<DalOptions>();
+        services.AddDbContext<T>(x => x.UseSqlServer(options.ConnectionString));
+        return services;
     }
 }

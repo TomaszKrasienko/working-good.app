@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
@@ -31,6 +32,12 @@ public static class Extensions
                 Version = "v1"
             });
         });
+
+    internal static T GetOptions<T>(this IServiceCollection services) where T : class
+    {
+        using var serviceProvider = services.BuildServiceProvider();
+        return serviceProvider.GetService<IOptions<T>>().Value;
+    }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
         => app
