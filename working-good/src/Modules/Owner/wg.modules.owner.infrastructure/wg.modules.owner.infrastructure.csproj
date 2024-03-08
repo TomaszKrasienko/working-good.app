@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
       <ProjectReference Include="..\wg.modules.owner.application\wg.modules.owner.application.csproj" />
     </ItemGroup>
     <ItemGroup>

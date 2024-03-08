@@ -6,7 +6,7 @@ public record Name
 {
     public string Value { get; }
 
-    internal Name(string value)
+    public Name(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

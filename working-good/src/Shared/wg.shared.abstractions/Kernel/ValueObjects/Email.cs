@@ -12,7 +12,7 @@ public sealed record Email
 
     public string Value { get; }
 
-    internal Email(string value)
+    public Email(string value)
     {
         if(string.IsNullOrWhiteSpace(value))
             throw new EmptyEmailException();
