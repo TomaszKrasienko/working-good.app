@@ -9,8 +9,3 @@ services:
       - SA_PASSWORD=SafePassword123!
     ports:
       - 5010:1433
-    volumes:
-      - sqlserver-volume:/var/opt/mssql/data
-
-volumes:
-  sqlserver-volume: 
