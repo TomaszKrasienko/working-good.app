@@ -53,5 +53,11 @@ public sealed class OwnerControllerTests : BaseTestsController
     {
         _ownerDbContext = new TestDb().OwnerDbContext;
     }
+
+    public override void Dispose()
+    {
+        _ownerDbContext.Dispose();
+    }
+
     #endregion
 }

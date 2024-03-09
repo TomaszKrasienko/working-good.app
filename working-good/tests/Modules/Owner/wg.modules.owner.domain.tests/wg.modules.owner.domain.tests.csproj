@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.domain\wg.modules.owner.domain.csproj" />
+      <ProjectReference Include="..\..\..\wg.sharedForTests\wg.sharedForTests.csproj" />
       <ProjectReference Include="..\wg.modules.owner.tests.shared\wg.modules.owner.tests.shared.csproj" />
     </ItemGroup>
 

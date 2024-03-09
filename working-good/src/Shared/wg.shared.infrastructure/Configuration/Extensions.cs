@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
+using wg.shared.infrastructure.Exceptions.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
 using wg.shared.infrastructure.Time.Configuration;
 
@@ -23,7 +24,8 @@ public static class Extensions
             .AddTime()
             .AddUiDocumentation()
             .AddAuth(configuration)
-            .AddDal(configuration);
+            .AddDal(configuration)
+            .AddExceptionMiddleware();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
@@ -46,7 +48,8 @@ public static class Extensions
     public static WebApplication UseInfrastructure(this WebApplication app)
         => app
             .UseControllers()
-            .UseUiDocumentation();
+            .UseUiDocumentation()
+            .UseExceptionMiddleware();
 
     private static WebApplication UseUiDocumentation(this WebApplication app)
     {

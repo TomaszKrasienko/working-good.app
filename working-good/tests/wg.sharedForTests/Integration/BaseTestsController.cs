@@ -17,7 +17,7 @@ public abstract class BaseTestsController : IDisposable
         
     }
     
-    public void Dispose()
+    public virtual void Dispose()
     {
     }
 }
