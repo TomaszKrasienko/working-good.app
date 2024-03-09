@@ -7,6 +7,7 @@ using Shouldly;
 using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
+using wg.modules.owner.application.CQRS.Users.Commands.VerifyUser;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
@@ -54,6 +55,45 @@ public sealed class UsersControllerTests : BaseTestsController
         result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         var user = await _ownerDbContext.Users.FirstOrDefaultAsync();
         user.ShouldBeNull();
+    }
+    
+    [Fact]
+    public async Task Verify_GivenExistingToken_ShouldReturn200OkStatusCodeAndUpdateUserInDb()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        var command = new VerifyUserCommand(user.VerificationToken.Token);
+        
+        //act
+        var result = await HttpClient.PostAsJsonAsync("/owner-module/users/verify", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var verifiedUser = await _ownerDbContext
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == user.Id);
+        verifiedUser!.State.ShouldBe(State.Activate());
+    }
+    
+    [Fact]
+    public async Task Verify_GivenNotExistingToken_ShouldReturnBadRequestStatusCode()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        var command = new VerifyUserCommand("invalid_token");
+        
+        //act
+        var result = await HttpClient.PostAsJsonAsync("/owner-module/users/verify", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
