@@ -1,4 +1,6 @@
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.shared.abstractions.CQRS.Commands;
@@ -12,6 +14,8 @@ internal sealed class OwnerController(
 {
 
     [HttpPost("add")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> AddOwner(AddOwnerCommand command, CancellationToken cancellationToken)
     {
         var id = Guid.NewGuid();
