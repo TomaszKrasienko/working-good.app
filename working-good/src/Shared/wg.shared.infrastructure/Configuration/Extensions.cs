@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -38,7 +39,8 @@ public static class Extensions
     internal static T GetOptions<T>(this IServiceCollection services) where T : class
     {
         using var serviceProvider = services.BuildServiceProvider();
-        return serviceProvider.GetService<IOptions<T>>().Value;
+        using var scope = serviceProvider.CreateScope();
+        return scope.ServiceProvider.GetService<IOptions<T>>().Value;
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)

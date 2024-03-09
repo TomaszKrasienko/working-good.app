@@ -16,8 +16,8 @@ internal sealed class DbInitializer(
 
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var dbContexts = assemblies
-            .Select(x => x.GetType())
-            .Where(x => typeof(DbContext).IsAssignableTo(x) && typeof(DbContext) != x);
+            .SelectMany(x => x.GetTypes())
+            .Where(x => x.IsAssignableTo(typeof(DbContext)) && typeof(DbContext) != x);
             
         using var scope = serviceProvider.CreateScope();
         foreach (var dbContext in dbContexts)

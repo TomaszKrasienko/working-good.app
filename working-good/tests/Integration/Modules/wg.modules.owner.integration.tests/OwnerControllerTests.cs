@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
+using wg.sharedForTests.Factories.Owner;
 using wg.sharedForTests.Integration;
 using Xunit;
 
@@ -22,9 +24,26 @@ public sealed class OwnerControllerTests : BaseTestsController
         var response = await HttpClient.PostAsJsonAsync("/owner-module/owner/add", command);
      
         //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         response.Headers.TryGetValues("resource-id", out var values);
         values!.Single().ShouldNotBe(Guid.Empty.ToString());
-        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        var owner = await _ownerDbContext.Owner.FirstOrDefaultAsync();
+        owner.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task AddOwner_GivenAddOwnerCommandForExistingOwner_ShouldReturnBadRequestStatusCode()
+    {
+        //arrange
+        await _ownerDbContext.Owner.AddAsync(OwnerFactory.Get());
+        await _ownerDbContext.SaveChangesAsync();
+        var command = new AddOwnerCommand(Guid.Empty, "owner_company_name");
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("/owner-module/owner/add", command);
+     
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
     
     #region arrange
