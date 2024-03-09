@@ -11,6 +11,7 @@ using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
 using wg.shared.abstractions.Auth.DTOs;
+using wg.shared.infrastructure.Exceptions.DTOs;
 using wg.sharedForTests.Factories.Owner;
 using wg.sharedForTests.Integration;
 using Xunit;
@@ -74,6 +75,25 @@ public sealed class UsersControllerTests : BaseTestsController
         var token = await result.Content.ReadFromJsonAsync<JwtDto>();
         token.ShouldNotBeNull();
         token.Token.ShouldNotBeNullOrWhiteSpace(); 
+    }
+    
+    [Fact]
+    public async Task SignIn_GivenSignUpCommandWithInvalidCredentials_ShouldReturnBadRequestStatusCodeWithWrongCredentialsMessage()
+    {
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        owner.VerifyUser(user.VerificationToken.Token, DateTime.Now);
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        var command = new SignInCommand(user.Email, "invalid_password");
+        
+        //act
+        var result = await HttpClient.PostAsJsonAsync("/owner-module/users/sign-in", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        var response = await result.Content.ReadFromJsonAsync<ErrorDto>();
+        response!.Message.ShouldBe("Wrong credentials");
     }
     
     #region arrange
