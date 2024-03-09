@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
+using wg.modules.owner.infrastructure.DAL;
+using wg.modules.owner.integration.tests._Helpers;
 using wg.sharedForTests.Integration;
 using Xunit;
 
@@ -24,4 +26,13 @@ public sealed class OwnerControllerTests : BaseTestsController
         values!.Single().ShouldNotBe(Guid.Empty.ToString());
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
     }
+    
+    #region arrange
+    private readonly OwnerDbContext _ownerDbContext;
+
+    public OwnerControllerTests()
+    {
+        _ownerDbContext = new TestDb().OwnerDbContext;
+    }
+    #endregion
 }

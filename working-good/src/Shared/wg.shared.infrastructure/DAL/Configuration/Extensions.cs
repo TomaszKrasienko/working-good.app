@@ -12,11 +12,15 @@ public static class Extensions
     
     internal static IServiceCollection AddDal(this IServiceCollection services, IConfiguration configuration)
         => services
-            .AddOptions(configuration);
+            .AddOptions(configuration)
+            .AddInitializer();
 
     private static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
         => services.Configure<DalOptions>(configuration.GetSection(SectionName));
 
+    private static IServiceCollection AddInitializer(this IServiceCollection services)
+        => services.AddHostedService<DbInitializer>();
+    
     public static IServiceCollection AddContext<T>(this IServiceCollection services) where T : DbContext
     {
         var options = services.GetOptions<DalOptions>();

@@ -11,5 +11,6 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.owner.infrastructure.tests"/>
+        <InternalsVisibleTo Include="wg.modules.owner.integration.tests"/>
     </ItemGroup>
 </Project>
