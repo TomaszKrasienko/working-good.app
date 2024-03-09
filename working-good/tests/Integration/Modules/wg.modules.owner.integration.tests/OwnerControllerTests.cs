@@ -47,16 +47,18 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     #region arrange
+    private readonly TestDb _testDb;
     private readonly OwnerDbContext _ownerDbContext;
 
     public OwnerControllerTests()
     {
-        _ownerDbContext = new TestDb().OwnerDbContext;
+        _testDb = new TestDb();
+        _ownerDbContext = _testDb.OwnerDbContext;
     }
 
     public override void Dispose()
     {
-        _ownerDbContext.Dispose();
+        _testDb.Dispose();
     }
 
     #endregion

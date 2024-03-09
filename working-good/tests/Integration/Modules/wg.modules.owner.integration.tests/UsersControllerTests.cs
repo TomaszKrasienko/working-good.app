@@ -12,10 +12,11 @@ using Xunit;
 
 namespace wg.modules.owner.integration.tests;
 
+[Collection("#1")]
 public sealed class UsersControllerTests : BaseTestsController
 {
     [Fact]
-    public async Task SignUp_GivenSignUpCommandForExistingOwner_ShouldReturn200StatusCodeAndSaveUserToDb()
+    public async Task SignUp_GivenSignUpCommandForExistingOwner_ShouldReturn200StatusCodeAndSaveUserInDb()
     {
         //arrange
         var owner = OwnerFactory.Get();
@@ -33,18 +34,35 @@ public sealed class UsersControllerTests : BaseTestsController
         user.ShouldNotBeNull();
     }
 
+    [Fact]
+    public async Task SignUp_GivenSignUpCommandWithoutExistingOwner_ShouldReturn400BadRequestStatusCodeAndNotSaveUserInDb()
+    {
+        //arrange
+        var command = new SignUpCommand(Guid.Empty, "joe.doe@test.pl", "Joe", "Doe",
+            "MyPass123!", Role.Manager());
+
+        //act
+        var result = await HttpClient.PostAsJsonAsync("/owner-module/users/sign-up", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        var user = await _ownerDbContext.Users.FirstOrDefaultAsync();
+        user.ShouldBeNull();
+    }
     #region arrange
 
+    private readonly TestDb _testDb;
     private readonly OwnerDbContext _ownerDbContext;
     
     public UsersControllerTests()
     {
-        _ownerDbContext = new TestDb().OwnerDbContext;
+        _testDb = new TestDb();
+        _ownerDbContext = _testDb.OwnerDbContext;
     }
 
     public override void Dispose()
     {
-        _ownerDbContext.Dispose();
+        _testDb.Dispose();
     }
 
     #endregion
