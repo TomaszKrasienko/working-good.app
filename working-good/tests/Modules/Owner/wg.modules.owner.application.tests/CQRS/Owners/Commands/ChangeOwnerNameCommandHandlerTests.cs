@@ -20,7 +20,7 @@ public sealed class ChangeOwnerNameCommandHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var command = new ChangeOwnerNameCommand(owner.Id, Guid.NewGuid().ToString("N"));
+        var command = new ChangeOwnerNameCommand(Guid.NewGuid().ToString("N"));
         _ownerRepository
             .GetAsync()
             .Returns(owner);
@@ -32,7 +32,7 @@ public sealed class ChangeOwnerNameCommandHandlerTests
         await _ownerRepository
             .Received(1)
             .UpdateAsync(Arg.Is<Owner>(arg
-                => arg.Id.Value == command.Id
+                => arg.Id == owner.Id
                    && arg.Name.Value == command.Name));
     }
     
@@ -41,7 +41,7 @@ public sealed class ChangeOwnerNameCommandHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var command = new ChangeOwnerNameCommand(owner.Id, Guid.NewGuid().ToString("N"));
+        var command = new ChangeOwnerNameCommand(Guid.NewGuid().ToString("N"));
         await _ownerRepository
             .GetAsync();
         

@@ -31,7 +31,7 @@ public abstract class BaseTestsController : IDisposable
     protected virtual void Authorize(Guid userId, string role)
     {
         var token = _authenticator.CreateToken(userId.ToString(), role);
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.Token);
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",token.Token);
     }
     
     public virtual void Dispose()

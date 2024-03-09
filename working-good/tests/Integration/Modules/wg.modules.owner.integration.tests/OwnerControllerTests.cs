@@ -3,6 +3,8 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
+using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
+using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
 using wg.sharedForTests.Factories.Owner;
@@ -44,6 +46,85 @@ public sealed class OwnerControllerTests : BaseTestsController
      
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ChangeOwnerName_GivenNewNameAndAuthorizedManager_ShouldReturn204NoContentStatusCodeAndChangeNameInDb()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(user.Id, user.Role);
+        var companyNewName = "MyCompanyNewName";
+        var command = new ChangeOwnerNameCommand(companyNewName);
+            
+        //act
+        var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        var changedOwner = await _ownerDbContext.Owner
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+        changedOwner!.Name.Value.ShouldBe(companyNewName);
+    }
+    
+    [Fact]
+    public async Task ChangeOwnerName_GivenNewNameAndWithoutAuthorizedUser_ShouldReturn401Unauthorized()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        var companyNewName = "MyCompanyNewName";
+        var command = new ChangeOwnerNameCommand(companyNewName);
+            
+        //act
+        var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task ChangeOwnerName_GivenNewNameAndAuthorizedUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var manager = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetUserInOwner(owner, Role.User());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(user.Id, user.Role);
+        var companyNewName = "MyCompanyNewName";
+        var command = new ChangeOwnerNameCommand(companyNewName);
+            
+        //act
+        var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+    
+    [Fact]
+    public async Task ChangeOwnerName_GivenEmptyNameAndAuthorizedUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(user.Id, user.Role);
+        var command = new ChangeOwnerNameCommand(string.Empty);
+            
+        //act
+        var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
     
     #region arrange

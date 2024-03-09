@@ -49,7 +49,8 @@ public static class Extensions
         => app
             .UseControllers()
             .UseUiDocumentation()
-            .UseExceptionMiddleware();
+            .UseExceptionMiddleware()
+            .UseAuth();
 
     private static WebApplication UseUiDocumentation(this WebApplication app)
     {
