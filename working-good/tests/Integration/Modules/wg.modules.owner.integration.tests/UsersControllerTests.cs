@@ -1,11 +1,16 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using wg.modules.owner.application.Auth;
+using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
+using wg.shared.abstractions.Auth.DTOs;
 using wg.sharedForTests.Factories.Owner;
 using wg.sharedForTests.Integration;
 using Xunit;
@@ -49,6 +54,28 @@ public sealed class UsersControllerTests : BaseTestsController
         var user = await _ownerDbContext.Users.FirstOrDefaultAsync();
         user.ShouldBeNull();
     }
+
+    [Fact]
+    public async Task SignIn_GivenSignUpCommandWithValidCredentials_ShouldReturn200OkStatusCodeWithToken()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        owner.VerifyUser(user.VerificationToken.Token, DateTime.Now);
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        var command = new SignInCommand(user.Email, user.Password);
+        
+        //act
+        var result = await HttpClient.PostAsJsonAsync("/owner-module/users/sign-in", command);
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var token = await result.Content.ReadFromJsonAsync<JwtDto>();
+        token.ShouldNotBeNull();
+        token.Token.ShouldNotBeNullOrWhiteSpace(); 
+    }
+    
     #region arrange
 
     private readonly TestDb _testDb;
@@ -63,6 +90,11 @@ public sealed class UsersControllerTests : BaseTestsController
     public override void Dispose()
     {
         _testDb.Dispose();
+    }
+
+    protected override void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<IPasswordManager, TestPasswordManager>();
     }
 
     #endregion

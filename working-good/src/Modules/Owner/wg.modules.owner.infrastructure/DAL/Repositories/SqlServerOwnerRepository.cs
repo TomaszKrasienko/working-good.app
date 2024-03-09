@@ -31,5 +31,7 @@ internal sealed class SqlServerOwnerRepository : IOwnerRepository
         => _owner.AnyAsync();
 
     public Task<Owner> GetAsync()
-        => _owner.FirstOrDefaultAsync();
+        => _owner
+            .Include(x => x.Users)
+            .FirstOrDefaultAsync();
 }

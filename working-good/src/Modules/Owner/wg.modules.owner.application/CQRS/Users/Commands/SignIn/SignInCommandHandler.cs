@@ -1,4 +1,5 @@
 using wg.modules.owner.application.Auth;
+using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.shared.abstractions.Auth;
 using wg.shared.abstractions.CQRS.Commands;
@@ -17,6 +18,11 @@ internal sealed class SignInCommandHandler(
     public async Task HandleAsync(SignInCommand command, CancellationToken cancellationToken)
     {
         var owner = await ownerRepository.GetAsync();
+        if (owner is null)
+        {
+            throw new OwnerNotFoundException();
+        }
+        
         if (!owner.IsUserActive(command.Email))
         {
             throw new UserIsNotActiveException(command.Email);

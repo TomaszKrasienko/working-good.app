@@ -11,7 +11,7 @@ internal static class Extensions
     
     internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
         => services
-            .AddOptions()
+            .AddOptions(configuration)
             .AddServices();
 
     private static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)

@@ -2,6 +2,7 @@ using NSubstitute;
 using Shouldly;
 using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
+using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
@@ -85,6 +86,19 @@ public sealed class SignInCommandHandlerTests
         
         //assert
         exception.ShouldBeOfType<UserIsNotActiveException>();
+    }
+
+    [Fact]
+    public async Task Handle_ForNotExistingUser_ShouldThrowOwnerNotFoundException()
+    {
+        //arrange
+        var command = new SignInCommand("test@test.pl", "MyStrongPass123!");
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<OwnerNotFoundException>();
     }
     
     #region arrange
