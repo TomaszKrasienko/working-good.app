@@ -9,8 +9,9 @@ public sealed record State
 
     public string Value { get; private set; }
 
-    private State(string value)
+    public State(string value)
     {
+        //todo: Add conditions and tests
         Value = value;
     }
 

@@ -10,7 +10,9 @@ internal static class Extensions
     private const string SectionName = "Jwt";
     
     internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
-        => services;
+        => services
+            .AddOptions()
+            .AddServices();
 
     private static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
         => services
