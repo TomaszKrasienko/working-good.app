@@ -53,4 +53,14 @@ public sealed class Company : AggregateRoot
         var employee = Employee.Create(id, email, phoneNumber);
         _employees.Add(employee);
     }
+
+    public void AddProject(Guid id, string title, string description, DateTime? plannedStart, DateTime? plannedFinish)
+    {
+        if (_projects.Any(x => x.Title.Value.ToLowerInvariant() == title.ToLowerInvariant()))
+        {
+            throw new ProjectAlreadyRegisteredException(title);
+        }
+
+        _projects.Add(Project.Create(id, title, description, plannedStart, plannedFinish));
+    }
 }

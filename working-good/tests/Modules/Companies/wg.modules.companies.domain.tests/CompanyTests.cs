@@ -1,4 +1,6 @@
+using Bogus.DataSets;
 using Shouldly;
+using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
 using wg.modules.companies.tests.shared.Factories;
 using Xunit;
@@ -52,5 +54,36 @@ public sealed class CompanyTests
         
         //assert
         exception.ShouldBeOfType<EmailNotMatchToEmailDomainException>();
+    }
+
+    [Fact]
+    public void AddProject_GivenNotExistingTitle_ShouldAddProject()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var projectId = Guid.NewGuid();
+        
+        //act
+        company.AddProject(projectId, "title", "My project description", DateTime.Now, DateTime.Now.AddMonths(3));
+        
+        //assert
+        var project = company.Projects.FirstOrDefault(x => x.Id.Value == projectId);
+        project.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public void AddProject_GivenExistingTitle_ShouldThrowProjectAlreadyRegisteredException()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var projectTitle = "My project title";
+        company.AddProject(Guid.NewGuid(), projectTitle, "My project description", DateTime.Now, DateTime.Now.AddMonths(3));
+        
+        //act
+        var exception = Record.Exception(() => company.AddProject(Guid.NewGuid(), projectTitle,
+            "My project description", DateTime.Now, DateTime.Now.AddMonths(3)));
+        
+        //assert
+        exception.ShouldBeOfType<ProjectAlreadyRegisteredException>();
     }
 }
