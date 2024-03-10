@@ -9,6 +9,7 @@ using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
 using wg.shared.infrastructure.Exceptions.Configuration;
+using wg.shared.infrastructure.Messaging.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
 using wg.shared.infrastructure.Time.Configuration;
 
@@ -25,7 +26,8 @@ public static class Extensions
             .AddUiDocumentation()
             .AddAuth(configuration)
             .AddDal(configuration)
-            .AddExceptionMiddleware();
+            .AddExceptionMiddleware()
+            .AddMessaging();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>

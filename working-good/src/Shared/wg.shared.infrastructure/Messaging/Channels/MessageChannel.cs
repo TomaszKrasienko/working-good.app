@@ -1,6 +1,7 @@
 using System.Threading.Channels;
+using wg.shared.abstractions.Messaging;
 
-namespace wg.shared.abstractions.Messaging.Channels;
+namespace wg.shared.infrastructure.Messaging.Channels;
 
 internal sealed class MessageChannel : IMessageChannel
 {
