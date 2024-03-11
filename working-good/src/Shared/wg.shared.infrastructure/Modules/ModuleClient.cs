@@ -3,10 +3,11 @@ using wg.shared.infrastructure.Modules.Abstractions;
 
 namespace wg.shared.infrastructure.Modules;
 
-internal sealed class ModuleClient
-    (IModuleRegistry moduleRegistry): IModuleClient
+internal sealed class ModuleClient(
+    IModuleRegistry moduleRegistry,
+    IModuleTypesTranslator moduleTypesTranslator) : IModuleClient
 {
-    public Task PublishAsync(object message)
+    public async Task PublishAsync(object message)
     {
         var key = message.GetType().Name;
         var registrations = moduleRegistry.GetBroadcastRegistrations(key);
@@ -16,10 +17,10 @@ internal sealed class ModuleClient
         foreach (var registration in registrations)
         {
             var action = registration.Action;
-            var receiverMessage = 
+            var receiverMessage = moduleTypesTranslator.TranslateType(message, registration.ReceiverType);
+            tasks.Add(registration.Action(receiverMessage));
         }
+
+        await Task.WhenAll(tasks);
     }
-    
-    private object TranslateType(object value, Type type)
-        => 
 }
