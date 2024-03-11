@@ -20,7 +20,6 @@ internal sealed class ModuleClient(
             var receiverMessage = moduleTypesTranslator.TranslateType(message, registration.ReceiverType);
             tasks.Add(registration.Action(receiverMessage));
         }
-
         await Task.WhenAll(tasks);
     }
 }

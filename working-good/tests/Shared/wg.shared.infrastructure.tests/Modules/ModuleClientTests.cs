@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NSubstitute;
 using wg.shared.abstractions.Modules;
 using wg.shared.infrastructure.Modules;
@@ -31,7 +29,7 @@ public sealed class ModuleClientTests
             .Returns(new[]
             {
                 new ModuleBroadcastRegistration(typeof(MessageToReceive), actionMoq)
-            });
+            }); 
 
         _moduleTypesTranslator
             .TranslateType(messageToSend, typeof(MessageToReceive))
