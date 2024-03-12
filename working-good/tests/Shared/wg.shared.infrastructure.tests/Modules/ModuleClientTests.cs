@@ -3,6 +3,7 @@ using wg.shared.abstractions.Modules;
 using wg.shared.infrastructure.Modules;
 using wg.shared.infrastructure.Modules.Abstractions;
 using wg.shared.infrastructure.Modules.Models;
+using wg.shared.infrastructure.shared.tests.Modules.Models;
 using Xunit;
 
 namespace wg.shared.infrastructure.tests.Modules;
@@ -58,12 +59,3 @@ public sealed class ModuleClientTests
     #endregion
 }
 
-public class MessageToSend
-{
-    public string Value { get; set; }
-}
-
-public class MessageToReceive
-{
-    public string Value { get; set; }
-}
