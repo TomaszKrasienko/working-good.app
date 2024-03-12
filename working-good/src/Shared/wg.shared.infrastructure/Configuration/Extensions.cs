@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
+using wg.shared.infrastructure.Events.Configuration;
 using wg.shared.infrastructure.Exceptions.Configuration;
 using wg.shared.infrastructure.Messaging.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
@@ -20,14 +21,15 @@ public static class Extensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IList<Assembly> assemblies,
         IConfiguration configuration)
         => services
-            .AddModules()
+            .AddModules(assemblies)
             .AddCqrs(assemblies)
             .AddTime()
             .AddUiDocumentation()
             .AddAuth(configuration)
             .AddDal(configuration)
             .AddExceptionMiddleware()
-            .AddMessaging();
+            .AddMessaging()
+            .AddEvents(assemblies);
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>

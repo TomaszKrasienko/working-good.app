@@ -1,16 +1,20 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using wg.shared.abstractions.Events;
+using wg.shared.infrastructure.Modules.Abstractions;
 using wg.shared.infrastructure.Providers;
 
 namespace wg.shared.infrastructure.Modules.Configuration;
 
 public static class Extensions
 {
-    internal static IServiceCollection AddModules(this IServiceCollection services)
+    internal static IServiceCollection AddModules(this IServiceCollection services, IEnumerable<Assembly> assemblies)
         => services
-            .AddModuleLoad();
+            .AddModuleLoad()
+            .AddModuleRegistry(assemblies);
 
     private static IServiceCollection AddModuleLoad(this IServiceCollection services)
     {
@@ -54,6 +58,28 @@ public static class Extensions
             });
     }
 
+    private static IServiceCollection AddModuleRegistry(this IServiceCollection services,
+        IEnumerable<Assembly> assemblies)
+        => services.AddSingleton<IModuleRegistry>(sp =>
+        {
+            var registry = new ModuleRegistry();
+            var types = assemblies.SelectMany(x => x.GetTypes())
+                .Where(x => x.IsAssignableTo(typeof(IEvent)) && x.IsClass)
+                .ToArray();
+
+            var eventDispatcher = sp.GetRequiredService<IEventDispatcher>();
+            var eventDispatcherType = eventDispatcher.GetType();
+
+            foreach (var type in types)
+            {
+                registry.AddBroadcastingRegistration(type, @event => 
+                    (Task)eventDispatcherType.GetMethod(nameof(eventDispatcher.PublishAsync))!
+                        .Invoke(eventDispatcher, new []{ @event }));
+            }
+
+            return registry;
+        });
+    
     public static IHostBuilder ConfigureModules(this IHostBuilder builder)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
         {
