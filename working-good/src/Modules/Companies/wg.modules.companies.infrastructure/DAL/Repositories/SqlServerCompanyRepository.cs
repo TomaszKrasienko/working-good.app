@@ -22,7 +22,7 @@ internal sealed class SqlServerCompanyRepository(
     }
 
     public Task<bool> ExistsAsync(string name)
-        => _companies.AnyAsync(x => x.Name == name);
+        => _companies.AnyAsync(x => !string.IsNullOrWhiteSpace(name) && x.Name == name);
 
     public Task<bool> ExistsDomainAsync(string emailDomain)
         => _companies.AnyAsync(x => x.EmailDomain == emailDomain);
