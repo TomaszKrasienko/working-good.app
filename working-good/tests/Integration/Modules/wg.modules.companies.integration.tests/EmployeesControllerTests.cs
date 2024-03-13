@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Employees.AddEmployee;
-using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.companies.integration.tests._Helpers;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -13,6 +12,7 @@ using Xunit;
 
 namespace wg.modules.companies.integration.tests;
 
+[Collection("#1")]
 public sealed class EmployeesControllerTests : BaseTestsController
 {
     [Fact]
@@ -37,6 +37,53 @@ public sealed class EmployeesControllerTests : BaseTestsController
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Email == command.Email);
         employee.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task AddEmployee_NotGivenAuthorizeHeader_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        await _companiesDbContext.Companies.AddAsync(company);
+        await _companiesDbContext.SaveChangesAsync();
+        var command = new AddEmployeeCommand(Guid.Empty, Guid.Empty, $"joe.doe@{company.EmailDomain.Value}", "555-555-555");
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync($"companies-module/employees/companies/{company.Id.Value}/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task AddEmployee_GivenAuthorizeHeaderAsUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        await _companiesDbContext.Companies.AddAsync(company);
+        await _companiesDbContext.SaveChangesAsync();
+        var command = new AddEmployeeCommand(Guid.Empty, Guid.Empty, $"joe.doe@{company.EmailDomain.Value}", "555-555-555");
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync($"companies-module/employees/companies/{company.Id.Value}/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+    
+    [Fact]
+    public async Task AddEmployee_GivenNotExistingCompanyId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var command = new AddEmployeeCommand(Guid.Empty, Guid.Empty, $"joe.doe@test.pl", "555-555-555");
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync($"companies-module/employees/companies/{Guid.NewGuid()}/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
     
     #region arrange
