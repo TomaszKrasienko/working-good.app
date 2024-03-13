@@ -10,4 +10,7 @@
       <ProjectReference Include="..\wg.modules.companies.application\wg.modules.companies.application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.companies.integration.tests"/>
+    </ItemGroup>
 </Project>

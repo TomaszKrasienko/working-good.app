@@ -10,5 +10,5 @@ internal static class Extensions
     internal static IServiceCollection AddDal(this IServiceCollection services)
         => services
             .AddContext<CompaniesDbContext>()
-            .AddSingleton<ICompanyRepository, InMemoryCompanyRepository>();
+            .AddScoped<ICompanyRepository, SqlServerCompanyRepository>();
 }
