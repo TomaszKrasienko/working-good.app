@@ -16,18 +16,29 @@ internal sealed class CompanyTypeConfiguration : IEntityTypeConfiguration<Compan
             .Property(x => x.Id)
             .HasConversion(x => x.Value, y => new AggregateId(y))
             .IsRequired();
+        
         builder
             .Property(x => x.Name)
             .HasConversion(x => x.Value, y => new Name(y))
             .IsRequired();
+        
         builder
             .Property(x => x.SlaTime)
             .HasConversion(x => x.Value, y => new SlaTime(y))
             .IsRequired();
+        
+        builder
+            .Property(x => x.EmailDomain)
+            .HasConversion(x => x.Value, y => new EmailDomain(y))
+            .IsRequired()
+            .HasMaxLength(20);
+        
         builder
             .HasMany<Employee>()
             .WithOne();
+        
         builder
-            .HasMany<Project>();
+            .HasMany<Project>()
+            .WithOne();
     }
 }

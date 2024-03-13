@@ -6,7 +6,11 @@ public sealed record EmailDomain
 {
     public string Value { get; }
 
-    internal EmailDomain(string value)
+    private EmailDomain()
+    {
+    }
+    
+    public EmailDomain(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
