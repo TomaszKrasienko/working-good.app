@@ -3,7 +3,7 @@ using wg.modules.companies.domain.Entities;
 
 namespace wg.modules.companies.infrastructure.DAL;
 
-public sealed class CompaniesDbContext : DbContext
+internal sealed class CompaniesDbContext : DbContext
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }
