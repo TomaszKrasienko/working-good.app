@@ -7,6 +7,7 @@ using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
 using wg.modules.companies.tests.shared.Factories;
 using wg.shared.abstractions.Messaging;
+using wg.sharedForTests.Factories.Companies;
 using Xunit;
 
 namespace wg.modules.companies.application.tests.CQRS.Projects.Commands;

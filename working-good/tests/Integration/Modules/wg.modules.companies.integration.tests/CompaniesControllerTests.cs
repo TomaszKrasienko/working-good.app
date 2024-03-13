@@ -30,6 +30,7 @@ public sealed class CompaniesControllerTests : BaseTestsController
         values!.Single().ShouldNotBe(Guid.Empty.ToString());
         var company = await _companiesDbContext
             .Companies
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Name == command.Name);
         company.ShouldNotBeNull();
     }
@@ -74,7 +75,6 @@ public sealed class CompaniesControllerTests : BaseTestsController
     }
 
     #region arrange
-
     private readonly TestDb _testDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
@@ -88,6 +88,5 @@ public sealed class CompaniesControllerTests : BaseTestsController
     {
         _testDb.Dispose();
     }
-
     #endregion
 }
