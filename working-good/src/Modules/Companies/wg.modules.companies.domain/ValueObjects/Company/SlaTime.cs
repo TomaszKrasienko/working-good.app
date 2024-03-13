@@ -4,7 +4,7 @@ public sealed record SlaTime
 {
     public TimeSpan Value { get; }
 
-    internal SlaTime(TimeSpan value)
+    public SlaTime(TimeSpan value)
     {
         if (value == TimeSpan.Zero)
         {
