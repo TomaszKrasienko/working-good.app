@@ -1,6 +1,6 @@
-using wg.modules.companies.domain.Exceptions;
+using wg.shared.abstractions.Kernel.Exceptions;
 
-namespace wg.modules.companies.domain.ValueObjects.Project;
+namespace wg.shared.abstractions.Kernel.ValueObjects;
 
 public sealed record Title
 {

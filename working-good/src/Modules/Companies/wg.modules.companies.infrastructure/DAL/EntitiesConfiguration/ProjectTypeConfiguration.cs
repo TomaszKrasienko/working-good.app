@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.ValueObjects.Project;
 using wg.shared.abstractions.Kernel.Types;
+using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.companies.infrastructure.DAL.EntitiesConfiguration;
 

@@ -1,6 +1,7 @@
 using Shouldly;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
+using wg.shared.abstractions.Kernel.Exceptions;
 using Xunit;
 
 namespace wg.modules.companies.domain.tests;

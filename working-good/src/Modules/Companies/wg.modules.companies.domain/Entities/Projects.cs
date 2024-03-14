@@ -1,6 +1,7 @@
 using wg.modules.companies.domain.Exceptions;
 using wg.modules.companies.domain.ValueObjects.Project;
 using wg.shared.abstractions.Kernel.Types;
+using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.companies.domain.Entities;
 
