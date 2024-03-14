@@ -6,25 +6,21 @@ using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.owner.infrastructure.DAL.EntitiesConfiguration;
 
-internal sealed class OwnerConfiguration : IEntityTypeConfiguration<Owner>
+public class GroupTypeConfiguration : IEntityTypeConfiguration<Group>
 {
-    public void Configure(EntityTypeBuilder<Owner> builder)
+    public void Configure(EntityTypeBuilder<Group> builder)
     {
         builder.HasKey(x => x.Id);
         builder
             .Property(x => x.Id)
-            .HasConversion(x => x.Value, y => new AggregateId(y))
+            .HasConversion(x => x.Value, y => new EntityId(y))
             .IsRequired();
         builder
-            .Property(x => x.Name)
-            .HasConversion(x => x.Value, y => new Name(y))
-            .IsRequired()
-            .HasMaxLength(40);
+            .Property(x => x.Title)
+            .HasConversion(x => x.Value, y => new Title(y))
+            .IsRequired();
         builder
             .HasMany<User>()
-            .WithOne();
-        builder
-            .HasMany<Group>()
             .WithOne();
     }
 }

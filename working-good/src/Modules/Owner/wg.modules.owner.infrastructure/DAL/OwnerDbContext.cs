@@ -7,6 +7,7 @@ internal sealed class OwnerDbContext : DbContext
 {
     public DbSet<Owner> Owner { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Group> Groups { get; set; }
 
     public OwnerDbContext(DbContextOptions<OwnerDbContext> dbContextOptions) : base(dbContextOptions)
     {
