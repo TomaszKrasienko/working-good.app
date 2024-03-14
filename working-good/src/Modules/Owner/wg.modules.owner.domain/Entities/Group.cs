@@ -20,7 +20,7 @@ public sealed class Group
     private Group(EntityId id)
         => Id = id;
 
-    public static Group Create(Guid id, string title)
+    internal static Group Create(Guid id, string title)
     {
         var group = new Group(id);
         group.ChangeTitle(title);

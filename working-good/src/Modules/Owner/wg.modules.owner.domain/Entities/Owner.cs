@@ -11,6 +11,9 @@ public sealed class Owner : AggregateRoot
     
     private readonly HashSet<User> _users = new HashSet<User>();
     public IEnumerable<User> Users => _users;
+
+    private readonly HashSet<Group> _groups = new HashSet<Group>();
+    public IEnumerable<Group> Groups => _groups;
     
     private Owner(AggregateId id)
     {
@@ -73,6 +76,16 @@ public sealed class Owner : AggregateRoot
         }
 
         return true;
+    }
+
+    public void AddGroup(Guid id, string title)
+    {
+        if (_groups.Any(x => x.Title == title))
+        {
+            throw new GroupAlreadyExistsException(title);
+        }
+
+        _groups.Add(Group.Create(id, title));
     }
 
 }
