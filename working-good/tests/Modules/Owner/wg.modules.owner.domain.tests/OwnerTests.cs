@@ -177,4 +177,34 @@ public sealed class OwnerTests
         //assert
         result.ShouldBeFalse();
     }
+
+    [Fact]
+    public void AddGroup_GivenNotExistingTitle_ShouldAddToGroup()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var id = Guid.NewGuid();
+        var title = "Group";
+        
+        //act
+        owner.AddGroup(id, title);
+        
+        //assert
+        owner.Groups.Any(x => x.Id.Equals(id)).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void AddGroup_GivenExistingTitle_ShouldThrowGroupAlreadyExistsException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var title = "Group";
+        owner.AddGroup(Guid.NewGuid(), title);
+        
+        //act
+        var exception = Record.Exception(() => owner.AddGroup(Guid.NewGuid(), title));
+        
+        //assert
+        exception.ShouldBeOfType<GroupAlreadyExistsException>();
+    }
 }
