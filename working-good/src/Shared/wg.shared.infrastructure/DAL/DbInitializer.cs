@@ -10,7 +10,7 @@ internal sealed class DbInitializer(
     IServiceProvider serviceProvider, 
     ILogger<DbInitializer> logger) : IHostedService
 {
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting initializing database");
 
@@ -23,10 +23,12 @@ internal sealed class DbInitializer(
         foreach (var dbContext in dbContexts)
         {
             var context = (DbContext)scope.ServiceProvider.GetService(dbContext);
-            context?.Database.EnsureCreated();
+            if (context is null)
+            {
+                continue;
+            }
+            await context?.Database.MigrateAsync(cancellationToken);
         }
-
-        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

@@ -1,7 +1,61 @@
-@url = https://localhost:7001
+@url = http://localhost:5001
+@email = joe.doe@test.pl
+@password = StrongPass123!
 
 ###
 GET {{url}}/wg
 
 ###
 GET {{url}}/owner
+
+### 
+POST {{url}}/owner-module/owner/add
+Content-Type: application/json
+
+{
+    "name":"MyCompany"
+}
+
+###
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "firstName":"Joe",
+    "lastName":"Doe",
+    "password":"{{password}}",
+    "role":"Manager"
+}
+
+###
+POST {{url}}/owner-module/users/verify
+Content-Type: application/json
+
+{
+    "token":"V3ExFoVdeEDcT20xwRgoC8tkq3s+qL0e+QrnsoLEiruHldNbuWN2vYAQRC47zR7cDoC8hZ3a0h8tRi4OC5Rg"
+}
+
+###
+# @name sign_in
+POST {{url}}/owner-module/users/sign-in
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "password":"{{password}}"
+}
+
+###
+@token = {{sign_in.response.body.$.token}}
+
+###
+POST {{url}}/companies-module/companies/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "name":"FirstClient",
+    "slaTime":"00:08:00",
+    "emailDomain":"test.pl"
+}
