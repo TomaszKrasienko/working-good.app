@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Modules;
 using wg.shared.infrastructure.Modules.Abstractions;
+using wg.shared.infrastructure.Modules.Models;
 using wg.shared.infrastructure.Providers;
 
 namespace wg.shared.infrastructure.Modules.Configuration;
@@ -19,7 +20,9 @@ public static class Extensions
             .AddModuleRegistry(assemblies);
 
     private static IServiceCollection AddServices(this IServiceCollection services)
-        => services.AddSingleton<IModuleClient, ModuleClient>();
+        => services
+            .AddSingleton<IModuleClient, ModuleClient>()
+            .AddSingleton<IModuleTypesTranslator, ModuleTypesTranslator>();
     
     private static IServiceCollection AddModuleLoad(this IServiceCollection services)
     {
