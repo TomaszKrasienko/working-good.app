@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using wg.shared.abstractions.Events;
+using wg.shared.abstractions.Modules;
 using wg.shared.infrastructure.Modules.Abstractions;
 using wg.shared.infrastructure.Providers;
 
@@ -13,9 +14,13 @@ public static class Extensions
 {
     internal static IServiceCollection AddModules(this IServiceCollection services, IEnumerable<Assembly> assemblies)
         => services
+            .AddServices()
             .AddModuleLoad()
             .AddModuleRegistry(assemblies);
 
+    private static IServiceCollection AddServices(this IServiceCollection services)
+        => services.AddSingleton<IModuleClient, ModuleClient>();
+    
     private static IServiceCollection AddModuleLoad(this IServiceCollection services)
     {
         var disabledModules = new List<string>();

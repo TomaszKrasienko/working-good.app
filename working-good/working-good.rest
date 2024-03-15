@@ -33,7 +33,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"V3ExFoVdeEDcT20xwRgoC8tkq3s+qL0e+QrnsoLEiruHldNbuWN2vYAQRC47zR7cDoC8hZ3a0h8tRi4OC5Rg"
+    "token":"qtFZEPspq3Dww9C1GGXy12uJ0Ad17BtTB7a2Xrm3NsW4B6XrayBctxRQSaU8IapqpB4DTon0GWYCjGwAbdAnpg"
 }
 
 ###
@@ -50,12 +50,26 @@ Content-Type: application/json
 @token = {{sign_in.response.body.$.token}}
 
 ###
+# @name add_company
 POST {{url}}/companies-module/companies/add
 Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "name":"FirstClient",
+    "name":"SecondClient",
     "slaTime":"00:08:00",
-    "emailDomain":"test.pl"
+    "emailDomain":"test2.pl"
+}
+
+###
+@companyId = {{add_company.response.headers.resource-id}}
+
+###
+POST {{url}}/companies-module/projects/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "title":"First Project4",
+    "description":"Description"
 }

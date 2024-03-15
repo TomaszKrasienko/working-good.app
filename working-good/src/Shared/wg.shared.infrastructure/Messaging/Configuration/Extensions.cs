@@ -10,5 +10,6 @@ internal static class Extensions
         => services.
              AddSingleton<IMessageChannel, MessageChannel>()
             .AddSingleton<IMessageBroker, MessageBroker>()
-            .AddSingleton<IAsyncMessageDispatcher, AsyncMessageDispatcher>();
+            .AddSingleton<IAsyncMessageDispatcher, AsyncMessageDispatcher>()
+            .AddHostedService<BackgroundMessageDispatcher>();
 }
