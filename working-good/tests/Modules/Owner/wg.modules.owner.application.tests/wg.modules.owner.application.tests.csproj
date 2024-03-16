@@ -31,4 +31,8 @@
       <ProjectReference Include="..\wg.modules.owner.tests.shared\wg.modules.owner.tests.shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="CQRS\Groups\Commands\" />
+    </ItemGroup>
+
 </Project>
