@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace wg.modules.owner.infrastructure.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initial_owner : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,26 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Groups",
+                schema: "owner",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Groups_Owner_OwnerId",
+                        column: x => x.OwnerId,
+                        principalSchema: "owner",
+                        principalTable: "Owner",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "owner",
                 columns: table => new
@@ -43,8 +63,7 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                     ResetPasswordToken_Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ResetPasswordToken_Expiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    OwnerId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,13 +74,46 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                         principalSchema: "owner",
                         principalTable: "Owner",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Users_Owner_OwnerId1",
-                        column: x => x.OwnerId1,
-                        principalSchema: "owner",
-                        principalTable: "Owner",
-                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateTable(
+                name: "GroupMembership",
+                schema: "owner",
+                columns: table => new
+                {
+                    GroupsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupMembership", x => new { x.GroupsId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_GroupMembership_Groups_GroupsId",
+                        column: x => x.GroupsId,
+                        principalSchema: "owner",
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupMembership_Users_UsersId",
+                        column: x => x.UsersId,
+                        principalSchema: "owner",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupMembership_UsersId",
+                schema: "owner",
+                table: "GroupMembership",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_OwnerId",
+                schema: "owner",
+                table: "Groups",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -75,17 +127,19 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                 schema: "owner",
                 table: "Users",
                 column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_OwnerId1",
-                schema: "owner",
-                table: "Users",
-                column: "OwnerId1");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "GroupMembership",
+                schema: "owner");
+
+            migrationBuilder.DropTable(
+                name: "Groups",
+                schema: "owner");
+
             migrationBuilder.DropTable(
                 name: "Users",
                 schema: "owner");

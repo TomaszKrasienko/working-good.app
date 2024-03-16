@@ -23,6 +23,21 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GroupMembership", b =>
+                {
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("GroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("GroupMembership", "owner");
+                });
+
             modelBuilder.Entity("wg.modules.owner.domain.Entities.Group", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,13 +82,7 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<Guid?>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("OwnerId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Password")
@@ -93,35 +102,38 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("GroupId");
-
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("OwnerId1");
-
                     b.ToTable("Users", "owner");
+                });
+
+            modelBuilder.Entity("GroupMembership", b =>
+                {
+                    b.HasOne("wg.modules.owner.domain.Entities.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("wg.modules.owner.domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.Group", b =>
                 {
                     b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
-                        .WithMany()
+                        .WithMany("Groups")
                         .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.User", b =>
                 {
-                    b.HasOne("wg.modules.owner.domain.Entities.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupId");
-
                     b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
                         .WithMany("Users")
                         .HasForeignKey("OwnerId");
-
-                    b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
-                        .WithMany()
-                        .HasForeignKey("OwnerId1");
 
                     b.OwnsOne("wg.modules.owner.domain.ValueObjects.User.FullName", "FullName", b1 =>
                         {
@@ -196,6 +208,8 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.Owner", b =>
                 {
+                    b.Navigation("Groups");
+
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618

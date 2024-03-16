@@ -6,7 +6,7 @@ using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.owner.infrastructure.DAL.EntitiesConfiguration;
 
-internal sealed class OwnerConfiguration : IEntityTypeConfiguration<Owner>
+internal sealed class OwnerTypeConfiguration : IEntityTypeConfiguration<Owner>
 {
     public void Configure(EntityTypeBuilder<Owner> builder)
     {
@@ -21,10 +21,10 @@ internal sealed class OwnerConfiguration : IEntityTypeConfiguration<Owner>
             .IsRequired()
             .HasMaxLength(40);
         builder
-            .HasMany<User>()
+            .HasMany<User>(x => x.Users)
             .WithOne();
         builder
-            .HasMany<Group>()
+            .HasMany<Group>(x => x.Groups)
             .WithOne();
     }
 }

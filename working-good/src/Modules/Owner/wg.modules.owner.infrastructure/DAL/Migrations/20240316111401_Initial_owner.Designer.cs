@@ -12,8 +12,8 @@ using wg.modules.owner.infrastructure.DAL;
 namespace wg.modules.owner.infrastructure.DAL.Migrations
 {
     [DbContext(typeof(OwnerDbContext))]
-    [Migration("20240314192649_group_14_03")]
-    partial class group_14_03
+    [Migration("20240316111401_Initial_owner")]
+    partial class Initial_owner
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,40 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("GroupMembership", b =>
+                {
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("GroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("GroupMembership", "owner");
+                });
+
+            modelBuilder.Entity("wg.modules.owner.domain.Entities.Group", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Groups", "owner");
+                });
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.Owner", b =>
                 {
@@ -54,9 +88,6 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OwnerId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -76,9 +107,29 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("OwnerId1");
-
                     b.ToTable("Users", "owner");
+                });
+
+            modelBuilder.Entity("GroupMembership", b =>
+                {
+                    b.HasOne("wg.modules.owner.domain.Entities.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("wg.modules.owner.domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("wg.modules.owner.domain.Entities.Group", b =>
+                {
+                    b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
+                        .WithMany("Groups")
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.User", b =>
@@ -86,10 +137,6 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
                     b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
                         .WithMany("Users")
                         .HasForeignKey("OwnerId");
-
-                    b.HasOne("wg.modules.owner.domain.Entities.Owner", null)
-                        .WithMany()
-                        .HasForeignKey("OwnerId1");
 
                     b.OwnsOne("wg.modules.owner.domain.ValueObjects.User.FullName", "FullName", b1 =>
                         {
@@ -164,6 +211,8 @@ namespace wg.modules.owner.infrastructure.DAL.Migrations
 
             modelBuilder.Entity("wg.modules.owner.domain.Entities.Owner", b =>
                 {
+                    b.Navigation("Groups");
+
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618

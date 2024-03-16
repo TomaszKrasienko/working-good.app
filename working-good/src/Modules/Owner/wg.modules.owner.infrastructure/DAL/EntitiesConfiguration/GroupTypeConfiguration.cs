@@ -6,7 +6,7 @@ using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.owner.infrastructure.DAL.EntitiesConfiguration;
 
-public class GroupTypeConfiguration : IEntityTypeConfiguration<Group>
+internal sealed class GroupTypeConfiguration : IEntityTypeConfiguration<Group>
 {
     public void Configure(EntityTypeBuilder<Group> builder)
     {
@@ -20,7 +20,8 @@ public class GroupTypeConfiguration : IEntityTypeConfiguration<Group>
             .HasConversion(x => x.Value, y => new Title(y))
             .IsRequired();
         builder
-            .HasMany<User>()
-            .WithOne();
+            .HasMany<User>(x => x.Users)
+            .WithMany(x => x.Groups)
+            .UsingEntity("GroupMembership");
     }
 }
