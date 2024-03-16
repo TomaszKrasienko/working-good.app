@@ -265,6 +265,6 @@ public sealed class OwnerTests
         var exception = Record.Exception(() => owner.AddUserToGroup(group.Id, user.Id));
         
         //assert
-        exception.ShouldBeOfType<GroupNotFoundException>();
+        exception.ShouldBeOfType<UserAlreadyInGroupException>();
     }
 }
