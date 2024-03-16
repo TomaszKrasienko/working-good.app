@@ -72,6 +72,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.integr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.shared.infrastructure.shared.tests", "tests\Shared\wg.shared.infrastructure.shared.tests\wg.shared.infrastructure.shared.tests.csproj", "{D6741401-AFC0-4B90-8901-4D0A735CBD09}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tickets", "Tickets", "{984860AD-FF0F-4017-A6F4-3B11135ABC84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.tickets.domain", "src\Modules\Tickets\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj", "{2A797EC8-70AA-441E-BC9C-5789F8C9F84B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tickets", "Tickets", "{405C1CD7-E809-4BFD-A557-2FD5FDF38FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.tickets.domain.tests", "tests\Modules\Tickets\wg.modules.tickets.domain.tests\wg.modules.tickets.domain.tests.csproj", "{BE3AA499-3294-457D-921C-C3C1FD838D7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +120,10 @@ Global
 		{068F5FCB-23AB-4EFB-879D-5DA53E33975D} = {FD0CE981-8432-4B57-B654-A91D55B67903}
 		{1CD7FD30-CFE6-4ADB-8755-74398ACCDE0E} = {36BA58D3-544B-46E6-BCA2-BDC57EB0E62E}
 		{D6741401-AFC0-4B90-8901-4D0A735CBD09} = {EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D}
+		{984860AD-FF0F-4017-A6F4-3B11135ABC84} = {1E378BD4-FFA8-41D8-AF6E-CB82BAAB9FEF}
+		{2A797EC8-70AA-441E-BC9C-5789F8C9F84B} = {984860AD-FF0F-4017-A6F4-3B11135ABC84}
+		{405C1CD7-E809-4BFD-A557-2FD5FDF38FD1} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
+		{BE3AA499-3294-457D-921C-C3C1FD838D7B} = {405C1CD7-E809-4BFD-A557-2FD5FDF38FD1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -206,5 +218,13 @@ Global
 		{D6741401-AFC0-4B90-8901-4D0A735CBD09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6741401-AFC0-4B90-8901-4D0A735CBD09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6741401-AFC0-4B90-8901-4D0A735CBD09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A797EC8-70AA-441E-BC9C-5789F8C9F84B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A797EC8-70AA-441E-BC9C-5789F8C9F84B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A797EC8-70AA-441E-BC9C-5789F8C9F84B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A797EC8-70AA-441E-BC9C-5789F8C9F84B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE3AA499-3294-457D-921C-C3C1FD838D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE3AA499-3294-457D-921C-C3C1FD838D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE3AA499-3294-457D-921C-C3C1FD838D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE3AA499-3294-457D-921C-C3C1FD838D7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
