@@ -32,11 +32,11 @@ public sealed class ProjectsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response.Headers.TryGetValues("resource-id", out var values);
         values!.Single().ShouldNotBe(Guid.Empty.ToString());
-        var employee = await _companiesDbContext
+        var project = await _companiesDbContext
             .Projects
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Title == command.Title);
-        employee.ShouldNotBeNull();
+        project.ShouldNotBeNull();
     }
     
     [Fact]

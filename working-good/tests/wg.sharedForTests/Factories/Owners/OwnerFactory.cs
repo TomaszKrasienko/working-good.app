@@ -1,4 +1,4 @@
-namespace wg.sharedForTests.Factories.Owner;
+namespace wg.sharedForTests.Factories.Owners;
 
 public static class OwnerFactory
 {

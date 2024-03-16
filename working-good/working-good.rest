@@ -33,7 +33,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"qtFZEPspq3Dww9C1GGXy12uJ0Ad17BtTB7a2Xrm3NsW4B6XrayBctxRQSaU8IapqpB4DTon0GWYCjGwAbdAnpg"
+    "token":"566eM29C4VEhYUzwddBbl4R0cRfmvIWU+867gtCYww3GGqfsgpR5+MuPlvT1mPJgsZ5skbCOK495RRS8wvwTkg"
 }
 
 ###

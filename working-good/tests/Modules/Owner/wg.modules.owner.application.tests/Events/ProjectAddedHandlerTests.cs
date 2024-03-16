@@ -4,7 +4,7 @@ using wg.modules.owner.application.Events.External;
 using wg.modules.owner.application.Events.External.Handlers;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
-using wg.sharedForTests.Factories.Owner;
+using wg.sharedForTests.Factories.Owners;
 using Xunit;
 
 namespace wg.modules.owner.application.tests.Events;

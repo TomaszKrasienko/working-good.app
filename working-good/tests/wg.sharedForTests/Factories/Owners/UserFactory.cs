@@ -1,11 +1,11 @@
 using Bogus;
 using wg.modules.owner.domain.Entities;
 
-namespace wg.sharedForTests.Factories.Owner;
+namespace wg.sharedForTests.Factories.Owners;
 
 public static class UserFactory
 {
-    public static User GetUserInOwner(modules.owner.domain.Entities.Owner owner, string role)
+    public static User GetUserInOwner(Owner owner, string role)
     {
         var userFaker = new Faker<User>()
             .CustomInstantiator(f => User.Create(

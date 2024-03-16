@@ -3,7 +3,7 @@ using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Exceptions;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
-using wg.sharedForTests.Factories.Owner;
+using wg.sharedForTests.Factories.Owners;
 using Xunit;
 
 namespace wg.modules.owner.domain.tests;
@@ -206,5 +206,65 @@ public sealed class OwnerTests
         
         //assert
         exception.ShouldBeOfType<GroupAlreadyExistsException>();
+    }
+
+    [Fact]
+    public void AddUserToGroup_ForExistingUserAndExistingGroup_ShouldAddUserToGroup()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var group = GroupFactory.GetGroupInOwner(owner);
+        
+        //act
+        owner.AddUserToGroup( group.Id, user.Id);
+        
+        //assert
+        group.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeTrue();
+    }
+    
+    
+    [Fact]
+    public void AddUserToGroup_ForNotExistingUserAndExistingGroup_ShouldUserNotFoundException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        
+        //act
+        var exception = Record.Exception(() => owner.AddUserToGroup(group.Id, Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<UserNotFoundException>();
+    }
+    
+    [Fact]
+    public void AddUserToGroup_ForExistingUserAndNotExistingGroup_ShouldThrowGroupNotFoundException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        
+        //act
+        var exception = Record.Exception(() => owner.AddUserToGroup( Guid.NewGuid(), user.Id));
+        
+        //assert
+        exception.ShouldBeOfType<GroupNotFoundException>();
+    }
+
+    [Fact]
+    public void AddUserToGroup_ForAlreadyRegisteredInGroupUser_ShouldThrowUserAlreadyInGroupException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var group = GroupFactory.GetGroupInOwner(owner);
+        owner.AddUserToGroup( group.Id, user.Id);
+        
+        //act
+        var exception = Record.Exception(() => owner.AddUserToGroup(group.Id, user.Id));
+        
+        //assert
+        exception.ShouldBeOfType<GroupNotFoundException>();
     }
 }

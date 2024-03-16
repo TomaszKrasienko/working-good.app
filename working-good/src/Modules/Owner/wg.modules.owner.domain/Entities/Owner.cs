@@ -84,8 +84,23 @@ public sealed class Owner : AggregateRoot
         {
             throw new GroupAlreadyExistsException(title);
         }
-
         _groups.Add(Group.Create(id, title));
     }
 
+    public void AddUserToGroup(Guid groupId, Guid userId)
+    {
+        var user = _users.FirstOrDefault(x => x.Id.Equals(userId));
+        if (user is null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+
+        var group = _groups.FirstOrDefault(x => x.Id.Equals(groupId));
+        if (group is null)
+        {
+            throw new GroupNotFoundException(groupId);
+        }
+
+        group.AddUser(user);
+    }
 }

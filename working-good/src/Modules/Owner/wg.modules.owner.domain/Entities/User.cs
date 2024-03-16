@@ -14,6 +14,8 @@ public sealed class User
     public VerificationToken VerificationToken { get; }
     public ResetPasswordToken ResetPasswordToken { get; }
     public State State { get; private set; }
+    private HashSet<Group> _groups = new HashSet<Group>();
+    public IEnumerable<Group> Groups => _groups;
 
     private User(EntityId id, Email email, FullName fullName, Password password, Role role, 
         VerificationToken verificationToken, ResetPasswordToken resetPasswordToken, State state)

@@ -7,7 +7,7 @@ using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
-using wg.sharedForTests.Factories.Owner;
+using wg.sharedForTests.Factories.Owners;
 using wg.sharedForTests.Integration;
 using Xunit;
 

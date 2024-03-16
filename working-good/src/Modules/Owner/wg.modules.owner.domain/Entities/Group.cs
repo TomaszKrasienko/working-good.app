@@ -1,4 +1,5 @@
 using System.Net;
+using wg.modules.owner.domain.Exceptions;
 using wg.shared.abstractions.Kernel.Types;
 using wg.shared.abstractions.Kernel.ValueObjects;
 
@@ -8,8 +9,8 @@ public sealed class Group
 {
     public EntityId Id { get; }
     public Title Title { get; private set; }
-    public HashSet<User> _users = new HashSet<User>();
-    public IEnumerable<User> Users;
+    private HashSet<User> _users = new HashSet<User>();
+    public IEnumerable<User> Users => _users;
 
     private Group(EntityId id, Title title)
     {
@@ -29,5 +30,15 @@ public sealed class Group
 
     private void ChangeTitle(string title)
         => Title = title;
+
+    internal void AddUser(User user)
+    {
+        if (_users.Any(x => x.Id.Equals(user.Id)))
+        {
+            throw new UserAlreadyInGroupException(user.Id, Id);
+        }
+
+        _users.Add(user);
+    }
 
 }
