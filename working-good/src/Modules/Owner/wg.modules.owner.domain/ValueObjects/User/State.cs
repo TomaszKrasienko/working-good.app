@@ -2,7 +2,7 @@ namespace wg.modules.owner.domain.ValueObjects.User;
 
 public sealed record State
 {
-    private static IEnumerable<string> AvailableStates = new[]
+    private static IEnumerable<string> _availableStates = new[]
     {
         "Registered", "Active", "Deactivated"
     };
