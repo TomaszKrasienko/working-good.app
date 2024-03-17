@@ -1,5 +1,4 @@
 using wg.modules.tickets.domain.Exceptions;
-using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Kernel.Types;
 

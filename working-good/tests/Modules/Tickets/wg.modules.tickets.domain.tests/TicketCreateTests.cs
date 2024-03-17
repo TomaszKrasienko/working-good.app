@@ -18,15 +18,16 @@ public sealed class TicketCreateTests
         var content = "Test content";
         var createdAt = DateTime.Now;
         var createdBy = Guid.NewGuid();
-        var state = State.New(DateTime.Now);
+        var state = State.New();
+        var stateDate = DateTime.Now;
         var isPriority = true;
         var expirationDate = DateTime.Now.AddDays(1);
         var assignedEmployee = Guid.NewGuid();
         var assignedUser = Guid.NewGuid();
         
         //act
-        var result = Ticket.Create(id, number, subject, content, createdAt, createdBy, state.Value,
-            state.ChangeDate, isPriority, expirationDate, assignedEmployee, assignedUser);
+        var result = Ticket.Create(id, number, subject, content, createdAt, createdBy, state,
+            stateDate, isPriority, expirationDate, assignedEmployee, assignedUser);
         
         //assert
         result.ShouldNotBeNull();
@@ -36,7 +37,8 @@ public sealed class TicketCreateTests
         result.Content.Value.ShouldBe(content);
         result.CreatedAt.Value.ShouldBe(createdAt);
         result.CreatedBy.Value.ShouldBe(createdBy);
-        result.State.ShouldBe(state);
+        result.State.Value.ShouldBe(state);
+        result.State.ChangeDate.ShouldBe(stateDate);
         result.IsPriority.Value.ShouldBe(isPriority);
         result.ExpirationDate.Value.ShouldBe(expirationDate);
         result.AssignedEmployee.Value.ShouldBe(assignedEmployee);
@@ -53,12 +55,13 @@ public sealed class TicketCreateTests
         var content = "Test content";
         var createdAt = DateTime.Now;
         var createdBy = Guid.NewGuid();
-        var state = State.New(DateTime.Now);
+        var state = State.New();
+        var stateDate = DateTime.Now;
         var isPriority = false;
         
         //act
-        var result = Ticket.Create(id, number, subject, content, createdAt, createdBy, state.Value,
-            state.ChangeDate, isPriority);
+        var result = Ticket.Create(id, number, subject, content, createdAt, createdBy, state,
+            stateDate, isPriority);
         
         //assert
         result.ShouldNotBeNull();
@@ -68,7 +71,8 @@ public sealed class TicketCreateTests
         result.Content.Value.ShouldBe(content);
         result.CreatedAt.Value.ShouldBe(createdAt);
         result.CreatedBy.Value.ShouldBe(createdBy);
-        result.State.ShouldBe(state);
+        result.State.Value.ShouldBe(state);
+        result.State.ChangeDate.ShouldBe(stateDate);
         result.IsPriority.Value.ShouldBe(isPriority);
         result.ExpirationDate.ShouldBeNull();
         result.AssignedEmployee.ShouldBeNull();
@@ -85,14 +89,74 @@ public sealed class TicketCreateTests
         var content = "Test content";
         var createdAt = DateTime.Now;
         var createdBy = Guid.NewGuid();
-        var state = State.New(DateTime.Now);
+        var state = State.New();
         var isPriority = true;
         
         //act
-        var exception = Record.Exception(() => Ticket.Create(id, number, subject, content, createdAt, createdBy, state.Value,
-            state.ChangeDate, isPriority));
+        var exception = Record.Exception(() => Ticket.Create(id, number, subject, content, createdAt, createdBy, state,
+            DateTime.Now, isPriority));
         
         //assert
         exception.ShouldBeOfType<MissingExpirationDateException>();
+    }
+
+    [Fact]
+    public void Create_GivenZeroNumber_ShouldThrowInvalidNumberException()
+    {
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 0, "My subject", 
+            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<InvalidNumberException>();
+    }
+
+    [Fact]
+    public void Create_GivenEmptySubject_ShouldThrowEmptySubjectException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, string.Empty, 
+            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<EmptySubjectException>();
+    }
+    
+    [Fact]
+    public void Create_GivenEmptyContent_ShouldThrowEmptyContentException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            string.Empty, DateTime.Now, Guid.NewGuid(), State.New(),
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyContentException>();
+    }
+    
+    [Fact]
+    public void Create_GivenEmptyState_ShouldThrowEmptyStateException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            "Test content", DateTime.Now, Guid.NewGuid(), string.Empty,
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyStateException>();
+    }
+    
+    [Fact]
+    public void Create_GivenInvalidState_ShouldThrowUnavailableStateException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            "Test content", DateTime.Now, Guid.NewGuid(), "Invalid state",
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<UnavailableStateException>();
     }
 }

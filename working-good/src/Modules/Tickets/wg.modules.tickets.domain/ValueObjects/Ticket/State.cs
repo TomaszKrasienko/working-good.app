@@ -28,21 +28,21 @@ public record State
         ChangeDate = changeDate;
     }
 
-    internal static State New(DateTime time)
-        => new State("New", time);
+    internal static string New()
+        => "New";
+
+    internal static string Open()
+        => "Open";
+
+    internal static string InProgress()
+        => "InProgress";
+
+    internal static string WaitingForResponse()
+        => "WaitingForResponse";
     
-    internal static State Open(DateTime time)
-        => new State("Open", time);
-    
-    internal static State InProgress(DateTime time)
-        => new State("InProgress", time);
-    
-    internal static State WaitingForResponse(DateTime time)
-        => new State("WaitingForResponse", time);
-    
-    internal static State Cancelled(DateTime time)
-        => new State("Cancelled", time);
-    
-    internal static State Done(DateTime time)
-        => new State("Done", time);
+    internal static string Cancelled()
+        => "Cancelled";
+
+    internal static string Done()
+        => "Done";
 }
