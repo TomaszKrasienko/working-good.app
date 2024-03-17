@@ -4,7 +4,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using Xunit;
 
-namespace wg.modules.tickets.domain.tests;
+namespace wg.modules.tickets.domain.tests.Entities;
 
 public sealed class TicketCreateTests
 {

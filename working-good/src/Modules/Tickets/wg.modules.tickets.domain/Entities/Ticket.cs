@@ -1,4 +1,5 @@
 using wg.modules.tickets.domain.Exceptions;
+using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Kernel.Types;
 
@@ -16,6 +17,9 @@ public sealed class Ticket : AggregateRoot
     public ExpirationDate ExpirationDate { get; private set; }
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
+
+    private List<Message> _messages = new List<Message>();
+    public IReadOnlyList<Message> Messages => _messages;
 
     private Ticket(AggregateId id, Number number, CreatedAt createdAt, EntityId createdBy)
     {
@@ -85,4 +89,8 @@ public sealed class Ticket : AggregateRoot
 
     private void ChangeAssignedUser(Guid assignedUser)
         => AssignedUser = assignedUser;
+
+    internal void AddMessage(Guid id, string sender, string subject, string content,
+        DateTime createdAt)
+        => _messages.Add(Message.Create(id, sender, subject, content, createdAt));
 }

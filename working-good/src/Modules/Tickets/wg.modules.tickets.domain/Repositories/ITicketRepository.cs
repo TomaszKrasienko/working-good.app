@@ -6,4 +6,5 @@ public interface ITicketRepository
 {
     Task<Ticket> GetByNumberAsync(int number);
     Task<int> GetMaxNumberAsync();
+    Task AddAsync(Ticket ticket);
 }

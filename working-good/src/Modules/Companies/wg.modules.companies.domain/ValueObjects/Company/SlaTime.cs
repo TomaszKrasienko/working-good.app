@@ -1,3 +1,5 @@
+using wg.modules.companies.domain.Exceptions;
+
 namespace wg.modules.companies.domain.ValueObjects.Company;
 
 public sealed record SlaTime

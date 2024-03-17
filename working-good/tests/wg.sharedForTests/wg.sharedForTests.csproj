@@ -16,6 +16,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>

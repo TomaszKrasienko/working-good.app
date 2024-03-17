@@ -1,6 +1,6 @@
 using wg.modules.tickets.domain.Exceptions;
 
-namespace wg.modules.tickets.domain.ValueObjects.Ticket;
+namespace wg.modules.tickets.domain.ValueObjects;
 
 public sealed record Content
 {
