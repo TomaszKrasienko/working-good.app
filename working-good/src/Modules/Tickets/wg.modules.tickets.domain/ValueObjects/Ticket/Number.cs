@@ -4,20 +4,20 @@ namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public sealed record Number
 {
-    public string Value { get; private set; }
+    public int Value { get; private set; }
 
-    public Number(string value)
+    public Number(int value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (value < 1)
         {
-            throw new EmptyNumberException();
+            throw new InvalidNumberException(value);
         }
         Value = value;
     }
 
-    public static implicit operator Number(string value)
+    public static implicit operator Number(int value)
         => new Number(value);
 
-    public static implicit operator string(Number number)
+    public static implicit operator int(Number number)
         => number.Value;
 }

@@ -8,7 +8,7 @@ public sealed record Content
 
     public Content(string value)
     {
-        if (!string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new EmptyContentException();
         }

@@ -8,5 +8,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
     </ItemGroup>
-
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.tickets.domain.tests"/>
+    </ItemGroup>
 </Project>
