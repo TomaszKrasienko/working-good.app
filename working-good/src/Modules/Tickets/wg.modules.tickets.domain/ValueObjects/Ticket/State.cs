@@ -1,6 +1,6 @@
 using wg.modules.tickets.domain.Exceptions;
 
-namespace wg.modules.tickets.domain.ValueObjects;
+namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public record State
 {

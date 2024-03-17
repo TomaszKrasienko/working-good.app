@@ -1,4 +1,4 @@
-namespace wg.modules.tickets.domain.ValueObjects;
+namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public record IsPriority(bool Value)
 {
