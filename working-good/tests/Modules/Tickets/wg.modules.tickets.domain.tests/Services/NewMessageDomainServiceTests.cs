@@ -1,7 +1,7 @@
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Shouldly;
 using wg.modules.tickets.domain.Entities;
+using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.Services;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -98,6 +98,28 @@ public sealed class NewMessageDomainServiceTests
         await _ticketRepository
             .Received(1)
             .UpdateAsync(ticket);
+    }
+    
+    [Fact]
+    public async Task AddNewMessage_GivenNotExistingNumber_ShouldThrowTicketNotFound()
+    {
+        //act
+        var exception = await Record.ExceptionAsync(async () => await _service.AddNewMessage(Guid.NewGuid(), "joe@doe.pl",
+            "Test subject", "Test content", DateTime.Now, 1, null, null));
+        
+        //assert
+        exception.ShouldBeOfType<TicketNotFoundException>();
+    }
+    
+    [Fact]
+    public async Task AddNewMessage_GivenNotExistingTicketId_ShouldThrowTicketNotFound()
+    {
+        //act
+        var exception = await Record.ExceptionAsync(async () => await _service.AddNewMessage(Guid.NewGuid(), "joe@doe.pl",
+            "Test subject", "Test content", DateTime.Now, null, Guid.NewGuid(), null));
+        
+        //assert
+        exception.ShouldBeOfType<TicketNotFoundException>();
     }
     
     #region arrange
