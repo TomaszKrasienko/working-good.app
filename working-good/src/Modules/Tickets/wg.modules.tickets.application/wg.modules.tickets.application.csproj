@@ -8,6 +8,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj" />
     </ItemGroup>
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.tickets.application.tests"/>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="NSubstitute" Version="5.1.0" />
+    </ItemGroup>
 </Project>

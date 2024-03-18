@@ -28,21 +28,21 @@ public record State
         ChangeDate = changeDate;
     }
 
-    internal static string New()
+    public static string New()
         => "New";
 
-    internal static string Open()
+    public static string Open()
         => "Open";
 
-    internal static string InProgress()
+    public static string InProgress()
         => "InProgress";
 
-    internal static string WaitingForResponse()
+    public static string WaitingForResponse()
         => "WaitingForResponse";
     
-    internal static string Cancelled()
+    public static string Cancelled()
         => "Cancelled";
 
-    internal static string Done()
+    public static string Done()
         => "Done";
 }

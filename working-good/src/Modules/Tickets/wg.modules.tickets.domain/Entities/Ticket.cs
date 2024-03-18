@@ -44,7 +44,7 @@ public sealed class Ticket : AggregateRoot
         ProjectId = projectId;
     }
 
-    internal static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
+    public static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
         Guid? createdBy, string state, DateTime stateChange, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
         Guid? assignedUser = null, Guid? projectId = null)
     {
