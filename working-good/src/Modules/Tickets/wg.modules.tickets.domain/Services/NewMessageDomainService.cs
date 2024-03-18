@@ -20,9 +20,10 @@ internal sealed class NewMessageDomainService(
 //         // var maxNumber = await ticketRepository.GetMaxNumberAsync(); 
 //         // Ticket.Create(Guid.NewGuid(), maxNumber + 1, subject, content, )
 //     }
-    public Task AddNewMessage(Guid messageId, string sender, string subject, string content, DateTime createdAt, int? ticketNumber,
-        Guid? ticketId)
-    {
-        throw new NotImplementedException();
-    }
+
+public Task AddNewMessage(Guid id, string sender, string subject, string content, DateTime createdAt, int? ticketNumber,
+    Guid? ticketId, Guid? employeeId)
+{
+    throw new NotImplementedException();
+}
 }

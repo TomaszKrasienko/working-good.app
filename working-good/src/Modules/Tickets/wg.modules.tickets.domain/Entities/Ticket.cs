@@ -17,6 +17,7 @@ public sealed class Ticket : AggregateRoot
     public ExpirationDate ExpirationDate { get; private set; }
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
+    public EntityId ProjectId  { get; private set; }
 
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
@@ -31,7 +32,7 @@ public sealed class Ticket : AggregateRoot
     
     private Ticket(AggregateId id, Number number, Subject subject, Content content, CreatedAt createdAt, 
         EntityId createdBy, IsPriority isPriority, State state, ExpirationDate expirationDate, 
-        EntityId assignedEmployee, EntityId assignedUser) : this(id, number, createdAt, createdBy)
+        EntityId assignedEmployee, EntityId assignedUser, EntityId projectId) : this(id, number, createdAt, createdBy)
     {
         Subject = subject;
         Content = content;
@@ -40,11 +41,12 @@ public sealed class Ticket : AggregateRoot
         AssignedEmployee = assignedEmployee;
         AssignedUser = assignedUser;
         State = state;
+        ProjectId = projectId;
     }
 
     internal static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
         Guid? createdBy, string state, DateTime stateChange, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
-        Guid? assignedUser = null)
+        Guid? assignedUser = null, Guid? projectId = null)
     {
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
@@ -59,6 +61,11 @@ public sealed class Ticket : AggregateRoot
         if (assignedUser is not null)
         {
             ticket.ChangeAssignedUser((Guid)assignedUser);
+        }
+
+        if (projectId is not null)
+        {
+            ticket.ChangeProject((Guid)projectId);
         }
 
         return ticket;
@@ -89,6 +96,9 @@ public sealed class Ticket : AggregateRoot
 
     private void ChangeAssignedUser(Guid assignedUser)
         => AssignedUser = assignedUser;
+
+    private void ChangeProject(Guid projectId)
+        => ProjectId = projectId;
 
     internal void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)

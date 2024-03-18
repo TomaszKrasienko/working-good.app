@@ -1,12 +1,16 @@
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
+using Shouldly;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.Services;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
+using wg.sharedForTests.Factories.Tickets;
 using Xunit;
 
 namespace wg.modules.tickets.domain.tests.Services;
 
-public class NewMessageDomainServiceTests
+public sealed class NewMessageDomainServiceTests
 {
     [Fact]
     public async Task AddNewMessage_GivenNullNumberAndId_ShouldAddNewTicketByRepository()
@@ -16,19 +20,84 @@ public class NewMessageDomainServiceTests
         var sender = "joe.doe@test.pl";
         var subject = "My Test Subject";
         var content = "My Test Content";
+        var employeeId = Guid.NewGuid();
         var createdAt = DateTime.Now;
+        var maxNumber = 1;
+        _ticketRepository
+            .GetMaxNumberAsync()
+            .Returns(1);
         
         //act
-        await _service.AddNewMessage(id, sender, subject, content, createdAt, null, null);
+        await _service.AddNewMessage(id, sender, subject, content, createdAt, null, null, employeeId);
         
         //assert
         await _ticketRepository
             .Received(1)
             .AddAsync(Arg.Is<Ticket>(x
                 => x.Id.Equals(id)
-                   && x.Subject == subject
-                   && x.Content == content
-                   && x.CreatedAt.Equals(createdAt)));
+                   && x.Subject.Value == subject
+                   && x.Content.Value == content
+                   && x.CreatedAt.Equals(createdAt)
+                   && x.AssignedEmployee.Equals(employeeId)
+                   && x.Number.Value == maxNumber + 1));
+    }
+
+    [Fact]
+    public async Task AddNewMessage_GivenTicketNumber_ShouldAddMessageToTicketAndUpdate()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(State.New());
+        var id = Guid.NewGuid();
+        var sender = "joe.doe@test.pl";
+        var subject = "My Test Subject";
+        var content = "My Test Content";
+        var createdAt = DateTime.Now;
+        _ticketRepository
+            .GetByNumberAsync(ticket.Number)
+            .Returns(ticket);
+        
+        //act
+        await _service.AddNewMessage(id, sender, subject, content, createdAt, ticket.Number.Value, null, null);
+        
+        //assert
+        var updatedTicket = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+        updatedTicket.ShouldNotBeNull();
+        updatedTicket.Sender.Value.ShouldBe(sender);
+        updatedTicket.Subject.Value.ShouldBe(subject);
+        updatedTicket.Content.Value.ShouldBe(content);
+        updatedTicket.CreatedAt.Value.ShouldBe(createdAt);
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
+    }
+    
+    [Fact]
+    public async Task AddNewMessage_GivenTicketId_ShouldAddMessageToTicketAndUpdate()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(State.New());
+        var id = Guid.NewGuid();
+        var sender = "joe.doe@test.pl";
+        var subject = "My Test Subject";
+        var content = "My Test Content";
+        var createdAt = DateTime.Now;
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+        
+        //act
+        await _service.AddNewMessage(id, sender, subject, content, createdAt, null, ticket.Id, null);
+        
+        //assert
+        var updatedTicket = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+        updatedTicket.ShouldNotBeNull();
+        updatedTicket.Sender.Value.ShouldBe(sender);
+        updatedTicket.Subject.Value.ShouldBe(subject);
+        updatedTicket.Content.Value.ShouldBe(content);
+        updatedTicket.CreatedAt.Value.ShouldBe(createdAt);
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
     }
     
     #region arrange
