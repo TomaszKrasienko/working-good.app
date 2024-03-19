@@ -3,6 +3,7 @@ using wg.modules.tickets.application.Clients.Companies.DTO;
 using wg.modules.tickets.application.Clients.Owner;
 using wg.modules.tickets.application.Clients.Owner.DTO;
 using wg.modules.tickets.application.Events;
+using wg.modules.tickets.application.Events.Mappers;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
@@ -73,8 +74,6 @@ internal sealed class AddTicketCommandHandler(
             expirationDate, command.AssignedEmployee, command.AssignedUser, command.ProjectId);
 
         await ticketRepository.AddAsync(ticket);
-        await eventDispatcher.PublishAsync(
-            new TicketCreated(ticket.Id, ticket.Number, ticket.Subject, ticket.Content,
-                ticket.AssignedUser ?? null, ticket.AssignedEmployee ?? null));
+        await eventDispatcher.PublishAsync(ticket.AsEvent());
     }
 }
