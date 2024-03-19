@@ -6,5 +6,5 @@ public interface ICompaniesApiClient
 {
     Task<CompanySlaTimeDto> GetSlaTimeByEmployee(Guid employeeId);
     Task<bool> IsEmployeeExists(Guid employeeId);
-    Task<bool> IsProjectExists(Guid projectId);
+    Task<bool> IsProjectExists(EmployeeWithProjectDto dto);
 }
