@@ -308,7 +308,7 @@ public sealed class AddTicketCommandHandlerTests
         exception.ShouldBeOfType<ProjectDoesNotExists>();
     }
     
-        [Fact]
+    [Fact]
     public async Task HandleAsync_GivenUserNotInGroup_ShouldThrowUserDoesNotBelongToGroupException()
     {
         //arrange
@@ -331,6 +331,40 @@ public sealed class AddTicketCommandHandlerTests
             .IsUserInGroup(Arg.Is<UserInGroupDto>(arg
                 => arg.UserId == assignedUser
                    && arg.GroupId == projectId))
+            .Returns(false);
+        
+        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+            Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
+            projectId);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
+    }
+    
+    [Fact]
+    public async Task HandleAsync_GivenNotExistingUser_ShouldThrowUserDoesNotExistException()
+    {
+        //arrange
+        var assignedEmployee = Guid.NewGuid();
+        var assignedUser = Guid.NewGuid();
+        var projectId = Guid.NewGuid();
+        var maxNumber = 1;
+
+        _ticketRepository
+            .GetMaxNumberAsync()
+            .Returns(maxNumber);
+        _companiesApiClient
+            .IsEmployeeExists(assignedEmployee)
+            .Returns(true);
+        _companiesApiClient
+            .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
+                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
+            .Returns(true);
+        _ownerApiClient
+            .IsUserExists(assignedUser)
             .Returns(false);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
