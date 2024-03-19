@@ -9,7 +9,7 @@ namespace wg.shared.infrastructure.tests.Modules;
 public sealed class ModuleTypeTranslatorTests
 {
     [Fact]
-    public void Tmp_GivenTypeAndObject_ShouldTranslateType()
+    public void TranslateType_GivenTypeAndObject_ShouldTranslateType()
     {
         //arrange
         TypeSource typeSource = new TypeSource()
@@ -23,6 +23,23 @@ public sealed class ModuleTypeTranslatorTests
         //assert
         result.ShouldBeOfType<TypeDestination>();
         (result as TypeDestination)!.Value.ShouldBe(typeSource.Value);
+    }
+    
+    [Fact]
+    public void TranslateType_GivenObjectAndGenericType_ShouldTranslateType()
+    {
+        //arrange
+        TypeSource typeSource = new TypeSource()
+        {
+            Value = "temporary_value"
+        };
+        
+        //act
+        var result = _moduleTypesTranslator.TranslateType<TypeDestination>(typeSource);
+        
+        //assert
+        result.ShouldBeOfType<TypeDestination>();
+        result.Value.ShouldBe(typeSource.Value);
     }
     
     #region arrange

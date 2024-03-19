@@ -22,4 +22,17 @@ internal sealed class ModuleClient(
         }
         await Task.WhenAll(tasks);
     }
+
+    public async Task<TResult> SendAsync<TResult>(string path, object request) where TResult : class
+    {
+        var registration = moduleRegistry.GetRequestRegistration(path);
+        if (registration is null)
+        {
+            throw new InvalidOperationException($"Not found action for path: {path}");
+        }
+
+        var receiverRequest = moduleTypesTranslator.TranslateType(request, registration.RequestType);
+        var result = await registration.Action(receiverRequest);
+        return result is null ? null : moduleTypesTranslator.TranslateType<TResult>(request);
+    }
 }

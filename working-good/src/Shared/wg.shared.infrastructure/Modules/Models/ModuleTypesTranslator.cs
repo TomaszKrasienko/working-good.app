@@ -12,6 +12,12 @@ internal sealed class ModuleTypesTranslator : IModuleTypesTranslator
         return ToObject(type, sourceJson);
     }
 
+    public TResult TranslateType<TResult>(object value) where TResult : class
+    {
+        var sourceJson = FromObject(value);
+        return JsonConvert.DeserializeObject(sourceJson, typeof(TResult));
+    }
+
     private string FromObject(object value)
         => JsonConvert.SerializeObject(value);
 
