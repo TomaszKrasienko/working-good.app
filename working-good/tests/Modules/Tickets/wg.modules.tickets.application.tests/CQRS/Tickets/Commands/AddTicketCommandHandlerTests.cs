@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Http.Features;
 using NSubstitute;
-using NSubstitute.Extensions;
 using Shouldly;
 using wg.modules.tickets.application.Clients.Companies;
 using wg.modules.tickets.application.Clients.Companies.DTO;
@@ -17,7 +15,7 @@ using wg.shared.abstractions.Time;
 using wg.sharedForTests.Mocks;
 using Xunit;
 
-namespace wg.modules.tickets.application.tests;
+namespace wg.modules.tickets.application.tests.CQRS.Tickets.Commands;
 
 public sealed class AddTicketCommandHandlerTests
 {
@@ -41,6 +39,9 @@ public sealed class AddTicketCommandHandlerTests
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
                 => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
+            .Returns(true);
+        _ownerApiClient
+            .IsUserExists(assignedUser)
             .Returns(true);
         _ownerApiClient
             .IsUserInGroup(Arg.Is<UserInGroupDto>(arg
@@ -84,7 +85,6 @@ public sealed class AddTicketCommandHandlerTests
         //arrange
         var assignedEmployee = Guid.NewGuid();
         var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
         var maxNumber = 1;
 
         _ticketRepository
@@ -93,17 +93,13 @@ public sealed class AddTicketCommandHandlerTests
         _companiesApiClient
             .IsEmployeeExists(assignedEmployee)
             .Returns(true);
-        _companiesApiClient
-            .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
-                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
-            .Returns(true);
         _ownerApiClient
             .IsUserExists(assignedUser)
             .Returns(true);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
             Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
-            projectId);
+            null);
         
         //act
         await Act(command);
@@ -156,6 +152,9 @@ public sealed class AddTicketCommandHandlerTests
         _companiesApiClient
             .GetSlaTimeByEmployee(assignedEmployee)
             .Returns(slaTimeDto);
+        _ownerApiClient
+            .IsUserExists(assignedUser)
+            .Returns(true);
         _ownerApiClient
             .IsUserInGroup(Arg.Is<UserInGroupDto>(arg
                 => arg.UserId == assignedUser
@@ -210,6 +209,9 @@ public sealed class AddTicketCommandHandlerTests
         await _companiesApiClient
             .Received(0)
             .GetSlaTimeByEmployee(Arg.Any<Guid>());
+        await _ownerApiClient
+            .Received(0)
+            .IsUserExists(Arg.Any<Guid>());
         await _ownerApiClient
             .Received(0)
             .IsUserInGroup(Arg.Any<UserInGroupDto>());
@@ -328,6 +330,9 @@ public sealed class AddTicketCommandHandlerTests
                 => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
             .Returns(true);
         _ownerApiClient
+            .IsUserExists(assignedUser)
+            .Returns(true);
+        _ownerApiClient
             .IsUserInGroup(Arg.Is<UserInGroupDto>(arg
                 => arg.UserId == assignedUser
                    && arg.GroupId == projectId))
@@ -375,7 +380,7 @@ public sealed class AddTicketCommandHandlerTests
         var exception = await Record.ExceptionAsync(async () => await Act(command));
         
         //assert
-        exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
+        exception.ShouldBeOfType<UserDoesNotExistException>();
     }
     
     #region arrange
