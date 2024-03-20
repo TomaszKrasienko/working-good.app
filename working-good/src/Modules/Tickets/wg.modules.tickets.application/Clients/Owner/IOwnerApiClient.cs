@@ -4,6 +4,6 @@ namespace wg.modules.tickets.application.Clients.Owner;
 
 public interface IOwnerApiClient
 {
-    Task<bool> IsUserInGroup(UserInGroupDto dto);
-    Task<bool> IsUserExists(Guid id);
+    Task<IsUserInGroupDto> IsUserInGroup(UserInGroupDto dto);
+    Task<IsUserExistsDto> IsUserExists(UserIdDto dto);
 }

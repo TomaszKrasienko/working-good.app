@@ -4,7 +4,7 @@ namespace wg.modules.tickets.application.Clients.Companies;
 
 public interface ICompaniesApiClient
 {
-    Task<CompanySlaTimeDto> GetSlaTimeByEmployee(Guid employeeId);
-    Task<bool> IsEmployeeExists(Guid employeeId);
-    Task<bool> IsProjectExists(EmployeeWithProjectDto dto);
+    Task<CompanySlaTimeDto> GetSlaTimeByEmployee(EmployeeIdDto dto);
+    Task<IsEmployeeExistsDto> IsEmployeeExists(EmployeeIdDto dto);
+    Task<IsProjectExistsDto> IsProjectExists(EmployeeWithProjectDto dto);
 }
