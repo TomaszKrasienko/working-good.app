@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using wg.modules.companies.application.CQRS.Companies.Queries;
+using wg.modules.companies.application.CQRS.Employees.Queries;
+using wg.modules.companies.application.CQRS.Projects.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.infrastructure.Configuration;
 using wg.shared.abstractions.CQRS.Queries;
@@ -23,6 +25,10 @@ internal sealed class CompaniesModule : IModule
         app
             .UseModuleRequest()
             .Subscribe<GetSlaTimeByEmployeeIdQuery, CompanySlaTimeDto>("companies/employee/sla-time/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<IsEmployeeExistsQuery, IsEmployeeExistsDto>("companies/employee/is-exists/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<IsProjectForEmployeeExistsQuery, IsProjectExistsDto>("companies/project/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }

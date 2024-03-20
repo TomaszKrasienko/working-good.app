@@ -14,4 +14,8 @@
         <InternalsVisibleTo Include="wg.modules.companies.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.companies.infrastructure.tests"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Queries\Handlers\" />
+    </ItemGroup>
 </Project>

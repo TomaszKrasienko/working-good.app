@@ -5,7 +5,7 @@ using wg.modules.companies.infrastructure.DAL;
 using wg.modules.companies.infrastructure.Queries.Mappers;
 using wg.shared.abstractions.CQRS.Queries;
 
-namespace wg.modules.companies.infrastructure.Queries.Companies;
+namespace wg.modules.companies.infrastructure.Queries.Handlers.Companies;
 
 internal sealed class GetSlaTimeByEmployeeIdQueryHandler(
     CompaniesDbContext dbContext) : IQueryHandler<GetSlaTimeByEmployeeIdQuery, CompanySlaTimeDto>
