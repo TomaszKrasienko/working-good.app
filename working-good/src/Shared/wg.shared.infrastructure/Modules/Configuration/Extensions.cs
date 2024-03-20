@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,8 @@ public static class Extensions
     private static IServiceCollection AddServices(this IServiceCollection services)
         => services
             .AddSingleton<IModuleClient, ModuleClient>()
-            .AddSingleton<IModuleTypesTranslator, ModuleTypesTranslator>();
+            .AddSingleton<IModuleTypesTranslator, ModuleTypesTranslator>()
+            .AddSingleton<IModuleSubscriber, ModuleSubscriber>();
     
     private static IServiceCollection AddModuleLoad(this IServiceCollection services)
     {
@@ -106,5 +108,7 @@ public static class Extensions
                 => Directory.EnumerateFiles(ctx.HostingEnvironment.ContentRootPath, $"module.{pattern}.json",
                     SearchOption.AllDirectories);
         });
-    
+
+    public static IModuleSubscriber UseModuleRequest(this IApplicationBuilder app)
+        => app.ApplicationServices.GetRequiredService<IModuleSubscriber>();
 }
