@@ -1,8 +1,9 @@
-using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
+using wg.modules.companies.application.CQRS.Companies.Queries;
+using wg.modules.companies.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 
@@ -12,12 +13,14 @@ internal sealed class CompaniesController(
     ICommandDispatcher commandDispatcher, 
     IQueryDispatcher queryDispatcher) : BaseController
 {
-    [HttpGet("{id:guid}")]
     [Authorize]
-    public async Task<ActionResult> GetById(Guid id)
-    {
-        throw new NotImplementedException();
-    }
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<CompanyDto>> GetById(Guid id, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetCompanyByIdQuery(id), cancellationToken));
+    
     
     [Authorize(Roles = "Manager")]
     [HttpPost("add")]
