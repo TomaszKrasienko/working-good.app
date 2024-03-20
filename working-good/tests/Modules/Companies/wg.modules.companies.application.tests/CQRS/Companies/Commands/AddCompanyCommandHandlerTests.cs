@@ -1,6 +1,6 @@
 using NSubstitute;
 using Shouldly;
-using wg.modules.companies.application.CQRS.Companies.AddCompany;
+using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
 using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;

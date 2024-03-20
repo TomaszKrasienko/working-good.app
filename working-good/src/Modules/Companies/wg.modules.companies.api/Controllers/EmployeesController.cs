@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using wg.modules.companies.application.CQRS.Employees.AddEmployee;
+using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 

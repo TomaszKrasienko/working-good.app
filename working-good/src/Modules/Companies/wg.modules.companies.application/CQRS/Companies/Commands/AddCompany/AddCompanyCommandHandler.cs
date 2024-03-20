@@ -3,7 +3,7 @@ using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 
-namespace wg.modules.companies.application.CQRS.Companies.AddCompany;
+namespace wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
 
 internal sealed class AddCompanyCommandHandler(
     ICompanyRepository companyRepository) : ICommandHandler<AddCompanyCommand>

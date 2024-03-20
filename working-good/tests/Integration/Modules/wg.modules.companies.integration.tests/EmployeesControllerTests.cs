@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using wg.modules.companies.application.CQRS.Employees.AddEmployee;
+using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.companies.integration.tests._Helpers;
 using wg.modules.owner.domain.ValueObjects.User;

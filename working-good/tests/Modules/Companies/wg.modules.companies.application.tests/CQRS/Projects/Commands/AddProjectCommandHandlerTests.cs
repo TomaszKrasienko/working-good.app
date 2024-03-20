@@ -5,7 +5,6 @@ using wg.modules.companies.application.Events;
 using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
-using wg.modules.companies.tests.shared.Factories;
 using wg.shared.abstractions.Messaging;
 using wg.sharedForTests.Factories.Companies;
 using Xunit;

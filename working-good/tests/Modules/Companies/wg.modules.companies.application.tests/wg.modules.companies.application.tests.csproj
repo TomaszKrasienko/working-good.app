@@ -28,7 +28,6 @@
       <ProjectReference Include="..\..\..\..\src\Modules\Companies\wg.modules.companies.application\wg.modules.companies.application.csproj" />
       <ProjectReference Include="..\..\..\..\src\Modules\Companies\wg.modules.companies.domain\wg.modules.companies.domain.csproj" />
       <ProjectReference Include="..\..\..\wg.sharedForTests\wg.sharedForTests.csproj" />
-      <ProjectReference Include="..\wg.modules.companies.tests.shared\wg.modules.companies.tests.shared.csproj" />
     </ItemGroup>
 
 </Project>

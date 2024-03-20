@@ -58,8 +58,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Companies", "Companies", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.domain.tests", "tests\Modules\Companies\wg.modules.companies.domain.tests\wg.modules.companies.domain.tests.csproj", "{F713C96C-5FEA-4B6B-9A33-E5D38D527F50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.tests.shared", "tests\Modules\Companies\wg.modules.companies.tests.shared\wg.modules.companies.tests.shared.csproj", "{014EDDD2-D754-4D2F-A192-2F2176273108}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.application", "src\Modules\Companies\wg.modules.companies.application\wg.modules.companies.application.csproj", "{FC96C47A-E562-42DE-A949-B834B85271EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.application.tests", "tests\Modules\Companies\wg.modules.companies.application.tests\wg.modules.companies.application.tests.csproj", "{B0F40EB2-AE1A-4DDC-A916-241801636928}"
@@ -85,6 +83,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.tickets.application.tests", "tests\Modules\Tickets\wg.modules.tickets.application.tests\wg.modules.tickets.application.tests.csproj", "{6E109232-6C15-41F8-9FC3-3A5F35381D37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.tickets.infrastructure", "src\Modules\Tickets\wg.modules.tickets.infrastructure\wg.modules.tickets.infrastructure.csproj", "{7ADD52D6-CE3F-4E53-9E47-258769FE1C7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.companies.infrastructure.tests", "tests\Modules\Companies\wg.modules.companies.infrastructure.tests\wg.modules.companies.infrastructure.tests.csproj", "{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,7 +119,6 @@ Global
 		{7D31D878-29AF-4259-9D88-14F230723818} = {FD0CE981-8432-4B57-B654-A91D55B67903}
 		{ED0C0608-7C3D-43E1-9E71-8305AFEE3076} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
 		{F713C96C-5FEA-4B6B-9A33-E5D38D527F50} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
-		{014EDDD2-D754-4D2F-A192-2F2176273108} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
 		{FC96C47A-E562-42DE-A949-B834B85271EC} = {FD0CE981-8432-4B57-B654-A91D55B67903}
 		{B0F40EB2-AE1A-4DDC-A916-241801636928} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
 		{D4A77E0E-DCAF-438C-918B-2285B48153BB} = {FD0CE981-8432-4B57-B654-A91D55B67903}
@@ -133,6 +132,7 @@ Global
 		{E17D7E59-BC30-4212-A847-A9D747A01035} = {984860AD-FF0F-4017-A6F4-3B11135ABC84}
 		{6E109232-6C15-41F8-9FC3-3A5F35381D37} = {405C1CD7-E809-4BFD-A557-2FD5FDF38FD1}
 		{7ADD52D6-CE3F-4E53-9E47-258769FE1C7E} = {984860AD-FF0F-4017-A6F4-3B11135ABC84}
+		{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7} = {ED0C0608-7C3D-43E1-9E71-8305AFEE3076}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -199,10 +199,6 @@ Global
 		{F713C96C-5FEA-4B6B-9A33-E5D38D527F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F713C96C-5FEA-4B6B-9A33-E5D38D527F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F713C96C-5FEA-4B6B-9A33-E5D38D527F50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{014EDDD2-D754-4D2F-A192-2F2176273108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{014EDDD2-D754-4D2F-A192-2F2176273108}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{014EDDD2-D754-4D2F-A192-2F2176273108}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{014EDDD2-D754-4D2F-A192-2F2176273108}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FC96C47A-E562-42DE-A949-B834B85271EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FC96C47A-E562-42DE-A949-B834B85271EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC96C47A-E562-42DE-A949-B834B85271EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -247,5 +243,9 @@ Global
 		{7ADD52D6-CE3F-4E53-9E47-258769FE1C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ADD52D6-CE3F-4E53-9E47-258769FE1C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ADD52D6-CE3F-4E53-9E47-258769FE1C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CC1680-2CDB-425B-9A6E-E20BDBDD56A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

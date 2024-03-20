@@ -2,7 +2,6 @@ using Bogus.DataSets;
 using Shouldly;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
-using wg.modules.companies.tests.shared.Factories;
 using wg.sharedForTests.Factories.Companies;
 using Xunit;
 

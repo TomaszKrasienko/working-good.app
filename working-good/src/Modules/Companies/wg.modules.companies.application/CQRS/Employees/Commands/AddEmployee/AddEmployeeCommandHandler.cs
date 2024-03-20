@@ -2,7 +2,7 @@ using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 
-namespace wg.modules.companies.application.CQRS.Employees.AddEmployee;
+namespace wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 
 internal sealed class AddEmployeeCommandHandler(
     ICompanyRepository companyRepository) : ICommandHandler<AddEmployeeCommand>

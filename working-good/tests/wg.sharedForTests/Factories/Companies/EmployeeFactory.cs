@@ -1,7 +1,7 @@
 using Bogus;
 using wg.modules.companies.domain.Entities;
 
-namespace wg.modules.companies.tests.shared.Factories;
+namespace wg.sharedForTests.Factories.Companies;
 
 public static class EmployeeFactory
 {
