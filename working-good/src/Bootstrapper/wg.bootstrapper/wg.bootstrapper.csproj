@@ -18,6 +18,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Modules\Companies\wg.modules.companies.api\wg.modules.companies.api.csproj" />
       <ProjectReference Include="..\..\Modules\Owner\wg.modules.owner.api\wg.modules.owner.api.csproj" />
+      <ProjectReference Include="..\..\Modules\Tickets\wg.modules.tickets.api\wg.modules.tickets.api.csproj" />
       <ProjectReference Include="..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>

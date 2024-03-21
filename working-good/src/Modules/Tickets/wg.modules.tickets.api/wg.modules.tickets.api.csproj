@@ -7,16 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="module.tickets.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="module.tickets.tests.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
+      <ProjectReference Include="..\wg.modules.tickets.infrastructure\wg.modules.tickets.infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
