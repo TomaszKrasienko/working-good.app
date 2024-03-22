@@ -44,6 +44,11 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired();
 
         builder
+            .Property(x => x.IsPriority)
+            .HasConversion(x => x.Value, y => new IsPriority(y))
+            .IsRequired();
+
+        builder
             .OwnsOne(x => x.State, options =>
             {
                 options
