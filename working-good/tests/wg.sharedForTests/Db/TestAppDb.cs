@@ -1,7 +1,16 @@
+using wg.modules.tickets.infrastructure.DAL;
+using wg.sharedForTests.Integration;
+
 namespace wg.sharedForTests.Db;
 
-public class TestAppDb : IDisposable
+internal sealed class TestAppDb : IDisposable
 {
+    public TicketsDbContext TicketsDbContext { get; set; }
+
+    public TestAppDb()
+    {
+        TicketsDbContext = new TicketsDbContext(DbContextOptionsProvider.GetDbContextOptions<TicketsDbContext>());
+    }
     
     public void Dispose()
     {

@@ -10,4 +10,7 @@
       <ProjectReference Include="..\wg.modules.tickets.application\wg.modules.tickets.application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.sharedForTests"/>
+    </ItemGroup>
 </Project>
