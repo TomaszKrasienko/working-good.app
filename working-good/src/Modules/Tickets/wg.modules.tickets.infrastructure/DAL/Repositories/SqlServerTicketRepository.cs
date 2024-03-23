@@ -28,12 +28,11 @@ internal sealed class SqlServerTicketRepository : ITicketRepository
 
     public async Task<int> GetMaxNumberAsync()
     {
-        if (!await _tickets.AnyAsync())
-        {
-            return 0;
-        }
-        return await _tickets
-            .MaxAsync(x => x.Number.Value);
+        var tickets = await _dbContext
+            .Tickets
+            .AsNoTracking()
+            .ToListAsync();
+        return tickets.Max(x => (int?)x.Number.Value) ?? 0;
     }
 
     public async Task AddAsync(Ticket ticket)
