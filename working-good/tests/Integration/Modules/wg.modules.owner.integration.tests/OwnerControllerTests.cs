@@ -1,9 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
+using wg.modules.owner.application.CQRS.Owners.Queries;
+using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
@@ -110,6 +113,44 @@ public sealed class OwnerControllerTests : BaseTestsController
         
         //assert
         result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task GetOwner_ForExistingOwnerWithAuthorized_ShouldReturnOwnerDto()
+    {
+        //arrange
+        await AddOwner();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetFromJsonAsync<OwnerDto>("owner-module/owner");
+        
+        //assert
+        response.ShouldNotBeNull();
+        response.ShouldBeOfType<OwnerDto>();
+    }
+    
+    [Fact]
+    public async Task GetOwner_ForNoExistingOwnerWithAuthorized_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync("owner-module/owner");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetOwner_ForUnauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync("owner-module/owner");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     
     private Task<Owner?> GetOwnerAsync()

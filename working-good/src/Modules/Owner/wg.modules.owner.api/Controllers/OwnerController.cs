@@ -1,11 +1,9 @@
-using System.Collections.Specialized;
-using System.Net;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
+using wg.modules.owner.application.CQRS.Owners.Queries;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 
@@ -20,10 +18,8 @@ internal sealed class OwnerController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> GetOwner()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<ActionResult> GetOwner(CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetOwnerQuery(), cancellationToken));
     
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
