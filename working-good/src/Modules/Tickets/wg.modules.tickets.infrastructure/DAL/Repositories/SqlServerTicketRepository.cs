@@ -26,9 +26,15 @@ internal sealed class SqlServerTicketRepository : ITicketRepository
             .Include(x => x.Messages)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
-    public Task<int> GetMaxNumberAsync()
-        => _tickets
+    public async Task<int> GetMaxNumberAsync()
+    {
+        if (!await _tickets.AnyAsync())
+        {
+            return 0;
+        }
+        return await _tickets
             .MaxAsync(x => x.Number.Value);
+    }
 
     public async Task AddAsync(Ticket ticket)
     {

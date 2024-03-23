@@ -12,5 +12,6 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="wg.sharedForTests"/>
+        <InternalsVisibleTo Include="wg.modules.tickets.integration.tests"/>
     </ItemGroup>
 </Project>

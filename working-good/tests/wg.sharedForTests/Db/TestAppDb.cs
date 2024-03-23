@@ -14,6 +14,6 @@ internal sealed class TestAppDb : IDisposable
     
     public void Dispose()
     {
-        // TODO release managed resources here
+        TicketsDbContext.Database.EnsureDeleted();
     }
 }

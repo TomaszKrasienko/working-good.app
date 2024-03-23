@@ -16,7 +16,7 @@ internal sealed class TicketsController(
         throw new NotImplementedException();
     }
     
-    [HttpPost("add-ticket")]
+    [HttpPost("add")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
