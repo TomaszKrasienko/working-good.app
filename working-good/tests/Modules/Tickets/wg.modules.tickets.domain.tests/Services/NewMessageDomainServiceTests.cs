@@ -5,7 +5,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.Services;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
-using wg.sharedForTests.Factories.Tickets;
+using wg.tests.shared.Factories.Tickets;
 using Xunit;
 
 namespace wg.modules.tickets.domain.tests.Services;

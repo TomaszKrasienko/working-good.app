@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using wg.shared.infrastructure.DAL.Configuration.Models;
 
-namespace wg.sharedForTests.Integration;
+namespace wg.tests.shared.Integration;
 
 public static class DbContextOptionsProvider
 {

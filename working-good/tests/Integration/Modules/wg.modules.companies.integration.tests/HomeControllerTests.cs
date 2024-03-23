@@ -1,6 +1,6 @@
 using System.Net;
 using Shouldly;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Integration;
 using Xunit;
 
 namespace wg.modules.companies.integration.tests;

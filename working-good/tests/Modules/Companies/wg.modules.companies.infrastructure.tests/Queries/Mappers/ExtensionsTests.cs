@@ -1,7 +1,7 @@
 using Shouldly;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.infrastructure.Queries.Mappers;
-using wg.sharedForTests.Factories.Companies;
+using wg.tests.shared.Factories.Companies;
 using Xunit;
 
 namespace wg.modules.companies.infrastructure.tests.Queries.Mappers;

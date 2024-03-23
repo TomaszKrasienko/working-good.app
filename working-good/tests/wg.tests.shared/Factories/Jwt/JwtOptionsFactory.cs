@@ -1,7 +1,7 @@
 using Bogus;
 using wg.shared.infrastructure.Auth.Configuration.Models;
 
-namespace wg.sharedForTests.Factories.Jwt;
+namespace wg.tests.shared.Factories.Jwt;
 
 internal static class JwtOptionsFactory
 {

@@ -13,7 +13,4 @@
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.tickets.application.tests"/>
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="NSubstitute" Version="5.1.0" />
-    </ItemGroup>
 </Project>

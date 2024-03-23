@@ -4,7 +4,7 @@ using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.sharedForTests.Factories.Owners;
+using wg.tests.shared.Factories.Owners;
 using Xunit;
 
 namespace wg.modules.owner.application.tests.CQRS.Groups;

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace wg.sharedForTests.Integration;
+namespace wg.tests.shared.Integration;
 
 internal sealed class TestApp : WebApplicationFactory<Program>
 {

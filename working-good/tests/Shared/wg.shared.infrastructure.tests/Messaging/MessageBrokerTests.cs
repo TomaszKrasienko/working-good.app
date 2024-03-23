@@ -3,7 +3,7 @@ using NSubstitute;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Messaging;
 using wg.shared.infrastructure.Messaging;
-using wg.sharedForTests.Factories.Events;
+using wg.tests.shared.Factories.Events;
 using Xunit;
 
 namespace wg.shared.infrastructure.tests.Messaging;

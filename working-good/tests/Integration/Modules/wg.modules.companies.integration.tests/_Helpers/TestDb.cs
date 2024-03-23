@@ -1,5 +1,5 @@
 using wg.modules.companies.infrastructure.DAL;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Integration;
 
 namespace wg.modules.companies.integration.tests._Helpers;
 

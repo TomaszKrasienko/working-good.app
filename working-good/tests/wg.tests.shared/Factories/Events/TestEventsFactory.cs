@@ -1,9 +1,9 @@
 using Bogus;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Messaging;
-using wg.sharedForTests.Models;
+using wg.tests.shared.Models;
 
-namespace wg.sharedForTests.Factories.Events;
+namespace wg.tests.shared.Factories.Events;
 
 public static class TestEventsFactory
 {

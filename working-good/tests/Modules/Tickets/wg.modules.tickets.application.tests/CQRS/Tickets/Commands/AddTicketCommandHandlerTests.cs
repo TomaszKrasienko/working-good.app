@@ -12,7 +12,7 @@ using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Time;
-using wg.sharedForTests.Mocks;
+using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.CQRS.Tickets.Commands;

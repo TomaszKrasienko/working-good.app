@@ -6,8 +6,8 @@ using wg.modules.companies.application.CQRS.Projects.Commands.AddProject;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.companies.integration.tests._Helpers;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.sharedForTests.Factories.Companies;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Factories.Companies;
+using wg.tests.shared.Integration;
 using Xunit;
 
 namespace wg.modules.companies.integration.tests;

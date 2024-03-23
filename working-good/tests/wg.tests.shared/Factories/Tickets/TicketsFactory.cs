@@ -1,7 +1,7 @@
 using Bogus;
 using wg.modules.tickets.domain.Entities;
 
-namespace wg.sharedForTests.Factories.Tickets;
+namespace wg.tests.shared.Factories.Tickets;
 
 public static class TicketsFactory
 {

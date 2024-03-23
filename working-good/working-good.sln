@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.owner.applicatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB094BD2-FA5C-4EA6-8420-C2F0201EDC6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.sharedForTests", "tests\wg.sharedForTests\wg.sharedForTests.csproj", "{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.tests.shared", "tests\wg.tests.shared\wg.tests.shared.csproj", "{3A853327-1EAC-4DE3-AE02-EC06C6359FE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.bootstrapper", "src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj", "{2F6C4F4B-8EF4-4DC4-A06A-D736AAC93957}"
 EndProject

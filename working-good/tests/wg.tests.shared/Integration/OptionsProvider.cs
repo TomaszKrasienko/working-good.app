@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace wg.sharedForTests.Integration;
+namespace wg.tests.shared.Integration;
 
 public sealed class OptionsProvider
 {

@@ -1,7 +1,7 @@
 using Shouldly;
 using wg.modules.tickets.application.Events.Mappers;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
-using wg.sharedForTests.Factories.Tickets;
+using wg.tests.shared.Factories.Tickets;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.Events.Mappers;

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using wg.modules.owner.infrastructure.DAL;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Integration;
 
 namespace wg.modules.owner.integration.tests._Helpers;
 

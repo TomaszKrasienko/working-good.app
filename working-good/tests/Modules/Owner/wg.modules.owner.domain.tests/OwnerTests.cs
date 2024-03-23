@@ -3,7 +3,7 @@ using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Exceptions;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.tests.shared.Factories;
-using wg.sharedForTests.Factories.Owners;
+using wg.tests.shared.Factories.Owners;
 using Xunit;
 
 namespace wg.modules.owner.domain.tests;

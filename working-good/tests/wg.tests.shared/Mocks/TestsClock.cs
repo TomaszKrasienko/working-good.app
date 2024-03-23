@@ -1,6 +1,6 @@
 using wg.shared.abstractions.Time;
 
-namespace wg.sharedForTests.Mocks;
+namespace wg.tests.shared.Mocks;
 
 public sealed class TestsClock : IClock
 {

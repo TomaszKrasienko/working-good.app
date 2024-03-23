@@ -13,8 +13,8 @@ using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
 using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.infrastructure.Exceptions.DTOs;
-using wg.sharedForTests.Factories.Owners;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Factories.Owners;
+using wg.tests.shared.Integration;
 using Xunit;
 
 namespace wg.modules.owner.integration.tests;

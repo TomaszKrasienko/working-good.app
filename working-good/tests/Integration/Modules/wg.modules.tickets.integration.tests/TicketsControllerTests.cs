@@ -5,14 +5,15 @@ using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.infrastructure.DAL;
-using wg.sharedForTests.Db;
-using wg.sharedForTests.Factories.Tickets;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Db;
+using wg.tests.shared.Factories.Tickets;
+using wg.tests.shared.Integration;
 using Xunit;
 using State = wg.modules.tickets.domain.ValueObjects.Ticket.State;
 
 namespace wg.modules.tickets.integration.tests;
 
+[Collection("#1")]
 public sealed class TicketsControllerTests : BaseTestsController, IDisposable
 {
     [Fact]
@@ -24,7 +25,8 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
         await _ticketsDbContext.SaveChangesAsync();
         var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
             State.New(), false, null, null, null);
-        Authorize(Guid.NewGuid(), Role.User());
+        var userId = Guid.NewGuid();
+        Authorize(userId, Role.User());
         
         //act
         var response = await HttpClient.PostAsJsonAsync("tickets-module/tickets/add", command);
@@ -39,7 +41,7 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
             .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id.Equals(Guid.Parse(value!.Single())));
         ticket.ShouldNotBeNull();
-        ticket.CreatedBy.Value.ShouldNotBe(Guid.Empty);
+        ticket.CreatedBy.Value.ShouldBe(userId);
     }
     
     #region arrange

@@ -6,7 +6,7 @@ using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
 using wg.shared.abstractions.Messaging;
-using wg.sharedForTests.Factories.Companies;
+using wg.tests.shared.Factories.Companies;
 using Xunit;
 
 namespace wg.modules.companies.application.tests.CQRS.Projects.Commands;

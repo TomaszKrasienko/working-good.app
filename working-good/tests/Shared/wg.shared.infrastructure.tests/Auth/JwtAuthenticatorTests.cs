@@ -5,8 +5,8 @@ using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.abstractions.Time;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
-using wg.sharedForTests.Factories.Jwt;
-using wg.sharedForTests.Mocks;
+using wg.tests.shared.Factories.Jwt;
+using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.shared.infrastructure.tests.Auth;

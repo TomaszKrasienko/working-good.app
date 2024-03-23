@@ -1,7 +1,7 @@
 using wg.modules.tickets.infrastructure.DAL;
-using wg.sharedForTests.Integration;
+using wg.tests.shared.Integration;
 
-namespace wg.sharedForTests.Db;
+namespace wg.tests.shared.Db;
 
 internal sealed class TestAppDb : IDisposable
 {

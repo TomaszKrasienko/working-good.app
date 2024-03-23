@@ -4,9 +4,9 @@ using Microsoft.Extensions.Options;
 using wg.shared.abstractions.Auth;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
-using wg.sharedForTests.Mocks;
+using wg.tests.shared.Mocks;
 
-namespace wg.sharedForTests.Integration;
+namespace wg.tests.shared.Integration;
 
 public abstract class BaseTestsController : IDisposable
 {

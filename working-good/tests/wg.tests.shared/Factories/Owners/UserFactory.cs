@@ -1,7 +1,7 @@
 using Bogus;
 using wg.modules.owner.domain.Entities;
 
-namespace wg.sharedForTests.Factories.Owners;
+namespace wg.tests.shared.Factories.Owners;
 
 public static class UserFactory
 {

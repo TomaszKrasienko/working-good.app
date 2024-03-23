@@ -23,7 +23,7 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>
-        <InternalsVisibleTo Include="wg.sharedForTests"/>
+        <InternalsVisibleTo Include="wg.tests.shared"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
 </Project>

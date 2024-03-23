@@ -4,7 +4,7 @@ using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
-using wg.sharedForTests.Factories.Companies;
+using wg.tests.shared.Factories.Companies;
 using Xunit;
 
 namespace wg.modules.companies.application.tests.CQRS.Employees.Commands;
