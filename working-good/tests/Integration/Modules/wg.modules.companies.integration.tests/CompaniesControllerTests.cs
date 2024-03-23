@@ -92,7 +92,7 @@ public sealed class CompaniesControllerTests : BaseTestsController
     }
     
     [Fact]
-    public async Task AddCompany_GivenAuthorizeForUser_ShouldReturn403ForbiddenStatusCode()
+    public async Task AddCompany_AuthorizedUser_ShouldReturn403ForbiddenStatusCode()
     {
         //arrange
         var command = new AddCompanyCommand(Guid.Empty, "NewCompanyTest", TimeSpan.FromHours(10), "test.pl");

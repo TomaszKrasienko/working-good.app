@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
+using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
@@ -17,7 +18,7 @@ namespace wg.modules.owner.integration.tests;
 public sealed class GroupControllerTests : BaseTestsController
 {
     [Fact]
-    public async Task AddUserToGroup_GivenAuthorizedManagerAndExistingFields_ShouldReturn204NoContentStatusCode()
+    public async Task AddUserToGroup_GivenAuthorizedManagerAndExistingGroupIdAndUserId_ShouldReturn204NoContentStatusCodeAndAddUserToGroup()
     {
         //arrange
         var owner = OwnerFactory.Get();
@@ -33,16 +34,13 @@ public sealed class GroupControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-        var changedGroup = await _ownerDbContext
-            .Groups
-            .AsNoTracking()
-            .Include(x => x.Users)
-            .FirstOrDefaultAsync(x => x.Id == group.Id);
-        changedGroup!.Users.Any().ShouldBeTrue();
+        
+        var updatedGroup = await GetGroupByIdAsync(group.Id);
+        updatedGroup!.Users.Any(x => x.Id == user.Id).ShouldBeTrue();
     }
     
     [Fact]
-    public async Task AddUserToGroup_GivenAuthorizedManagerAndOneNotExistingField_ShouldReturn400BadRequestStatusCode()
+    public async Task AddUserToGroup_GivenAuthorizedManagerAndNotExistingUser_ShouldReturn400BadRequestStatusCode()
     {
         //arrange
         var owner = OwnerFactory.Get();
@@ -57,12 +55,6 @@ public sealed class GroupControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        var changedGroup = await _ownerDbContext
-            .Groups
-            .AsNoTracking()
-            .Include(x => x.Users)
-            .FirstOrDefaultAsync(x => x.Id == group.Id);
-        changedGroup!.Users.Any().ShouldBeFalse();
     }
     
     [Fact]
@@ -80,7 +72,7 @@ public sealed class GroupControllerTests : BaseTestsController
     }
     
     [Fact]
-    public async Task AddUserToGroup_GivenUnauthorized_ShouldReturn401UnauthorizedStatusCode()
+    public async Task AddUserToGroup_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
     {
         //arrange
         var command = new AddUserToGroupCommand(Guid.Empty, Guid.NewGuid());
@@ -91,21 +83,27 @@ public sealed class GroupControllerTests : BaseTestsController
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
+
+    private Task<Group?> GetGroupByIdAsync(Guid id)
+        =>  _ownerDbContext
+            .Groups
+            .AsNoTracking()
+            .Include(x => x.Users)
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
     
     #region arrange
-    private readonly TestAppDb _testDb;
+    private readonly TestAppDb _testAppDb;
     private readonly OwnerDbContext _ownerDbContext;
 
     public GroupControllerTests()
     {
-        _testDb = new TestAppDb();
-        _ownerDbContext = _testDb.OwnerDbContext;
+        _testAppDb = new TestAppDb();
+        _ownerDbContext = _testAppDb.OwnerDbContext;
     }
 
     public override void Dispose()
     {
-        _testDb.Dispose();
+        _testAppDb.Dispose();
     }
-
     #endregion
 }

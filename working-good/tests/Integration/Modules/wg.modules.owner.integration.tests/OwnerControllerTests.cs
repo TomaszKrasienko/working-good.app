@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
+using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
-using wg.modules.owner.integration.tests._Helpers;
 using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Integration;
@@ -18,7 +18,7 @@ namespace wg.modules.owner.integration.tests;
 public sealed class OwnerControllerTests : BaseTestsController
 {
     [Fact]
-    public async Task AddOwner_GivenAddOwnerCommand_ShouldReturnCreatedStatusCodeWithResourceHeader()
+    public async Task AddOwner_GivenAddOwnerCommand_ShouldReturn201CreatedStatusCodeWithResourceIdHeaderAndLocationHeaderAndAddOwnerToDb()
     {
         //arrange
         var command = new AddOwnerCommand(Guid.Empty, "owner_company_name");
@@ -27,19 +27,22 @@ public sealed class OwnerControllerTests : BaseTestsController
         var response = await HttpClient.PostAsJsonAsync("/owner-module/owner/add", command);
      
         //assert
-        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-        response.Headers.TryGetValues("resource-id", out var values);
-        values!.Single().ShouldNotBe(Guid.Empty.ToString());
-        var owner = await _ownerDbContext.Owner.FirstOrDefaultAsync();
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        response.Headers.Location.ShouldNotBeNull();
+        
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
+
+        var owner = await GetOwnerAsync();
         owner.ShouldNotBeNull();
     }
     
     [Fact]
-    public async Task AddOwner_GivenAddOwnerCommandForExistingOwner_ShouldReturnBadRequestStatusCode()
+    public async Task AddOwner_GivenAddOwnerCommandWithExistingOwner_ShouldReturn400BadRequestStatusCode()
     {
         //arrange
-        await _ownerDbContext.Owner.AddAsync(OwnerFactory.Get());
-        await _ownerDbContext.SaveChangesAsync();
+        await AddOwner();
         var command = new AddOwnerCommand(Guid.Empty, "owner_company_name");
         
         //act
@@ -53,35 +56,25 @@ public sealed class OwnerControllerTests : BaseTestsController
     public async Task ChangeOwnerName_GivenNewNameAndAuthorizedManager_ShouldReturn204NoContentStatusCodeAndChangeNameInDb()
     {
         //arrange
-        var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
-        Authorize(user.Id, user.Role);
-        var companyNewName = "MyCompanyNewName";
-        var command = new ChangeOwnerNameCommand(companyNewName);
+        var owner = await AddOwner();
+        Authorize(Guid.NewGuid(), Role.Manager());
+        var command = new ChangeOwnerNameCommand("MyCompanyNewName");
             
         //act
         var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
         
         //assert
         result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-        var changedOwner = await _ownerDbContext.Owner
-            .AsNoTracking()
-            .FirstOrDefaultAsync();
-        changedOwner!.Name.Value.ShouldBe(companyNewName);
+        
+        var changedOwner = await GetOwnerAsync();
+        changedOwner!.Name.Value.ShouldBe(command.Name);
     }
     
     [Fact]
-    public async Task ChangeOwnerName_GivenNewNameAndWithoutAuthorizedUser_ShouldReturn401Unauthorized()
+    public async Task ChangeOwnerName_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
     {
         //arrange
-        var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
-        var companyNewName = "MyCompanyNewName";
-        var command = new ChangeOwnerNameCommand(companyNewName);
+        var command = new ChangeOwnerNameCommand("MyCompanyNewName");
             
         //act
         var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
@@ -91,17 +84,11 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     [Fact]
-    public async Task ChangeOwnerName_GivenNewNameAndAuthorizedUser_ShouldReturn403ForbiddenStatusCode()
+    public async Task ChangeOwnerName_AuthorizedUser_ShouldReturn403ForbiddenStatusCode()
     {
         //arrange
-        var owner = OwnerFactory.Get();
-        var manager = UserFactory.GetUserInOwner(owner, Role.Manager());
-        var user = UserFactory.GetUserInOwner(owner, Role.User());
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
-        Authorize(user.Id, user.Role);
-        var companyNewName = "MyCompanyNewName";
-        var command = new ChangeOwnerNameCommand(companyNewName);
+        Authorize(Guid.NewGuid(), Role.User());
+        var command = new ChangeOwnerNameCommand("MyCompanyNewName");
             
         //act
         var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
@@ -111,14 +98,11 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     [Fact]
-    public async Task ChangeOwnerName_GivenEmptyNameAndAuthorizedUser_ShouldReturn403ForbiddenStatusCode()
+    public async Task ChangeOwnerName_GivenEmptyNameAndAuthorizedManager_ShouldReturn400BadRequest()
     {
         //arrange
-        var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
-        Authorize(user.Id, user.Role);
+        var owner = await AddOwner();
+        Authorize(Guid.NewGuid(), Role.Manager());
         var command = new ChangeOwnerNameCommand(string.Empty);
             
         //act
@@ -128,10 +112,24 @@ public sealed class OwnerControllerTests : BaseTestsController
         result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
     
+    private Task<Owner?> GetOwnerAsync()
+        => _ownerDbContext
+            .Owner
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
+    private async Task<Owner> AddOwner()
+    {
+        var owner = OwnerFactory.Get();
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        return owner;
+    }
+    
     #region arrange
     private readonly TestAppDb _testDb;
     private readonly OwnerDbContext _ownerDbContext;
-
+    
     public OwnerControllerTests()
     {
         _testDb = new TestAppDb();
@@ -142,6 +140,5 @@ public sealed class OwnerControllerTests : BaseTestsController
     {
         _testDb.Dispose();
     }
-
     #endregion
 }

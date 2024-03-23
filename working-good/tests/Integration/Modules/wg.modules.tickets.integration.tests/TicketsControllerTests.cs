@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.infrastructure.DAL;
 using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Tickets;
@@ -20,9 +21,7 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
     public async Task AddTicket_GivenOnlyRequiredArgumentsAndAuthor_ShouldReturn201StatusCodeAndAddTicket()
     {
         //arrange
-        var existingTicket = TicketsFactory.GetOnlyRequired(State.Open());
-        await _ticketsDbContext.Tickets.AddAsync(existingTicket);
-        await _ticketsDbContext.SaveChangesAsync();
+        var existingTicket = await AddTicket();
         var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
             State.New(), false, null, null, null);
         var userId = Guid.NewGuid();
@@ -34,19 +33,33 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response.Headers.Location.ShouldNotBeNull();
+        
         var resourceId = GetResourceIdFromHeader(response);
         resourceId.ShouldNotBeNull();
         resourceId.ShouldNotBe(Guid.Empty);
-        var ticket = await _ticketsDbContext
-            .Tickets
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id.Equals(resourceId));
+        
+        var ticket = await GetTicketByIdAsync((Guid)resourceId);
         ticket.ShouldNotBeNull();
         ticket.CreatedBy.Value.ShouldBe(userId);
+        ticket.Number.Value.ShouldBe(existingTicket.Number + 1);
+    }
+
+    private async Task<Ticket> AddTicket()
+    {
+        var ticket = TicketsFactory.GetOnlyRequired(State.Open());
+        await _ticketsDbContext.Tickets.AddAsync(ticket);
+        await _ticketsDbContext.SaveChangesAsync();
+        return ticket;
     }
     
+    private Task<Ticket?> GetTicketByIdAsync(Guid id)
+        =>  _ticketsDbContext
+            .Tickets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
+    
+    
     #region arrange
-
     private readonly TestAppDb _testAppDb;
     private readonly TicketsDbContext _ticketsDbContext;
 
@@ -60,6 +73,5 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
     {
         _testAppDb.Dispose();
     }
-
     #endregion
 }

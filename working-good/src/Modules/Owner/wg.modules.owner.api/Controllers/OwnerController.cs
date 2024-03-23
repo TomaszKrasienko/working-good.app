@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +15,16 @@ internal sealed class OwnerController(
     ICommandDispatcher commandDispatcher, 
     IQueryDispatcher queryDispatcher) : BaseController()
 {
-
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> GetOwner()
+    {
+        throw new NotImplementedException();
+    }
+    
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -23,7 +33,7 @@ internal sealed class OwnerController(
         var id = Guid.NewGuid();
         await commandDispatcher.SendAsync(command with {Id = id}, cancellationToken);
         AddResourceHeader(id);
-        return NoContent();
+        return CreatedAtAction(nameof(GetOwner), null, null);
     }
 
     [HttpPatch("change-name")]
