@@ -13,6 +13,7 @@ using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
 using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.infrastructure.Exceptions.DTOs;
+using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -138,12 +139,12 @@ public sealed class UsersControllerTests : BaseTestsController
     
     #region arrange
 
-    private readonly TestDb _testDb;
+    private readonly TestAppDb _testDb;
     private readonly OwnerDbContext _ownerDbContext;
     
     public UsersControllerTests()
     {
-        _testDb = new TestDb();
+        _testDb = new TestAppDb();
         _ownerDbContext = _testDb.OwnerDbContext;
     }
 

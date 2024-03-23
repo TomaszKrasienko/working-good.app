@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.infrastructure.DAL;
-using wg.modules.companies.integration.tests._Helpers;
 using wg.modules.owner.domain.ValueObjects.User;
+using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -87,12 +87,12 @@ public sealed class EmployeesControllerTests : BaseTestsController
     }
     
     #region arrange
-    private readonly TestDb _testDb;
+    private readonly TestAppDb _testDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
     public EmployeesControllerTests()
     {
-        _testDb = new TestDb();
+        _testDb = new TestAppDb();
         _companiesDbContext = _testDb.CompaniesDbContext;
     }
 

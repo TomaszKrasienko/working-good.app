@@ -6,6 +6,7 @@ using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
+using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -92,12 +93,12 @@ public sealed class GroupControllerTests : BaseTestsController
     }
     
     #region arrange
-    private readonly TestDb _testDb;
+    private readonly TestAppDb _testDb;
     private readonly OwnerDbContext _ownerDbContext;
 
     public GroupControllerTests()
     {
-        _testDb = new TestDb();
+        _testDb = new TestAppDb();
         _ownerDbContext = _testDb.OwnerDbContext;
     }
 
