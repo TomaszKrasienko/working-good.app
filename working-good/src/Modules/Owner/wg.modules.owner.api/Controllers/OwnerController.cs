@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
 using wg.modules.owner.application.CQRS.Owners.Queries;
+using wg.modules.owner.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 
@@ -18,7 +19,7 @@ internal sealed class OwnerController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> GetOwner(CancellationToken cancellationToken)
+    public async Task<ActionResult<OwnerDto>> GetOwner(CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetOwnerQuery(), cancellationToken));
     
     [HttpPost("add")]

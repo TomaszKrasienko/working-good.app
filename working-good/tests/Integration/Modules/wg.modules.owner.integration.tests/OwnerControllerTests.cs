@@ -1,11 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
-using wg.modules.owner.application.CQRS.Owners.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -168,18 +166,18 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     #region arrange
-    private readonly TestAppDb _testDb;
+    private readonly TestAppDb _testAppDb;
     private readonly OwnerDbContext _ownerDbContext;
     
     public OwnerControllerTests()
     {
-        _testDb = new TestAppDb();
-        _ownerDbContext = _testDb.OwnerDbContext;
+        _testAppDb = new TestAppDb();
+        _ownerDbContext = _testAppDb.OwnerDbContext;
     }
 
     public override void Dispose()
     {
-        _testDb.Dispose();
+        _testAppDb.Dispose();
     }
     #endregion
 }
