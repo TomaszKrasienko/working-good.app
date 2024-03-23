@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using wg.shared.abstractions.Auth;
@@ -10,17 +11,12 @@ namespace wg.tests.shared.Integration;
 
 public abstract class BaseTestsController : IDisposable
 {
-    protected HttpClient HttpClient { get; }
-    private readonly IAuthenticator _authenticator;
-    
-    public BaseTestsController()
+    protected readonly HttpClient HttpClient;
+
+    protected BaseTestsController()
     {
         var app = new TestApp(ConfigureServices);
         HttpClient = app.HttpClient;
-        var clock = TestsClock.Create();
-        var optionsProvider = new OptionsProvider();
-        var jwtOptions = optionsProvider.Get<JwtOptions>("Jwt");
-        _authenticator = new JwtAuthenticator(clock, Options.Create(jwtOptions));
     }
 
     protected virtual void ConfigureServices(IServiceCollection services)
@@ -30,8 +26,33 @@ public abstract class BaseTestsController : IDisposable
 
     protected virtual void Authorize(Guid userId, string role)
     {
-        var token = _authenticator.CreateToken(userId.ToString(), role);
+        var clock = TestsClock.Create();
+        var optionsProvider = new OptionsProvider();
+        var jwtOptions = optionsProvider.Get<JwtOptions>("Jwt");
+        var authenticator = new JwtAuthenticator(clock, Options.Create(jwtOptions));
+        var token = authenticator.CreateToken(userId.ToString(), role);
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",token.Token);
+    }
+
+    protected virtual Guid? GetResourceIdFromHeader(HttpResponseMessage httpResponseMessage) 
+    {
+        if (httpResponseMessage is null)
+        {
+            throw new InvalidOperationException("Http response message is null");
+        }
+
+        if (!httpResponseMessage.Headers.TryGetValues("resource-id", out var value))
+        {
+            return null;
+        }
+
+        var stringId = value.Single();
+        if (!Guid.TryParse(stringId, out var id))
+        {
+            throw new InvalidOperationException("Resource id is not GUID type");
+        }
+
+        return id;
     }
     
     public virtual void Dispose()

@@ -87,18 +87,18 @@ public sealed class EmployeesControllerTests : BaseTestsController
     }
     
     #region arrange
-    private readonly TestAppDb _testDb;
+    private readonly TestAppDb _testAppDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
     public EmployeesControllerTests()
     {
-        _testDb = new TestAppDb();
-        _companiesDbContext = _testDb.CompaniesDbContext;
+        _testAppDb = new TestAppDb();
+        _companiesDbContext = _testAppDb.CompaniesDbContext;
     }
 
     public override void Dispose()
     {
-        _testDb.Dispose();
+        _testAppDb.Dispose();
     }
     #endregion
 }

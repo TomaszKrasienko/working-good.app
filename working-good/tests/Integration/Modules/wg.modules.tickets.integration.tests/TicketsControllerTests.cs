@@ -34,12 +34,13 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response.Headers.Location.ShouldNotBeNull();
-        response.Headers.TryGetValues("resource-id", out var value);
-        value!.Single().ShouldNotBe(Guid.Empty.ToString());
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
         var ticket = await _ticketsDbContext
             .Tickets
             .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id.Equals(Guid.Parse(value!.Single())));
+            .SingleOrDefaultAsync(x => x.Id.Equals(resourceId));
         ticket.ShouldNotBeNull();
         ticket.CreatedBy.Value.ShouldBe(userId);
     }
