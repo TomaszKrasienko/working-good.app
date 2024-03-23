@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
+using wg.shared.infrastructure.Context.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
 using wg.shared.infrastructure.Events.Configuration;
@@ -24,12 +25,13 @@ public static class Extensions
             .AddModules(assemblies)
             .AddCqrs(assemblies)
             .AddTime()
-            .AddUiDocumentation()
             .AddAuth(configuration)
             .AddDal(configuration)
             .AddExceptionMiddleware()
             .AddMessaging()
-            .AddEvents(assemblies);
+            .AddEvents(assemblies)
+            .AddIdentityContext()
+            .AddUiDocumentation();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>

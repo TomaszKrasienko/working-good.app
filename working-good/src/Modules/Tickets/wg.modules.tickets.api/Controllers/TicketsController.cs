@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 
 namespace wg.modules.tickets.api.Controllers;
 
 internal sealed class TicketsController(
+    IIdentityContext identityContext,
     ICommandDispatcher commandDispatcher) : BaseController
 {
     [HttpGet("{id:guid}")]
@@ -24,7 +26,11 @@ internal sealed class TicketsController(
     public async Task<ActionResult> AddTicket(AddTicketCommand command, CancellationToken cancellationToken)
     {
         var ticketId = Guid.NewGuid();
-        await commandDispatcher.SendAsync(command with { Id = ticketId }, cancellationToken);
+        await commandDispatcher.SendAsync(command with
+        {
+            Id = ticketId,
+            CreatedBy = identityContext.UserId
+        }, cancellationToken);
         AddResourceHeader(ticketId);
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
