@@ -1,0 +1,7 @@
+{
+  "notifications":{
+    "module": {
+      "enabled": true
+    }
+  }
+}
