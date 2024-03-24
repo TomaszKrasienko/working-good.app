@@ -33,6 +33,6 @@ internal sealed class ModuleClient(
 
         var receiverRequest = moduleTypesTranslator.TranslateType(request, registration.RequestType);
         var result = await registration.Action(receiverRequest);
-        return result is null ? null : moduleTypesTranslator.TranslateType<TResult>(request);
+        return result is null ? null : moduleTypesTranslator.TranslateType<TResult>(result);
     }
 }

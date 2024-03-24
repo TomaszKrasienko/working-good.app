@@ -14,4 +14,5 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.MapHealthChecks("/wg");
 app.UseInfrastructure();
+app.UseModulesConfiguration(modules);
 app.Run();

@@ -13,4 +13,14 @@ internal static class ModuleServiceRegistry
         }
         return services;
     }
+    
+    internal static WebApplication UseModulesConfiguration(this WebApplication app, 
+        IList<IModule> modules)
+    {
+        foreach (var module in modules)
+        {
+            module.Use(app);
+        }
+        return app;
+    }
 }

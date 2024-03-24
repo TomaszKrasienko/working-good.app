@@ -16,6 +16,6 @@ internal sealed class GetSlaTimeByEmployeeIdQueryHandler(
                 .Companies
                 .Include(x => x.Employees)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Employees.Any(x => x.Id.Equals(query.EmployeeId)), cancellationToken))
+                .FirstOrDefaultAsync(x => x.Employees.Any(y => y.Id.Equals(query.Id)), cancellationToken))
             .AsSlaTimeDto();
 }

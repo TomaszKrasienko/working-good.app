@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.companies.integration.tests"/>
+        <InternalsVisibleTo Include="wg.modules.tickets.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.companies.infrastructure.tests"/>
         <InternalsVisibleTo Include="wg.tests.shared"/>
     </ItemGroup>

@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.companies.application.CQRS.Companies.Queries;
 
-public sealed record GetSlaTimeByEmployeeIdQuery(Guid EmployeeId) : IQuery<CompanySlaTimeDto>;
+public sealed record GetSlaTimeByEmployeeIdQuery(Guid Id) : IQuery<CompanySlaTimeDto>;
