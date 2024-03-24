@@ -34,7 +34,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -91,7 +91,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _ownerApiClient
             .IsUserExists(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
@@ -143,14 +143,14 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
                 => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
             .Returns(new IsProjectExistsDto(){ Value = true});
         _companiesApiClient
-            .GetSlaTimeByEmployee(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .GetSlaTimeByEmployee(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(slaTimeDto);
         _ownerApiClient
             .IsUserExists(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
@@ -262,7 +262,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = false});
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
@@ -292,7 +292,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -323,7 +323,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -362,7 +362,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .IsEmployeeExists(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExists(Arg.Is<EmployeeWithProjectDto>(arg 

@@ -2,9 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
-using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
@@ -86,6 +84,35 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
         addedTicket.ShouldNotBeNull();
         addedTicket.CreatedBy.ShouldBe(user.Id);
         addedTicket.Number.Value.ShouldBe(existingTicket.Number + 1);
+    }
+
+    [Fact]
+    public async Task AddTicket_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
+            State.New(), false, null, null, null);
+        
+        //act 
+        var response = await HttpClient.PostAsJsonAsync("tickets-module/tickets/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task AddTicket_GivenNotExistingEmployeeIdAndAuthorized_ShouldReturn400BadRequest()
+    {
+        //arrange
+        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
+            State.New(), true, Guid.NewGuid(), null, null);
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("tickets-module/tickets/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     private async Task<Ticket> AddTicket()
