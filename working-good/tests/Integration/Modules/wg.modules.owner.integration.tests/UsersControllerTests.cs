@@ -111,7 +111,7 @@ public sealed class UsersControllerTests : BaseTestsController
         //arrange
         await AddOwner(true, true);
         var user = await GetUser();
-        var command = new SignInCommand(user.Email, "invalid_password");
+        var command = new SignInCommand(user!.Email, "invalid_password");
 
         //act
         var result = await HttpClient.PostAsJsonAsync("/owner-module/users/sign-in", command);
@@ -131,7 +131,7 @@ public sealed class UsersControllerTests : BaseTestsController
             var user = UserFactory.GetUserInOwner(owner, Role.Manager());
             if (withVerifiedUser)
             {
-                user.VerificationToken.Verify(DateTime.Now);
+                user.Verify(DateTime.Now);
             }
         }
         await _ownerDbContext.Owner.AddAsync(owner);
