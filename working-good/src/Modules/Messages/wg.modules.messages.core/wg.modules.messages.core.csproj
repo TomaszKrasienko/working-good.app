@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MailKit" Version="4.4.0" />
+    </ItemGroup>
+
 </Project>
