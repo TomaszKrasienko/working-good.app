@@ -20,7 +20,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     public async Task AddEmployee_GivenExistingCompanyIdAndAddEmployeeCommandAndAuthorizedManager_ShouldReturn201CreatedStatusCodeWithResourceIdHeaderAndLocationHeaderAndAddedEmployeeToDb()
     {
         //arrange
-        var company = await AddCompany();
+        var company = await AddCompanyAsync();
         var command = new AddEmployeeCommand(Guid.Empty, Guid.Empty, $"joe.doe@{company.EmailDomain.Value}", "555-555-555");
         Authorize(Guid.NewGuid(), Role.Manager());
         
@@ -81,7 +81,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    private async Task<Company> AddCompany()
+    private async Task<Company> AddCompanyAsync()
     {
         var company = CompanyFactory.Get();
         await _companiesDbContext.Companies.AddAsync(company);
