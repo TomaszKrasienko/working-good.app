@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Projects.Commands.AddProject;
+using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.tests.shared.Db;
@@ -16,12 +17,10 @@ namespace wg.modules.companies.integration.tests;
 public sealed class ProjectsControllerTests : BaseTestsController
 {
     [Fact]
-    public async Task AddProject_GivenExistingCompanyIdAndValidArgumentsForAuthorizedManager_ShouldReturn204CreatedStatusCodeAndAddToDb()
+    public async Task AddProject_GivenExistingCompanyIdAndAddProjectCommandAndAuthorizedManager_ShouldReturn204CreatedStatusCodeAndResourceIdHeaderAndLocationHeaderAndAddToDb()
     {
         //arrange
-        var company = CompanyFactory.Get();
-        await _companiesDbContext.Companies.AddAsync(company);
-        await _companiesDbContext.SaveChangesAsync();
+        var company = await AddCompanyAsync();
         Authorize(Guid.NewGuid(), Role.Manager());
         var command = new AddProjectCommand(Guid.Empty, Guid.Empty, "MyProject", "Description of project");
         
@@ -30,13 +29,15 @@ public sealed class ProjectsControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
-        response.Headers.TryGetValues("resource-id", out var values);
-        values!.Single().ShouldNotBe(Guid.Empty.ToString());
-        var project = await _companiesDbContext
-            .Projects
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Title == command.Title);
+        response.Headers.Location.ShouldNotBeNull();
+        
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
+        
+        var project = await GetProjectByIdAsync((Guid)resourceId);
         project.ShouldNotBeNull();
+        project.Title.Value.ShouldBe(command.Title);
     }
     
     [Fact]
@@ -79,6 +80,20 @@ public sealed class ProjectsControllerTests : BaseTestsController
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
+
+    private async Task<Company> AddCompanyAsync()
+    {
+        var company = CompanyFactory.Get();
+        await _companiesDbContext.Companies.AddAsync(company);
+        await _companiesDbContext.SaveChangesAsync();
+        return company;
+    }
+    
+    private Task<Project> GetProjectByIdAsync(Guid id)
+        =>  _companiesDbContext
+        .Projects
+        .AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
     
     #region arrange
     private readonly TestAppDb _testDb;
