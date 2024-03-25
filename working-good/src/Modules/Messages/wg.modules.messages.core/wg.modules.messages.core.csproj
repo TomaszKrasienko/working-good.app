@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +11,11 @@
 
     <ItemGroup>
       <PackageReference Include="MailKit" Version="4.4.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.messages.core.tests"/>
+        <InternalsVisibleTo Include="wg.tests.shared"/>
     </ItemGroup>
 
 </Project>
