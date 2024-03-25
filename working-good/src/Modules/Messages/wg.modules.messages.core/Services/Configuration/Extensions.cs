@@ -7,5 +7,6 @@ internal static class Extensions
 {
     internal static IServiceCollection AddServices(this IServiceCollection services)
         => services
-            .AddSingleton<IMessageSearcher, MessageSearcher>();
+            .AddSingleton<IMessageSearcher, MessageSearcher>()
+            .AddHostedService<BackgroundSearcher>();
 }
