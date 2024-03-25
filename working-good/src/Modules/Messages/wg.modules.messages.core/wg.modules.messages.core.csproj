@@ -17,5 +17,9 @@
         <InternalsVisibleTo Include="wg.modules.messages.core.tests"/>
         <InternalsVisibleTo Include="wg.tests.shared"/>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Clients\Configuration\" />
+    </ItemGroup>
 
 </Project>
