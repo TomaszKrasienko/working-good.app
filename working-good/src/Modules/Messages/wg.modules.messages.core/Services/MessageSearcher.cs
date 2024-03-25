@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using wg.modules.messages.core.Entities;
 using wg.modules.messages.core.Events;
+using wg.modules.messages.core.Events.Mappers;
 using wg.modules.messages.core.Services.Abstractions;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Mailbox;
@@ -18,8 +19,6 @@ internal sealed class MessageSearcher(
     IMailboxRegister mailboxRegister,
     IMessageBroker messageBroker) : IMessageSearcher
 {
-    private static int _count = 0;
-    
     public async Task SearchEmails(CancellationToken cancellationToken)
     {
         using var client = new ImapClient();
@@ -28,7 +27,7 @@ internal sealed class MessageSearcher(
         var inbox = client.Inbox;
         var readFolder = await inbox.GetSubfolderAsync("Read", cancellationToken);
         var uids = await inbox.SearchAsync(SearchQuery.All, cancellationToken);
-        List<ClientMessage> clientMessages = new List<ClientMessage>();
+        var clientMessages = new List<ClientMessage>();
         foreach (var uid in uids)
         {
             var message = await inbox.GetMessageAsync(uid, cancellationToken);
@@ -37,8 +36,9 @@ internal sealed class MessageSearcher(
             await inbox.MoveToAsync(uid, readFolder, cancellationToken);
         }
         await client.DisconnectAsync(true, cancellationToken);
-        
-        
+
+        var events = clientMessages?.Select(x => x.AsEvent()).ToArray();
+        await messageBroker.PublishAsync(events);
     }
 
     private async Task ConnectAsync(ImapClient client, CancellationToken cancellationToken)
@@ -49,10 +49,5 @@ internal sealed class MessageSearcher(
         client.AuthenticationMechanisms.Remove("XOAUTH2");
         await client.AuthenticateAsync(credentials, cancellationToken);
         await client.Inbox.OpenAsync(FolderAccess.ReadWrite, cancellationToken);
-    }
-    
-    private IEvent MapEvents(MimeMessage message)
-    {
-        return new MessageReceived(null, null, null, DateTime.Now, null);
     }
 }
