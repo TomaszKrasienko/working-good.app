@@ -55,8 +55,8 @@ internal sealed class MessageSearcher(
             {
                 clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
                     message.From.ToString(), message.Date.DateTime));
-                await inbox.MoveToAsync(uid, subfolder, cancellationToken);
             }
+            await inbox.MoveToAsync(uid, subfolder, cancellationToken);
         }
 
         return clientMessages;
