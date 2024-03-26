@@ -7,10 +7,10 @@ using wg.shared.abstractions.CQRS.Queries;
 namespace wg.modules.companies.infrastructure.Queries.Handlers.Employees;
 
 internal sealed class IsEmailExistsQueryHandler(
-    CompaniesDbContext dbContext) : IQueryHandler<IsEmailExistsQuery, IsEmployeeExistsDto>
+    CompaniesDbContext dbContext) : IQueryHandler<IsEmailExistsQuery, IsEmailExistsDto>
 {
-    public async Task<IsEmployeeExistsDto> HandleAsync(IsEmailExistsQuery query, CancellationToken cancellationToken)
-        => new IsEmployeeExistsDto()
+    public async Task<IsEmailExistsDto> HandleAsync(IsEmailExistsQuery query, CancellationToken cancellationToken)
+        => new IsEmailExistsDto()
         {
             Value = await dbContext
                 .Employees
