@@ -1,6 +1,8 @@
+using wg.modules.notifications.core.Models;
+
 namespace wg.modules.notifications.core.Services.Abstractions;
 
-public class IEmailPublisher
+public interface IEmailPublisher
 {
-    
+    Task PublishAsync(EmailNotification emailNotification);
 }
