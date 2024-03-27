@@ -6,14 +6,16 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.companies.infrastructure.Queries.Handlers.Employees;
 
-internal sealed class IsEmailExistsQueryHandler(
-    CompaniesDbContext dbContext) : IQueryHandler<IsEmailExistsQuery, IsEmailExistsDto>
+internal sealed class GetEmployeeIdQueryHandler(
+    CompaniesDbContext dbContext) : IQueryHandler<GetEmployeeIdQuery, EmployeeIdDto>
 {
-    public async Task<IsEmailExistsDto> HandleAsync(IsEmailExistsQuery query, CancellationToken cancellationToken)
-        => new IsEmailExistsDto()
+    public async Task<EmployeeIdDto> HandleAsync(GetEmployeeIdQuery query, CancellationToken cancellationToken)
+        => new EmployeeIdDto()
         {
             Value = await dbContext
                 .Employees
-                .AnyAsync(x => x.Email == query.Email, cancellationToken)
+                .Where(x => x.Email == query.Email)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync(cancellationToken)
         };
 }

@@ -6,5 +6,5 @@ internal static class Extensions
 {
     internal static MessageReceived AsEvent(this ClientMessage clientMessage)
         => new MessageReceived(clientMessage.Sender, clientMessage.Subject, clientMessage.Content,
-            clientMessage.CreatedAt, clientMessage.Number);
+            clientMessage.CreatedAt, clientMessage.AssignedEmployee, clientMessage.Number);
 }

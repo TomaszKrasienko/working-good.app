@@ -15,7 +15,7 @@ internal sealed class NewMessageDomainService(
         {
             var maxNumber = await ticketRepository.GetMaxNumberAsync();
             var newTicket = Ticket.Create(id, maxNumber + 1, subject, content,
-                createdAt, employeeId, State.New(), createdAt, false, null,
+                createdAt, employeeId ?? Guid.Empty, State.New(), createdAt, false, null,
                 employeeId);
             await ticketRepository.AddAsync(newTicket);
             return;

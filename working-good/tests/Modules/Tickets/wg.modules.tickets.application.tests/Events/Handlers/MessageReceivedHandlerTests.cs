@@ -25,7 +25,7 @@ public sealed class MessageReceivedHandlerTests
         await _newMessageDomainService
             .Received(1)
             .AddNewMessage(Arg.Any<Guid>(), @event.Sender, @event.Subject, @event.Content, @event.CreatedAt,
-                @event.TicketNumber, null, null);
+                @event.TicketNumber, null, @event.AssignedEmployee);
     }
     
     #region arrange

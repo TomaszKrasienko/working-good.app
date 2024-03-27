@@ -15,9 +15,10 @@ public sealed class ClientMessageCreateTests
         var content = "Test content";
         var sender = "test@test.pl";
         var createdAt = DateTime.Now;
+        var assignedEmployee = Guid.NewGuid();
         
         //act
-        var message = ClientMessage.Create(subject, content, sender, createdAt);
+        var message = ClientMessage.Create(subject, content, sender, createdAt, assignedEmployee);
         
         //assert
         message.Id.Value.ShouldNotBe(Guid.Empty);
@@ -36,9 +37,10 @@ public sealed class ClientMessageCreateTests
         var content = "Test content";
         var sender = "test@test.pl";
         var createdAt = DateTime.Now;
+        var assignedEmployee = Guid.NewGuid();
         
         //act
-        var message = ClientMessage.Create(subject, content, sender, createdAt);
+        var message = ClientMessage.Create(subject, content, sender, createdAt, assignedEmployee);
         
         //assert
         message.Id.Value.ShouldNotBe(Guid.Empty);

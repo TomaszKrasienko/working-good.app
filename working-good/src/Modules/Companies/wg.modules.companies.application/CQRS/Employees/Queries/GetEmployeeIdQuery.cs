@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.companies.application.CQRS.Employees.Queries;
 
-public record IsEmailExistsQuery(string Email) : IQuery<IsEmailExistsDto>;
+public sealed record GetEmployeeIdQuery(string Email) : IQuery<EmployeeIdDto>;

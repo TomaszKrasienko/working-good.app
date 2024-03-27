@@ -13,6 +13,7 @@ internal static class MessageReceivedFactory
                 f.Lorem.Sentence(5),
                 f.Lorem.Sentence(10),
                 f.Date.Recent(),
+                Guid.NewGuid(),
                 10));
         return faker.Generate(1).Single();
     }

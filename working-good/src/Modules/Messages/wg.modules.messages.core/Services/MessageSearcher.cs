@@ -50,11 +50,12 @@ internal sealed class MessageSearcher(
         foreach (var uid in uids)
         {
             var message = await inbox.GetMessageAsync(uid, cancellationToken);
-            var isExists = await companiesApiClient.IsEmployeeExists(new EmployeeEmailDto(message.From.ToString()));
-            if (isExists.Value)
+            var senderAddress = message.From.Mailboxes.Single().Address;
+            var employeeId = await companiesApiClient.GetEmployeeId(new EmployeeEmailDto(senderAddress));
+            if (employeeId?.Value is not null)
             {
                 clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
-                    message.From.ToString(), message.Date.DateTime));
+                    senderAddress, message.Date.DateTime, (Guid)employeeId.Value));
             }
             await inbox.MoveToAsync(uid, subfolder, cancellationToken);
         }

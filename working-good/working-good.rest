@@ -6,7 +6,7 @@
 GET {{url}}/wg
 
 ###
-GET {{url}}/owner
+GET {{url}}/owner-module/owner
 
 ### 
 POST {{url}}/owner-module/owner/add
@@ -33,7 +33,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"566eM29C4VEhYUzwddBbl4R0cRfmvIWU+867gtCYww3GGqfsgpR5+MuPlvT1mPJgsZ5skbCOK495RRS8wvwTkg"
+    "token":"peTdBtl40jYjVPKrZaVsEP5T1zhi2ojcaWpY2gRGk5cP82MfwIiJ9DKGjxg1en9EOze2klEexcdwWbymZtTHw"
 }
 
 ###
@@ -58,7 +58,7 @@ Content-Type: application/json
 {
     "name":"SecondClient",
     "slaTime":"00:08:00",
-    "emailDomain":"test2.pl"
+    "emailDomain":"outlook.com"
 }
 
 ###
@@ -70,6 +70,16 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "title":"First Project5",
+    "title":"First Project",
     "description":"Description"
+}
+
+###
+POST {{url}}/companies-module/employees/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "email": "tomasz.krasienko@outlook.com",
+    "phoneNumber":"555000111"
 }

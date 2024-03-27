@@ -6,5 +6,6 @@ namespace wg.modules.tickets.domain.Configuration;
 public static class Extensions
 {
     public static IServiceCollection AddDomain(this IServiceCollection services)
-        => services;
+        => services
+            .AddScoped<INewMessageDomainService, NewMessageDomainService>();
 }

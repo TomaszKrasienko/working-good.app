@@ -16,7 +16,8 @@ internal static class ClientMessageFactory
                     $"#{numberFaker}{f.Lorem.Sentence(5)}",
                     f.Lorem.Sentence(10),
                     f.Internet.Email(),
-                    f.Date.Recent()));
+                    f.Date.Recent(),
+                    Guid.NewGuid()));
         }
         else
         {
@@ -25,7 +26,8 @@ internal static class ClientMessageFactory
                     f.Lorem.Sentence(5),
                     f.Lorem.Sentence(10),
                     f.Internet.Email(),
-                    f.Date.Recent()));
+                    f.Date.Recent(),
+                    Guid.NewGuid()));
         }
 
         var clientMessages = clientMessageFaker.Generate(1);

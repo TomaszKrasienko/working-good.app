@@ -30,7 +30,11 @@ internal sealed class CompaniesModule : IModule
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsProjectForEmployeeExistsQuery, IsProjectExistsDto>("companies/project/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<IsEmailExistsQuery, IsEmailExistsDto>("companies/employee/is-email-exists/get",
-                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
+            .Subscribe<GetEmployeeIdQuery, EmployeeIdDto>("companies/employee/id/get",
+                (query, sp) =>
+                {
+                    var scope = sp.CreateScope();
+                    return scope.ServiceProvider.GetRequiredService<IQueryDispatcher>().SendAsync(query, default);
+                });
     }
 }

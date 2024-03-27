@@ -4,5 +4,5 @@ namespace wg.modules.messages.core.Clients.Employees;
 
 public interface ICompaniesApiClient
 {
-    Task<IsEmployeeExistsDto> IsEmployeeExists(EmployeeEmailDto dto);
+    Task<EmployeeIdDto> GetEmployeeId(EmployeeEmailDto dto);
 }

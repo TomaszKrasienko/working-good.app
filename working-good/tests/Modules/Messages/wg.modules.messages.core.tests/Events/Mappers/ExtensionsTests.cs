@@ -22,6 +22,7 @@ public sealed class ExtensionsTests
         result.Content.ShouldBe(clientMessage.Content);
         result.CreatedAt.ShouldBe(clientMessage.CreatedAt);
         result.Sender.ShouldBe(clientMessage.Sender);
+        result.AssignedEmployee.ShouldBe(clientMessage.AssignedEmployee);
         result.TicketNumber.ShouldBe(clientMessage.Number);
     }
 
@@ -40,6 +41,7 @@ public sealed class ExtensionsTests
         result.Content.ShouldBe(clientMessage.Content);
         result.CreatedAt.ShouldBe(clientMessage.CreatedAt);
         result.Sender.ShouldBe(clientMessage.Sender);
+        result.AssignedEmployee.ShouldBe(clientMessage.AssignedEmployee);
         result.TicketNumber.ShouldBeNull();
     }
 }

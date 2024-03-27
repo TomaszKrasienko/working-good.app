@@ -9,6 +9,6 @@ internal sealed class MessageReceivedHandler(
     public async Task HandleAsync(MessageReceived @event)
     {
         await newMessageDomainService.AddNewMessage(Guid.NewGuid(), @event.Sender, @event.Subject,
-            @event.Content, @event.CreatedAt, @event.TicketNumber, null, null);
+            @event.Content, @event.CreatedAt, @event.TicketNumber, null, @event.AssignedEmployee);
     }
 }
