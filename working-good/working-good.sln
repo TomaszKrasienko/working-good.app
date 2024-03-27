@@ -106,6 +106,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messages", "Messages", "{CE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.messages.core.tests", "tests\Modules\Messages\wg.modules.messages.core.tests\wg.modules.messages.core.tests.csproj", "{C6F89B4E-465A-4F7D-B6FC-8647A862DBB6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{F917781D-0332-41B9-B7E7-ECAC9E4EB67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.notifications.core.tests", "tests\Modules\Notifications\wg.modules.notifications.core.tests\wg.modules.notifications.core.tests.csproj", "{7188650B-2544-4E1A-9A63-5CDCEEACB5FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +167,8 @@ Global
 		{384E91DB-16FF-437A-9AF8-ACAFFE112E3D} = {8B677AD0-D191-41B4-B0CD-C84F320B5582}
 		{CEFFBE14-6344-4644-AB65-5E11C532AEE2} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
 		{C6F89B4E-465A-4F7D-B6FC-8647A862DBB6} = {CEFFBE14-6344-4644-AB65-5E11C532AEE2}
+		{F917781D-0332-41B9-B7E7-ECAC9E4EB67C} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
+		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB} = {F917781D-0332-41B9-B7E7-ECAC9E4EB67C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -305,5 +311,9 @@ Global
 		{C6F89B4E-465A-4F7D-B6FC-8647A862DBB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F89B4E-465A-4F7D-B6FC-8647A862DBB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F89B4E-465A-4F7D-B6FC-8647A862DBB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
