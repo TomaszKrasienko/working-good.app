@@ -1,4 +1,5 @@
 using wg.modules.notifications.core.Clients.Companies;
+using wg.modules.notifications.core.Clients.Companies.DTO;
 using wg.modules.notifications.core.Providers.Abstractions;
 using wg.modules.notifications.core.Services.Abstractions;
 using wg.shared.abstractions.Events;
@@ -10,8 +11,19 @@ internal sealed class TicketCreatedHandler(
     IEmailNotificationProvider emailNotificationProvider,
     IEmailPublisher emailPublisher) : IEventHandler<TicketCreated>
 {
-    public Task HandleAsync(TicketCreated @event)
+    public async Task HandleAsync(TicketCreated @event)
     {
-        throw new NotImplementedException();
+        if (@event.EmployeeId is null)
+        {
+            return;
+        }
+
+        var recipientEmail = await companiesApiClient.GetEmployeeEmail(new EmployeeIdDto()
+        {
+            Value = (Guid)@event.EmployeeId
+        });
+        var notification = emailNotificationProvider.GetForNewTicket(recipientEmail.Value,
+            @event.TicketNumber, @event.Content, @event.Subject);
+        await emailPublisher.PublishAsync(notification);
     }
 }
