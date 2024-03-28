@@ -46,7 +46,7 @@ public sealed class TicketCreatedHandlerTests
         //assert
         await _emailPublisher
             .Received(1)
-            .PublishAsync(notification);
+            .PublishAsync(notification, default);
     }
     
     [Fact]
@@ -69,7 +69,7 @@ public sealed class TicketCreatedHandlerTests
 
         await _emailPublisher
             .Received(0)
-            .PublishAsync(Arg.Any<EmailNotification>());
+            .PublishAsync(Arg.Any<EmailNotification>(), default);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public sealed class TicketCreatedHandlerTests
         //assert
         await _emailPublisher
             .Received(0)
-            .PublishAsync(Arg.Any<EmailNotification>());
+            .PublishAsync(Arg.Any<EmailNotification>(), default);
     }
 
 

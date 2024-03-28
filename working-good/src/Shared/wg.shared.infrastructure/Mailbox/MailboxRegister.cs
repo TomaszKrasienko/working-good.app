@@ -22,7 +22,11 @@ internal sealed class MailboxRegister : IMailboxRegister
         };
 
     public MailboxCredentials GetForSending()
-    {
-        throw new NotImplementedException();
-    }
+        => new MailboxCredentials()
+        {
+            Username = _options.Username,
+            Password = _options.Password,
+            Server = _options.SendingServer,
+            Port = _options.SendingPort
+        };
 }

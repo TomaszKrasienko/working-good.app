@@ -28,6 +28,6 @@ internal sealed class TicketCreatedHandler(
         {
             return;
         }
-        await emailPublisher.PublishAsync(notification);
+        await emailPublisher.PublishAsync(notification, default);
     }
 }

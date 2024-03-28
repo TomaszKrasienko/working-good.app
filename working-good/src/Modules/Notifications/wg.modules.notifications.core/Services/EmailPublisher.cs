@@ -1,12 +1,47 @@
+using System.Net;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
+using MimeKit;
 using wg.modules.notifications.core.Models;
 using wg.modules.notifications.core.Services.Abstractions;
+using wg.shared.abstractions.Mailbox;
 
 namespace wg.modules.notifications.core.Services;
 
-internal sealed class EmailPublisher : IEmailPublisher
+internal sealed class EmailPublisher(
+    ILogger<EmailPublisher> logger,
+    IMailboxRegister mailboxRegister) : IEmailPublisher
 {
-    public Task PublishAsync(EmailNotification emailNotification)
+    public async Task PublishAsync(EmailNotification emailNotification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        using var client = new SmtpClient();
+        await ConnectAsync(client, cancellationToken);
+        MimeMessage mimeMessage = GetMessage(emailNotification.Recipient,
+            mailboxRegister.GetForSending().Username, emailNotification.Subject,
+            emailNotification.Content);
+        await client.SendAsync(mimeMessage, cancellationToken);
+    }
+
+    private async Task ConnectAsync(SmtpClient client, CancellationToken cancellationToken)
+    {
+        var mailboxCredentials = mailboxRegister.GetForSending();
+        var credentials = new NetworkCredential(mailboxCredentials.Username, mailboxCredentials.Password);
+        await client.ConnectAsync(mailboxCredentials.Server, mailboxCredentials.Port, cancellationToken: cancellationToken);
+        client.AuthenticationMechanisms.Remove("XOAUTH2");
+        await client.AuthenticateAsync(credentials, cancellationToken);
+    }
+    
+    private MimeMessage GetMessage(string recipient, string sender, string subject, string content)
+    {
+        var message = new MimeMessage();
+        message.From.Add(MailboxAddress.Parse(sender));
+        message.To.Add(MailboxAddress.Parse(recipient));
+        message.Subject = subject;
+        var builder = new BodyBuilder
+        {
+            TextBody = content
+        };
+        message.Body = builder.ToMessageBody();
+        return message;
     }
 }

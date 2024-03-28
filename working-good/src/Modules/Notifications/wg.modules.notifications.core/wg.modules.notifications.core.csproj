@@ -11,4 +11,7 @@
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.notifications.core.tests"/>
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="MailKit" Version="4.4.0" />
+    </ItemGroup>
 </Project>
