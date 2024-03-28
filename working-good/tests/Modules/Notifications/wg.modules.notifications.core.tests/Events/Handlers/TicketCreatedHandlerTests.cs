@@ -72,6 +72,33 @@ public sealed class TicketCreatedHandlerTests
             .PublishAsync(Arg.Any<EmailNotification>());
     }
 
+    [Fact]
+    public async Task HandleAsync_ForNullNotification_ShouldNotSendByPublisher()
+    {
+        //arrange
+        var @event = TicketCreatedFactory.Get();
+        
+        var employeeEmail = "test@test.pl";
+        _companiesApiClient
+            .GetEmployeeEmail(Arg.Is<EmployeeIdDto>(arg
+                => arg.Value == @event.EmployeeId))
+            .Returns(new EmployeeEmailDto()
+            {
+                Value = employeeEmail
+            });
+
+        _emailNotificationProvider
+            .GetForNewTicket(employeeEmail, @event.TicketNumber, @event.Content, @event.Subject);
+
+        //act
+        await Act(@event);
+        
+        //assert
+        await _emailPublisher
+            .Received(0)
+            .PublishAsync(Arg.Any<EmailNotification>());
+    }
+
 
     
     #region arrange

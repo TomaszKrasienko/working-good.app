@@ -1,7 +1,7 @@
-using wg.modules.messages.core.Clients.Employees.DTO;
+using wg.modules.messages.core.Clients.Companies.DTO;
 using wg.shared.abstractions.Modules;
 
-namespace wg.modules.messages.core.Clients.Employees;
+namespace wg.modules.messages.core.Clients.Companies;
 
 internal sealed class CompaniesApiClient(
     IModuleClient moduleClient) : ICompaniesApiClient

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using wg.modules.messages.core.Clients.Companies;
+using wg.modules.notifications.core.Clients.Companies;
 
-namespace wg.modules.messages.core.Clients.Configuration;
+namespace wg.modules.notifications.core.Clients.Configuration;
 
 internal static class Extensions
 {

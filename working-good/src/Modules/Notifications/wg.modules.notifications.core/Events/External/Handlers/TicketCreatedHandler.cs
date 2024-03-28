@@ -24,6 +24,10 @@ internal sealed class TicketCreatedHandler(
         });
         var notification = emailNotificationProvider.GetForNewTicket(recipientEmail.Value,
             @event.TicketNumber, @event.Content, @event.Subject);
+        if (notification is null)
+        {
+            return;
+        }
         await emailPublisher.PublishAsync(notification);
     }
 }

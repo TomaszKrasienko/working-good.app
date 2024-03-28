@@ -1,4 +1,4 @@
-namespace wg.modules.messages.core.Clients.Employees.DTO;
+namespace wg.modules.messages.core.Clients.Companies.DTO;
 
 public class EmployeeIdDto
 {
