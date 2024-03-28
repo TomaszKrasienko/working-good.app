@@ -81,5 +81,19 @@ Content-Type: application/json
 
 {
     "email": "tomasz.krasienko@outlook.com",
-    "phoneNumber":"555000111"
+    "phoneNumber": "555000111"
+}
+
+###
+POST {{url}}/tickets-module/tickets/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "subject": "Test ticket subject",
+    "content": "Test ticket content",
+    "state": "New",
+    "isPriority": true,
+    "assignedEmployee": "cfe31982-c319-4459-9d1b-8b92aa1cccd4",
+    "assignedUser":"0d0094f2-69a3-4b66-91a6-6aa1b6b700db"
 }

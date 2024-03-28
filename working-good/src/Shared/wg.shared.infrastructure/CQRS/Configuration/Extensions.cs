@@ -33,6 +33,6 @@ internal static class Extensions
     
     private static IServiceCollection AddDispatchers(this IServiceCollection services)
         => services
-            .AddScoped<ICommandDispatcher, CommandDispatcher>()
-            .AddScoped<IQueryDispatcher, QueryDispatcher>();
+            .AddSingleton<ICommandDispatcher, CommandDispatcher>()
+            .AddSingleton<IQueryDispatcher, QueryDispatcher>();
 }

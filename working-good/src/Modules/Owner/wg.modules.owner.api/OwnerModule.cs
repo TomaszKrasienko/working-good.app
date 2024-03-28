@@ -28,6 +28,5 @@ internal sealed class OwnerModule : IModule
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsUserExistsQuery, IsUserExistsDto>("owner/user/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
-        
     }
 }
