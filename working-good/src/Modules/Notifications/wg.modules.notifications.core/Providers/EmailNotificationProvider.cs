@@ -1,5 +1,6 @@
 using wg.modules.notifications.core.Models;
 using wg.modules.notifications.core.Providers.Abstractions;
+using wg.shared.infrastructure.Notifications;
 
 namespace wg.modules.notifications.core.Providers;
 
@@ -22,8 +23,8 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
         return new EmailNotification()
         {
             Recipient = recipient,
-            Subject = $"Ticket number #{ticketNumber} - {subject}",
-            Content = $"A ticket has been created to which you have been assigned with the following content\n{content}"
+            Subject = NotificationsDirectory.GetNewTicketSubject(ticketNumber, subject),
+            Content = NotificationsDirectory.GetNewTicketContent(content)
         };
     }
 }

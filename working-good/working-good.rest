@@ -116,7 +116,7 @@ Content-Type: application/json
     "subject": "Test ticket subject",
     "content": "Test ticket content",
     "state": "New",
-    "isPriority": true,
+    "isPriority": false,
     "assignedEmployee": "{{employeeId}}",
     "assignedUser": "{{userId}}"
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public record ExpirationDate(DateTime Value)

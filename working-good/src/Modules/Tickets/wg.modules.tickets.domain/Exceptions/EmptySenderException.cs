@@ -1,4 +1,6 @@
+using wg.shared.abstractions.Exceptions;
+
 namespace wg.modules.tickets.domain.Exceptions;
 
 public class EmptySenderException() 
-    : Exception("Sender can not be empty");
+    : WgException("Sender can not be empty");

@@ -1,3 +1,5 @@
+using System;
+
 namespace wg.modules.tickets.domain.ValueObjects;
 
 public sealed record CreatedAt(DateTime Value)

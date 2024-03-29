@@ -1,3 +1,4 @@
+using System;
 using wg.shared.abstractions.Exceptions;
 
 namespace wg.modules.tickets.domain.Exceptions;

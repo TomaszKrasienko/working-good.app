@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;

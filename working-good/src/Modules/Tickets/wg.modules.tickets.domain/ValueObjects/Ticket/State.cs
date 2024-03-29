@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using wg.modules.tickets.domain.Exceptions;
 
 namespace wg.modules.tickets.domain.ValueObjects.Ticket;

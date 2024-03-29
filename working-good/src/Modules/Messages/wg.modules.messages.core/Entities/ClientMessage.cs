@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using wg.shared.abstractions.Kernel.Types;
+using wg.shared.infrastructure.Notifications;
 
 namespace wg.modules.messages.core.Entities;
 
@@ -42,7 +43,7 @@ internal sealed class ClientMessage
 
     private void SetNumber()
     {
-        string pattern = @"Ticket number #(\d+) - ";
+        string pattern = NotificationsDirectory.GetNewTicketPattern();
         if (Regex.IsMatch(Subject, pattern))
         {
             var sentenceMatch = Regex.Match(Subject, pattern);

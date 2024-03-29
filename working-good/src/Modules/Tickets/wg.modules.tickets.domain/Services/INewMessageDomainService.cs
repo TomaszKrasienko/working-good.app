@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace wg.modules.tickets.domain.Services;
 
 public interface INewMessageDomainService
