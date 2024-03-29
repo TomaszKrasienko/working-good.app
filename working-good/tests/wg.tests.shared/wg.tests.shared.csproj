@@ -29,5 +29,6 @@
         <InternalsVisibleTo Include="wg.modules.owner.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.messages.core.tests"/>
         <InternalsVisibleTo Include="wg.modules.notifications.core.tests"/>
+        <InternalsVisibleTo Include="wg.modules.tickets.infrastructure.tests"/>
     </ItemGroup>
 </Project>
