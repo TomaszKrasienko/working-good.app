@@ -6,7 +6,6 @@ using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -96,18 +95,11 @@ public sealed class EmployeesControllerTests : BaseTestsController
         .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
     
     #region arrange
-    private readonly TestAppDb _testAppDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
     public EmployeesControllerTests()
     {
-        _testAppDb = new TestAppDb();
-        _companiesDbContext = _testAppDb.CompaniesDbContext;
-    }
-
-    public override void Dispose()
-    {
-        _testAppDb.Dispose();
+        _companiesDbContext = TestAppDb.CompaniesDbContext;
     }
     #endregion
 }

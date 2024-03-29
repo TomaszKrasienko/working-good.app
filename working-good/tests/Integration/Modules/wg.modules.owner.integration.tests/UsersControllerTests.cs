@@ -152,20 +152,12 @@ public sealed class UsersControllerTests : BaseTestsController
             .FirstOrDefaultAsync(x => x.Email == email);
 
     #region arrange
-    private readonly TestAppDb _testAppDb;
     private readonly OwnerDbContext _ownerDbContext;
     
     public UsersControllerTests()
     {
-        _testAppDb = new TestAppDb();
-        _ownerDbContext = _testAppDb.OwnerDbContext;
+        _ownerDbContext = TestAppDb.OwnerDbContext;
     }
-
-    public override void Dispose()
-    {
-        _testAppDb.Dispose();
-    }
-
     protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IPasswordManager, TestPasswordManager>();

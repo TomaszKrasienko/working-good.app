@@ -92,18 +92,11 @@ public sealed class GroupControllerTests : BaseTestsController
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
     
     #region arrange
-    private readonly TestAppDb _testAppDb;
     private readonly OwnerDbContext _ownerDbContext;
 
     public GroupControllerTests()
     {
-        _testAppDb = new TestAppDb();
-        _ownerDbContext = _testAppDb.OwnerDbContext;
-    }
-
-    public override void Dispose()
-    {
-        _testAppDb.Dispose();
+        _ownerDbContext = TestAppDb.OwnerDbContext;
     }
     #endregion
 }

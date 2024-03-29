@@ -19,7 +19,7 @@ using State = wg.modules.tickets.domain.ValueObjects.Ticket.State;
 namespace wg.modules.tickets.integration.tests;
 
 [Collection("#1")]
-public sealed class TicketsControllerTests : BaseTestsController, IDisposable
+public sealed class TicketsControllerTests : BaseTestsController
 {
     [Fact]
     public async Task AddTicket_GivenOnlyRequiredArgumentsAndAuthorized_ShouldReturn201StatusCodeWithResourceIdAndLocationHeaderAndAddTicketToDdb()
@@ -131,22 +131,15 @@ public sealed class TicketsControllerTests : BaseTestsController, IDisposable
     
     
     #region arrange
-    private readonly TestAppDb _testAppDb;
     private readonly TicketsDbContext _ticketsDbContext;
     private readonly CompaniesDbContext _companiesDbContext;
     private readonly OwnerDbContext _ownerDbContext;
     
     public TicketsControllerTests()
     {
-        _testAppDb = new TestAppDb();
-        _ticketsDbContext = _testAppDb.TicketsDbContext;
-        _companiesDbContext = _testAppDb.CompaniesDbContext;
-        _ownerDbContext = _testAppDb.OwnerDbContext;
-    }
-
-    public override void Dispose()
-    {
-        _testAppDb.Dispose();
+        _ticketsDbContext = TestAppDb.TicketsDbContext;
+        _companiesDbContext = TestAppDb.CompaniesDbContext;
+        _ownerDbContext = TestAppDb.OwnerDbContext;
     }
     #endregion
 }

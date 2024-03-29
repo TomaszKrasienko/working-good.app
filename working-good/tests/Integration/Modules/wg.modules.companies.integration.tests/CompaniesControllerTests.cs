@@ -142,18 +142,11 @@ public sealed class CompaniesControllerTests : BaseTestsController
             .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
 
     #region arrange
-    private readonly TestAppDb _testAppDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
     public CompaniesControllerTests()
     {
-        _testAppDb = new TestAppDb();
-        _companiesDbContext = _testAppDb.CompaniesDbContext;
-    }
-
-    public override void Dispose()
-    {
-        _testAppDb.Dispose();
+        _companiesDbContext = TestAppDb.CompaniesDbContext;
     }
     #endregion
 }

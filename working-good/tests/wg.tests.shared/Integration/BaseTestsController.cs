@@ -1,10 +1,9 @@
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using wg.shared.abstractions.Auth;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
+using wg.tests.shared.Db;
 using wg.tests.shared.Mocks;
 
 namespace wg.tests.shared.Integration;
@@ -12,11 +11,13 @@ namespace wg.tests.shared.Integration;
 public abstract class BaseTestsController : IDisposable
 {
     protected readonly HttpClient HttpClient;
+    internal readonly TestAppDb TestAppDb;
 
     protected BaseTestsController()
     {
         var app = new TestApp(ConfigureServices);
         HttpClient = app.HttpClient;
+        TestAppDb = new TestAppDb();
     }
 
     protected virtual void ConfigureServices(IServiceCollection services)
@@ -57,5 +58,6 @@ public abstract class BaseTestsController : IDisposable
     
     public virtual void Dispose()
     {
+        TestAppDb.Dispose();
     }
 }

@@ -96,18 +96,11 @@ public sealed class ProjectsControllerTests : BaseTestsController
         .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
     
     #region arrange
-    private readonly TestAppDb _testDb;
     private readonly CompaniesDbContext _companiesDbContext;
 
     public ProjectsControllerTests()
     {
-        _testDb = new TestAppDb();
-        _companiesDbContext = _testDb.CompaniesDbContext;
-    }
-
-    public override void Dispose()
-    {
-        _testDb.Dispose();
+        _companiesDbContext = TestAppDb.CompaniesDbContext;
     }
     #endregion
 }
