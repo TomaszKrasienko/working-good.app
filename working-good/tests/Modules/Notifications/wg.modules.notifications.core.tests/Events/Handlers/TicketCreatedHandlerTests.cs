@@ -23,7 +23,7 @@ public sealed class TicketCreatedHandlerTests
         var employeeEmail = "test@test.pl";
         _companiesApiClient
             .GetEmployeeEmail(Arg.Is<EmployeeIdDto>(arg
-                => arg.Value == @event.EmployeeId))
+                => arg.Id == @event.EmployeeId))
             .Returns(new EmployeeEmailDto()
             {
                 Value = employeeEmail
@@ -81,7 +81,7 @@ public sealed class TicketCreatedHandlerTests
         var employeeEmail = "test@test.pl";
         _companiesApiClient
             .GetEmployeeEmail(Arg.Is<EmployeeIdDto>(arg
-                => arg.Value == @event.EmployeeId))
+                => arg.Id == @event.EmployeeId))
             .Returns(new EmployeeEmailDto()
             {
                 Value = employeeEmail

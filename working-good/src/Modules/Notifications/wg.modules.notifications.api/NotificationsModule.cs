@@ -9,6 +9,7 @@ internal sealed class NotificationsModule : IModule
 {
     internal const string RoutePath = "notifications-module";
     public string Name { get; } = "Notifications";
+    
     public void Register(IServiceCollection services)
     {
         services.AddCore();

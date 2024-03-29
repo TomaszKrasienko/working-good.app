@@ -31,6 +31,8 @@ internal sealed class CompaniesModule : IModule
             .Subscribe<IsProjectForEmployeeExistsQuery, IsProjectExistsDto>("companies/project/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetEmployeeIdQuery, EmployeeIdDto>("companies/employee/id/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<GetEmployeeEmailQuery, EmployeeEmailDto>("companies/employee/email/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }

@@ -7,7 +7,7 @@ using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
-using wg.shared.abstractions.Events;
+using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 
 namespace wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
@@ -17,7 +17,7 @@ internal sealed class AddTicketCommandHandler(
     ICompaniesApiClient companiesApiClient,
     IOwnerApiClient ownerApiClient,
     IClock clock,
-    IEventDispatcher eventDispatcher) : ICommandHandler<AddTicketCommand>
+    IMessageBroker messageBroker) : ICommandHandler<AddTicketCommand>
 {
     public async Task HandleAsync(AddTicketCommand command, CancellationToken cancellationToken)
     {
@@ -81,6 +81,6 @@ internal sealed class AddTicketCommandHandler(
             expirationDate, command.AssignedEmployee, command.AssignedUser, command.ProjectId);
 
         await ticketRepository.AddAsync(ticket);
-        await eventDispatcher.PublishAsync(ticket.AsEvent());
+        await messageBroker.PublishAsync(ticket.AsEvent());
     }
 }

@@ -11,6 +11,7 @@ using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Events;
+using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Mocks;
 using Xunit;
@@ -69,9 +70,9 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId.Value == command.ProjectId));
-        await _eventDispatcher
+        await _messageBroker
             .Received(1)
-            .PublishAsync<TicketCreated>(Arg.Is<TicketCreated>(x 
+            .PublishAsync(Arg.Is<TicketCreated>(x 
                 => x.Subject == command.Subject
                 && x.Content == command.Content
                 && x.TicketNumber == maxNumber + 1
@@ -117,9 +118,9 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId == null));
-        await _eventDispatcher
+        await _messageBroker
             .Received(1)
-            .PublishAsync<TicketCreated>(Arg.Is<TicketCreated>(x 
+            .PublishAsync(Arg.Is<TicketCreated>(x 
                 => x.Subject == command.Subject
                 && x.Content == command.Content
                 && x.TicketNumber == maxNumber + 1
@@ -182,9 +183,9 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId.Value == command.ProjectId
                && arg.ExpirationDate.Value == _clock.Now().Add(slaTimeDto.SlaTime)));
-        await _eventDispatcher
+        await _messageBroker
             .Received(1)
-            .PublishAsync<TicketCreated>(Arg.Is<TicketCreated>(x 
+            .PublishAsync(Arg.Is<TicketCreated>(x 
                 => x.Subject == command.Subject
                 && x.Content == command.Content
                 && x.TicketNumber == maxNumber + 1
@@ -236,9 +237,9 @@ public sealed class AddTicketCommandHandlerTests
                    && arg.AssignedUser == null
                    && arg.ProjectId == null
                    && arg.ExpirationDate == null));
-        await _eventDispatcher
+        await _messageBroker
             .Received(1)
-            .PublishAsync<TicketCreated>(Arg.Is<TicketCreated>(x 
+            .PublishAsync(Arg.Is<TicketCreated>(x 
                 => x.Subject == command.Subject
                    && x.Content == command.Content
                    && x.TicketNumber == maxNumber + 1
@@ -388,7 +389,7 @@ public sealed class AddTicketCommandHandlerTests
     private readonly ICompaniesApiClient _companiesApiClient;
     private readonly IOwnerApiClient _ownerApiClient;
     private readonly IClock _clock;
-    private readonly IEventDispatcher _eventDispatcher;
+    private readonly IMessageBroker _messageBroker;
     private readonly AddTicketCommandHandler _handler;
 
     public AddTicketCommandHandlerTests()
@@ -397,9 +398,9 @@ public sealed class AddTicketCommandHandlerTests
         _companiesApiClient = Substitute.For<ICompaniesApiClient>();
         _ownerApiClient = Substitute.For<IOwnerApiClient>();
         _clock = TestsClock.Create(DateTime.Now);
-        _eventDispatcher = Substitute.For<IEventDispatcher>();
+        _messageBroker = Substitute.For<IMessageBroker>();
         _handler = new AddTicketCommandHandler(_ticketRepository, _companiesApiClient, _ownerApiClient,
-            _clock, _eventDispatcher);
+            _clock, _messageBroker);
     }
     #endregion
 }

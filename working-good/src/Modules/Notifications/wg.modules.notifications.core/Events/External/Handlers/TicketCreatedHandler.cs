@@ -20,7 +20,7 @@ internal sealed class TicketCreatedHandler(
 
         var recipientEmail = await companiesApiClient.GetEmployeeEmail(new EmployeeIdDto()
         {
-            Value = (Guid)@event.EmployeeId
+            Id = (Guid)@event.EmployeeId
         });
         var notification = emailNotificationProvider.GetForNewTicket(recipientEmail.Value,
             @event.TicketNumber, @event.Content, @event.Subject);

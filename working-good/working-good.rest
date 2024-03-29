@@ -3,10 +3,20 @@
 @password = StrongPass123!
 
 ###
-GET {{url}}/wg
+GET {{url}}/companies-module
 
 ###
-GET {{url}}/owner-module/owner
+GET {{url}}/messages-module
+
+###
+GET {{url}}/notifications-module
+
+###
+GET {{url}}/owner-module
+
+###
+GET {{url}}/tickets-module
+
 
 ### 
 POST {{url}}/owner-module/owner/add
