@@ -34,11 +34,11 @@ internal sealed class CompanyTypeConfiguration : IEntityTypeConfiguration<Compan
             .HasMaxLength(20);
         
         builder
-            .HasMany<Employee>()
+            .HasMany<Employee>(x => x.Employees)
             .WithOne();
         
         builder
-            .HasMany<Project>()
+            .HasMany<Project>(x => x.Projects)
             .WithOne();
     }
 }
