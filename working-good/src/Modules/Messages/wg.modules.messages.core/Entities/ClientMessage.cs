@@ -42,11 +42,13 @@ internal sealed class ClientMessage
 
     private void SetNumber()
     {
-        string pattern = @"^#[0-9]+";
+        string pattern = @"Ticket number #(\d+) - ";
         if (Regex.IsMatch(Subject, pattern))
         {
-            var number = Regex.Match(Subject, pattern);
-            Number = int.Parse(number.Value.Substring(1));
+            var sentenceMatch = Regex.Match(Subject, pattern);
+            var numberPattern = @"(\d+)";
+            var numberMatch = Regex.Match(sentenceMatch.Value, numberPattern);
+            Number = int.Parse(numberMatch.Value);
         }
     }
 }

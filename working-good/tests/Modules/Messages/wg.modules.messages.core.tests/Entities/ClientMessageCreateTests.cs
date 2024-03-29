@@ -6,23 +6,26 @@ namespace wg.modules.messages.core.tests.Entities;
 
 public sealed class ClientMessageCreateTests
 {
-    [Fact]
-    public void Create_GivenSubjectStartedFromNumber_ShouldReturnMessageWithFilledNumber()
+    [Theory]
+    [InlineData("Ticket number #{0} - Test subject")]
+    [InlineData("PD: Ticket number #{0} - Test subject")]
+    [InlineData("ODP: Ticket number #{0} - Test subject")]
+    public void Create_GivenSubjectStartedFromNumber_ShouldReturnMessageWithFilledNumber(string subject)
     {
         //arrange
         var number = 14;
-        var subject = $"#{number} - Test subject";
+        var subjectWithNumber = string.Format(subject, number);
         var content = "Test content";
         var sender = "test@test.pl";
         var createdAt = DateTime.Now;
         var assignedEmployee = Guid.NewGuid();
         
         //act
-        var message = ClientMessage.Create(subject, content, sender, createdAt, assignedEmployee);
+        var message = ClientMessage.Create(subjectWithNumber, content, sender, createdAt, assignedEmployee);
         
         //assert
         message.Id.Value.ShouldNotBe(Guid.Empty);
-        message.Subject.ShouldBe(subject);
+        message.Subject.ShouldBe(subjectWithNumber);
         message.Content.ShouldBe(content);
         message.Sender.ShouldBe(sender);
         message.CreatedAt.ShouldBe(createdAt);
