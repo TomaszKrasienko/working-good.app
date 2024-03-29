@@ -7,7 +7,8 @@ namespace wg.modules.notifications.api;
 
 internal sealed class NotificationsModule : IModule
 {
-    public string Name { get; } = "notifications-module";
+    internal const string RoutePath = "notifications-module";
+    public string Name { get; } = "Notifications";
     public void Register(IServiceCollection services)
     {
         services.AddCore();

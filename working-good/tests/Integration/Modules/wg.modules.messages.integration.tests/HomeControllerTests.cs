@@ -3,7 +3,7 @@ using Shouldly;
 using wg.tests.shared.Integration;
 using Xunit;
 
-namespace wg.modules.companies.integration.tests;
+namespace wg.modules.messages.integration.tests;
 
 [Collection("#1")]
 public class HomeControllerTests : BaseTestsController
@@ -12,8 +12,8 @@ public class HomeControllerTests : BaseTestsController
     public async Task Get_ShouldReturn200OkStatusCode()
     {
         //act
-        var response = await HttpClient.GetAsync("/companies-module");
-        
+        var response = await HttpClient.GetAsync("/messages-module");
+    
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }

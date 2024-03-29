@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace wg.modules.messages.api.Controllers;
+namespace wg.modules.notifications.api.Controllers;
 
-[Route(MessagesModule.RoutePath)]
+[Microsoft.AspNetCore.Components.Route(NotificationsModule.RoutePath)]
 internal sealed class HomeController : BaseController
 {
     [HttpGet]
