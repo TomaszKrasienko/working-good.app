@@ -112,6 +112,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.notifications.co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.messages.integration.tests", "tests\Integration\Modules\wg.modules.messages.integration.tests\wg.modules.messages.integration.tests.csproj", "{AC6A51D0-1EA3-4259-A0C9-367F51D6FA42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.notifications.integration.tests", "tests\Integration\Modules\wg.modules.notifications.integration.tests\wg.modules.notifications.integration.tests.csproj", "{3300D072-444C-4A09-83F5-E47807CE6362}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,6 +174,7 @@ Global
 		{F917781D-0332-41B9-B7E7-ECAC9E4EB67C} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
 		{7188650B-2544-4E1A-9A63-5CDCEEACB5FB} = {F917781D-0332-41B9-B7E7-ECAC9E4EB67C}
 		{AC6A51D0-1EA3-4259-A0C9-367F51D6FA42} = {36BA58D3-544B-46E6-BCA2-BDC57EB0E62E}
+		{3300D072-444C-4A09-83F5-E47807CE6362} = {36BA58D3-544B-46E6-BCA2-BDC57EB0E62E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -322,5 +325,9 @@ Global
 		{AC6A51D0-1EA3-4259-A0C9-367F51D6FA42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6A51D0-1EA3-4259-A0C9-367F51D6FA42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6A51D0-1EA3-4259-A0C9-367F51D6FA42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3300D072-444C-4A09-83F5-E47807CE6362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3300D072-444C-4A09-83F5-E47807CE6362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3300D072-444C-4A09-83F5-E47807CE6362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3300D072-444C-4A09-83F5-E47807CE6362}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
