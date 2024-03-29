@@ -22,7 +22,7 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
         return new EmailNotification()
         {
             Recipient = recipient,
-            Subject = $"#{ticketNumber} - {subject}",
+            Subject = $"Ticket number #{ticketNumber} - {subject}",
             Content = $"A ticket has been created to which you have been assigned with the following content\n{content}"
         };
     }

@@ -11,4 +11,15 @@ internal static class Extensions
             Id = owner.Id,
             Name = owner.Name
         };
+
+    internal static UserDto AsDto(this User user)
+        => new UserDto()
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FullName.FirstName,
+            LastName = user.FullName.LastName,
+            Role = user.Role,
+            State = user.State
+        };
 }

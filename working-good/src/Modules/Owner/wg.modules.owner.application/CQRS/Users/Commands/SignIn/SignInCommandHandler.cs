@@ -34,7 +34,7 @@ internal sealed class SignInCommandHandler(
             throw new IncorrectPasswordException(command.Password);
         }
 
-        var jwt = authenticator.CreateToken(user.Id.ToString(), user.Role);
+        var jwt = authenticator.CreateToken(user.Id.Value.ToString(), user.Role);
         tokenStorage.Set(jwt);
     }
 }

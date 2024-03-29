@@ -34,7 +34,7 @@ public sealed class SignInCommandHandlerTests
             .VerifyPassword(user.Password, command.Password)
             .Returns(true);
         _authenticator
-            .CreateToken(user.Id.ToString(), user.Role)
+            .CreateToken(user.Id.Value.ToString(), user.Role)
             .Returns(jwtDto);
         
         //act

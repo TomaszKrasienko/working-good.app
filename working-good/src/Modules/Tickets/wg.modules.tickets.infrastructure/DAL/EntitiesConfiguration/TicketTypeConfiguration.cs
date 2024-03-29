@@ -79,7 +79,7 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
             .HasConversion(x => x.Value, y => new EntityId(y));
 
         builder
-            .HasMany<Message>()
+            .HasMany<Message>(x => x.Messages)
             .WithOne();
         
         builder

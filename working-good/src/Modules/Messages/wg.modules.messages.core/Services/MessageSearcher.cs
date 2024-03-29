@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
@@ -51,15 +52,27 @@ internal sealed class MessageSearcher(
         {
             var message = await inbox.GetMessageAsync(uid, cancellationToken);
             var senderAddress = message.From.Mailboxes.Single().Address;
-            var employeeId = await companiesApiClient.GetEmployeeId(new EmployeeEmailDto(senderAddress));
-            if (employeeId?.Value is not null)
+            if (IsAddressCorrect(senderAddress))
             {
-                clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
-                    senderAddress, message.Date.DateTime, (Guid)employeeId.Value));
+                var employeeId = await companiesApiClient.GetEmployeeId(new EmployeeEmailDto(senderAddress));
+                if (employeeId?.Value is not null)
+                {
+                    clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
+                        senderAddress, message.Date.DateTime, (Guid)employeeId.Value));
+                }
             }
             await inbox.MoveToAsync(uid, subfolder, cancellationToken);
         }
 
         return clientMessages;
+    }
+
+    private bool IsAddressCorrect(string address)
+    {
+        Regex regex = new(
+            @"^(?("")("".+?(?<!\\)""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+            @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+            RegexOptions.Compiled);
+        return regex.IsMatch(address);
     }
 }

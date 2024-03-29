@@ -7,6 +7,7 @@ using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
 using wg.modules.owner.application.CQRS.Users.Commands.VerifyUser;
+using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
@@ -123,6 +124,31 @@ public sealed class UsersControllerTests : BaseTestsController
         response!.Message.ShouldBe("Wrong credentials");
     }
 
+    [Fact]
+    public async Task Me_GivenAuthorizedUser_ShouldReturnUserDto()
+    {
+        //arrange
+        await AddOwner(true, true);
+        var user = await GetUser();
+        Authorize(user.Id, user.Role);
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<UserDto>("owner-module/users/me");
+        
+        //assert
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Me_GivenUnauthorizedUser_ShouldReturnUnauthorized()
+    {
+        //act
+        var result = await HttpClient.GetAsync("owner-module/users/me");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
     private async Task<Owner> AddOwner(bool withUser, bool withVerifiedUser)
     {
         var owner = OwnerFactory.Get();
@@ -139,13 +165,13 @@ public sealed class UsersControllerTests : BaseTestsController
         return owner;
     }
     
-    private Task<User?> GetUser()
+    private Task<User> GetUser()
         => _ownerDbContext
             .Users
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
-    private Task<User?> GetUserByEmail(string email)
+    private Task<User> GetUserByEmail(string email)
         => _ownerDbContext
             .Users
             .AsNoTracking()

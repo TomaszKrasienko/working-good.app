@@ -43,7 +43,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"peTdBtl40jYjVPKrZaVsEP5T1zhi2ojcaWpY2gRGk5cP82MfwIiJ9DKGjxg1en9EOze2klEexcdwWbymZtTHw"
+    "token":"00000000-0000-0000-0000-000000000000"
 }
 
 ###
@@ -58,6 +58,14 @@ Content-Type: application/json
 
 ###
 @token = {{sign_in.response.body.$.token}}
+
+###
+# @name me
+GET {{url}}/owner-module/users/me
+Authorization: Bearer {{token}}
+
+###
+@userId = {{me.response.body.$.id}}
 
 ###
 # @name add_company
@@ -85,6 +93,7 @@ Content-Type: application/json
 }
 
 ###
+# @name add_employee
 POST {{url}}/companies-module/employees/companies/{{companyId}}/add
 Authorization: bearer {{token}}
 Content-Type: application/json
@@ -93,6 +102,10 @@ Content-Type: application/json
     "email": "tomasz.krasienko@outlook.com",
     "phoneNumber": "555000111"
 }
+
+###
+@employeeId = {{add_employee.response.headers.resource-id}}
+
 
 ###
 POST {{url}}/tickets-module/tickets/add
@@ -104,6 +117,6 @@ Content-Type: application/json
     "content": "Test ticket content",
     "state": "New",
     "isPriority": true,
-    "assignedEmployee": "cfe31982-c319-4459-9d1b-8b92aa1cccd4",
-    "assignedUser":"0d0094f2-69a3-4b66-91a6-6aa1b6b700db"
+    "assignedEmployee": "{{employeeId}}",
+    "assignedUser": "{{userId}}"
 }
