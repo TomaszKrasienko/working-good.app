@@ -134,6 +134,29 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.Messages.ShouldNotBeEmpty();
     }
 
+    [Fact]
+    public async Task GetById_GivenNotExistingIdAndAuthorized_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401Unauthorized()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
     private async Task<Ticket> AddTicket(bool withMessage = false)
     {
         var ticket = TicketsFactory.GetOnlyRequired(State.Open());
