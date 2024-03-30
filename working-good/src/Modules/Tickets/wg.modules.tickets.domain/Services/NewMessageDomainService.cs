@@ -33,7 +33,7 @@ internal sealed class NewMessageDomainService(
             }
         }
 
-        if (ticketNumber is not null)
+        if (ticketNumber is not null && ticket is null)
         {
             ticket = await ticketRepository.GetByNumberAsync((int)ticketNumber);
             if (ticket is null)

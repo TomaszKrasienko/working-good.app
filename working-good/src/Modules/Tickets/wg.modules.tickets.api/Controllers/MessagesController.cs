@@ -14,4 +14,11 @@ internal sealed class MessagesController : BaseController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<MessageDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok();
+    
+    // [HttpPost("add")]
+    // [Authorize]
+    // [ProducesResponseType(StatusCodes.Status201Created)]
+    // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    // [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // public async Task<ActionResult> AddMessage(AddM)
 }
