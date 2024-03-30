@@ -1,11 +1,13 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.infrastructure.DAL;
 using wg.tests.shared.Db;
@@ -115,9 +117,33 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    private async Task<Ticket> AddTicket()
+    [Fact]
+    public async Task GetById_GivenExistingTicketIdWithMessageAndAuthorized_ShouldReturnTicketDtoWithMessageDto()
+    {
+        //arrange
+        var ticket = await AddTicket(true);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetFromJsonAsync<TicketDto>($"tickets-module/tickets/{ticket.Id.Value}");
+        
+        //assert
+        response.ShouldNotBeNull();
+        response.Id.ShouldBe(ticket.Id.Value);
+        response.Messages.ShouldNotBeNull();
+        response.Messages.ShouldNotBeEmpty();
+    }
+
+    private async Task<Ticket> AddTicket(bool withMessage = false)
     {
         var ticket = TicketsFactory.GetOnlyRequired(State.Open());
+        if (withMessage)
+        {
+            var message = MessagesFactory.Get().Single();
+            ticket.AddMessage(message.Id, message.Sender, message.Subject, message.Content, 
+                message.CreatedAt);
+        }
+        
         await _ticketsDbContext.Tickets.AddAsync(ticket);
         await _ticketsDbContext.SaveChangesAsync();
         return ticket;

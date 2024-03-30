@@ -108,6 +108,7 @@ Content-Type: application/json
 
 
 ###
+# @name ticket_add
 POST {{url}}/tickets-module/tickets/add
 Authorization: bearer {{token}}
 Content-Type: application/json
@@ -120,3 +121,10 @@ Content-Type: application/json
     "assignedEmployee": "{{employeeId}}",
     "assignedUser": "{{userId}}"
 }
+
+###
+@ticketId = {{ticket_add.response.headers.resource-id}}
+
+###
+GET {{url}}/tickets-module/tickets/{{ticketId}}
+Authorization: bearer {{token}}

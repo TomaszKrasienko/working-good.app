@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
+using wg.modules.tickets.application.DTOs;
 using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
@@ -20,7 +21,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<TicketDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetTaskByIdQuery(id), cancellationToken));
     
     [HttpPost("add")]

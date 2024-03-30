@@ -9,4 +9,7 @@ public record ExpirationDate(DateTime Value)
 
     public static implicit operator DateTime(ExpirationDate expirationDate)
         => expirationDate.Value;
+    
+    public static implicit operator DateTime?(ExpirationDate expirationDate)
+        => expirationDate?.Value;
 };
