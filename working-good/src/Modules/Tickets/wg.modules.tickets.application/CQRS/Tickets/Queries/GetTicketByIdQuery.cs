@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.application.CQRS.Tickets.Queries;
 
-public sealed record GetTaskByIdQuery(Guid Id) : IQuery<TicketDto>;
+public sealed record GetTicketByIdQuery(Guid Id) : IQuery<TicketDto>;

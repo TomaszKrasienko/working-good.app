@@ -172,7 +172,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         return ticket;
     }
     
-    private Task<Ticket?> GetTicketByIdAsync(Guid id)
+    private Task<Ticket> GetTicketByIdAsync(Guid id)
         =>  _ticketsDbContext
             .Tickets
             .AsNoTracking()

@@ -22,7 +22,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TicketDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetTaskByIdQuery(id), cancellationToken));
+        => Ok(await queryDispatcher.SendAsync(new GetTicketByIdQuery(id), cancellationToken));
     
     [HttpPost("add")]
     [Authorize]

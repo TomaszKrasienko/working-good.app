@@ -7,13 +7,14 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.infrastructure.Queries.Handlers.Tickets;
 
-internal sealed class GetTaskByIdQueryHandler(
-    TicketsDbContext dbContext) : IQueryHandler<GetTaskByIdQuery, TicketDto>
+internal sealed class GetTicketByIdQueryHandler(
+    TicketsDbContext dbContext) : IQueryHandler<GetTicketByIdQuery, TicketDto>
 {
-    public async Task<TicketDto> HandleAsync(GetTaskByIdQuery query, CancellationToken cancellationToken)
+    public async Task<TicketDto> HandleAsync(GetTicketByIdQuery query, CancellationToken cancellationToken)
         => (await dbContext
             .Tickets
             .Include(x => x.Messages)
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))?
             .AsDto();
 }
