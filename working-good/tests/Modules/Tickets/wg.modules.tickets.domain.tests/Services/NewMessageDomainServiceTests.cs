@@ -13,7 +13,7 @@ namespace wg.modules.tickets.domain.tests.Services;
 public sealed class NewMessageDomainServiceTests
 {
     [Fact]
-    public async Task AddNewMessage_GivenNullNumberAndId_ShouldAddNewTicketByRepository()
+    public async Task AddNewMessage_GivenNullNumberAndId_ShouldAddNewTicketByRepositoryAndReturnTicket()
     {
         //arrange
         var id = Guid.NewGuid();
@@ -28,7 +28,7 @@ public sealed class NewMessageDomainServiceTests
             .Returns(1);
         
         //act
-        await _service.AddNewMessage(id, sender, subject, content, createdAt, null, null, employeeId);
+        var result = await _service.AddNewMessage(id, sender, subject, content, createdAt, null, null, employeeId);
         
         //assert
         await _ticketRepository
@@ -40,6 +40,7 @@ public sealed class NewMessageDomainServiceTests
                    && x.CreatedAt.Equals(createdAt)
                    && x.AssignedEmployee.Equals(employeeId)
                    && x.Number.Value == maxNumber + 1));
+        result.ShouldNotBeNull();
     }
 
     [Fact]
@@ -57,7 +58,7 @@ public sealed class NewMessageDomainServiceTests
             .Returns(ticket);
         
         //act
-        await _service.AddNewMessage(id, sender, subject, content, createdAt, ticket.Number.Value, null, null);
+        var result = await _service.AddNewMessage(id, sender, subject, content, createdAt, ticket.Number.Value, null, null);
         
         //assert
         var updatedTicket = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
@@ -69,6 +70,7 @@ public sealed class NewMessageDomainServiceTests
         await _ticketRepository
             .Received(1)
             .UpdateAsync(ticket);
+        result.ShouldNotBeNull();
     }
     
     [Fact]
@@ -86,7 +88,7 @@ public sealed class NewMessageDomainServiceTests
             .Returns(ticket);
         
         //act
-        await _service.AddNewMessage(id, sender, subject, content, createdAt, null, ticket.Id, null);
+        var result = await _service.AddNewMessage(id, sender, subject, content, createdAt, null, ticket.Id, null);
         
         //assert
         var updatedTicket = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
@@ -98,6 +100,36 @@ public sealed class NewMessageDomainServiceTests
         await _ticketRepository
             .Received(1)
             .UpdateAsync(ticket);
+        result.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task AddNewMessage_GivenTicketIdAndNullSubject_ShouldAddMessageToTicketAndUpdateWithSubjectFromTicket()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(State.New());
+        var id = Guid.NewGuid();
+        var sender = "joe.doe@test.pl";
+        var content = "My Test Content";
+        var createdAt = DateTime.Now;
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+        
+        //act
+        var result = await _service.AddNewMessage(id, sender, null, content, createdAt, null, ticket.Id, null);
+        
+        //assert
+        var updatedTicket = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+        updatedTicket.ShouldNotBeNull();
+        updatedTicket.Sender.Value.ShouldBe(sender);
+        updatedTicket.Subject.Value.ShouldBe(ticket.Subject);
+        updatedTicket.Content.Value.ShouldBe(content);
+        updatedTicket.CreatedAt.Value.ShouldBe(createdAt);
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
+        result.ShouldNotBeNull();
     }
     
     [Fact]
@@ -124,7 +156,7 @@ public sealed class NewMessageDomainServiceTests
     
     #region arrange
     private readonly ITicketRepository _ticketRepository;
-    private readonly NewMessageDomainService _service;
+    private readonly INewMessageDomainService _service;
     
     public NewMessageDomainServiceTests()
     {

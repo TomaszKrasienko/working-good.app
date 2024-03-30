@@ -1,14 +1,15 @@
 using NSubstitute;
 using Shouldly;
-using wg.modules.tickets.application.Clients.Companies;
 using wg.modules.tickets.application.Clients.Owner;
 using wg.modules.tickets.application.Clients.Owner.DTO;
 using wg.modules.tickets.application.CQRS.Messages.Commands.AddMessage;
+using wg.modules.tickets.application.Events;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.Services;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
+using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets;
 using wg.tests.shared.Factories.Tickets;
@@ -22,7 +23,7 @@ public sealed class AddMessageCommandHandlerTests
     private Task Act(AddMessageCommand command) => _handler.HandleAsync(command, default);
 
     [Fact]
-    public async Task AddMessage_GivenAddMessageCommandWithExistingTicketId_ShouldBeUpdatedByRepository()
+    public async Task AddMessage_GivenAddMessageCommandWithExistingTicketId_ShouldBeUpdatedByRepositoryAndSentByMessageBroker()
     {
         //arrange
         var ticket = TicketsFactory.GetAll(State.New());
@@ -46,6 +47,15 @@ public sealed class AddMessageCommandHandlerTests
         
         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(command.Id));
         message.ShouldNotBeNull();
+        var recipients = ticket.Messages.Select(x => x.Sender.Value).ToArray();
+        await _messageBroker
+            .Received(1)
+            .PublishAsync(Arg.Is<MessageAdded>(arg
+                => arg.TicketNumber == ticket.Number
+                   && arg.Subject == ticket.Subject
+                   && arg.Content == command.Content
+                   && arg.Recipients[0] == recipients[0]
+                   ));
     }
 
     [Fact]
@@ -83,19 +93,20 @@ public sealed class AddMessageCommandHandlerTests
     #region arrange
     private readonly IOwnerApiClient _ownerApiClient;
     private readonly ITicketRepository _ticketRepository;
-    private readonly DateTime _now;
     private readonly IClock _clock;
     private readonly INewMessageDomainService _newMessageDomainService;
+    private readonly IMessageBroker _messageBroker;
     private readonly AddMessageCommandHandler _handler;
 
     public AddMessageCommandHandlerTests()
     {
         _ownerApiClient = Substitute.For<IOwnerApiClient>();
         _ticketRepository = Substitute.For<ITicketRepository>();
-        _now = DateTime.Now;
-        _clock = TestsClock.Create(_now);
+        _clock = TestsClock.Create();
         _newMessageDomainService = new NewMessageDomainService(_ticketRepository);
-        _handler = new AddMessageCommandHandler(_ownerApiClient, _clock, _newMessageDomainService);
+        _messageBroker = Substitute.For<IMessageBroker>();
+        _handler = new AddMessageCommandHandler(_ownerApiClient, _clock, _newMessageDomainService,
+            _messageBroker);
     }
     #endregion
 }

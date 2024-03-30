@@ -10,7 +10,7 @@ namespace wg.modules.tickets.domain.Services;
 internal sealed class NewMessageDomainService(
     ITicketRepository ticketRepository) : INewMessageDomainService
 {
-    public async Task AddNewMessage(Guid id, string sender, string subject, string content, DateTime createdAt,
+    public async Task<Ticket> AddNewMessage(Guid id, string sender, string subject, string content, DateTime createdAt,
         int? ticketNumber, Guid? ticketId, Guid? employeeId)
     {
         if (ticketNumber is null && ticketId is null)
@@ -20,7 +20,7 @@ internal sealed class NewMessageDomainService(
                 createdAt, employeeId ?? Guid.Empty, State.New(), createdAt, false, null,
                 employeeId);
             await ticketRepository.AddAsync(newTicket);
-            return;
+            return newTicket;
         }
 
         Ticket ticket = null;
@@ -41,7 +41,14 @@ internal sealed class NewMessageDomainService(
                 throw new TicketNotFoundException((int)ticketNumber);
             }
         }
+
+        if (string.IsNullOrWhiteSpace(subject))
+        {
+            subject = ticket.Subject;
+        }
+        
         ticket.AddMessage(id, sender, subject, content, createdAt);
         await ticketRepository.UpdateAsync(ticket);
+        return ticket;
     }
 }
