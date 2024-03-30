@@ -14,6 +14,6 @@ internal sealed class GetMessageByIdQueryHandler(
         => (await dbContext
                 .Messages
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))
+                .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))?
             .AsDto();
 }
