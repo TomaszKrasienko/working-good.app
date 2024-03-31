@@ -7,12 +7,12 @@ namespace wg.modules.tickets.infrastructure.Clients.Companies;
 internal sealed class CompaniesApiClient(
     IModuleClient moduleClient) : ICompaniesApiClient
 {
-    public Task<CompanySlaTimeDto> GetSlaTimeByEmployee(EmployeeIdDto dto)
+    public Task<CompanySlaTimeDto> GetSlaTimeByEmployeeAsync(EmployeeIdDto dto)
         => moduleClient.SendAsync<CompanySlaTimeDto>("companies/employee/sla-time/get", dto);
 
-    public Task<IsEmployeeExistsDto> IsEmployeeExists(EmployeeIdDto dto)
+    public Task<IsEmployeeExistsDto> IsEmployeeExistsAsync(EmployeeIdDto dto)
         => moduleClient.SendAsync<IsEmployeeExistsDto>("companies/employee/is-exists/get", dto);
 
-    public Task<IsProjectExistsDto> IsProjectExists(EmployeeWithProjectDto dto)
+    public Task<IsProjectExistsDto> IsProjectExistsAsync(EmployeeWithProjectDto dto)
         => moduleClient.SendAsync<IsProjectExistsDto>("companies/project/is-exists/get", dto);
 }

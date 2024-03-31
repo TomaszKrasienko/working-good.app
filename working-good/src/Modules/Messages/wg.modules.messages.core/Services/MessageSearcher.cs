@@ -54,7 +54,7 @@ internal sealed class MessageSearcher(
             var senderAddress = message.From.Mailboxes.Single().Address;
             if (IsAddressCorrect(senderAddress))
             {
-                var employeeId = await companiesApiClient.GetEmployeeId(new EmployeeEmailDto(senderAddress));
+                var employeeId = await companiesApiClient.GetEmployeeIdAsync(new EmployeeEmailDto(senderAddress));
                 if (employeeId?.Value is not null)
                 {
                     clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 

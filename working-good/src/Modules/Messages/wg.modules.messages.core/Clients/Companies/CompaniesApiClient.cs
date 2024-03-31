@@ -6,6 +6,6 @@ namespace wg.modules.messages.core.Clients.Companies;
 internal sealed class CompaniesApiClient(
     IModuleClient moduleClient) : ICompaniesApiClient
 {
-    public Task<EmployeeIdDto> GetEmployeeId(EmployeeEmailDto dto)
+    public Task<EmployeeIdDto> GetEmployeeIdAsync(EmployeeEmailDto dto)
         => moduleClient.SendAsync<EmployeeIdDto>("companies/employee/id/get", dto);
 }

@@ -34,7 +34,7 @@ public sealed class AddMessageCommandHandlerTests
             .GetByIdAsync(ticket.Id)
             .Returns(ticket);
         _ownerApiClient
-            .GetUserByIdAsync(new UserIdDto(command.UserId))
+            .GetUserByIdAsyncAsync(new UserIdDto(command.UserId))
             .Returns(userDto);
         
         //act
@@ -66,7 +66,7 @@ public sealed class AddMessageCommandHandlerTests
         var command = new AddMessageCommand(Guid.NewGuid(), userDto.Id, "My test content",
             Guid.NewGuid());
         _ownerApiClient
-            .GetUserByIdAsync(new UserIdDto(command.UserId))
+            .GetUserByIdAsyncAsync(new UserIdDto(command.UserId))
             .Returns(userDto);
         
         //act
