@@ -3,6 +3,7 @@ using wg.shared.abstractions.CQRS.Commands;
 
 namespace wg.shared.infrastructure.Logging.Decorators;
 
+[Decorator]
 internal sealed class CommandHandlerLogDecorator<T>(
     ICommandHandler<T> handler,
     ILogger<ICommandHandler<T>> logger) : ICommandHandler<T> where T : ICommand

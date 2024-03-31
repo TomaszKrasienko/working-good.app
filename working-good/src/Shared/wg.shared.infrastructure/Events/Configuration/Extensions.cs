@@ -18,7 +18,8 @@ internal static class Extensions
         IEnumerable<Assembly> assemblies)
     {
         services.Scan(x => x.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
+            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
+                .WithoutAttribute<DecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         return services;

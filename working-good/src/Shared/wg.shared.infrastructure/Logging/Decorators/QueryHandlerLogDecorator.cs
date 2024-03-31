@@ -3,6 +3,7 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.shared.infrastructure.Logging.Decorators;
 
+[Decorator]
 internal sealed class QueryHandlerLogDecorator<TQuery, TResponse>(
     IQueryHandler<TQuery, TResponse> queryHandler,
     ILogger<IQueryHandler<TQuery, TResponse>> logger) : IQueryHandler<TQuery, TResponse> where TQuery : IQuery<TResponse>

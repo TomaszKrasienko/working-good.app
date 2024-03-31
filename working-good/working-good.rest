@@ -88,7 +88,7 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "title":"First Project",
+    "title":"Second Project",
     "description":"Description"
 }
 

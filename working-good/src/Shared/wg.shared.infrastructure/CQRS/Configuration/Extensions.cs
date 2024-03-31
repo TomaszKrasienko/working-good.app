@@ -16,7 +16,8 @@ internal static class Extensions
     private static IServiceCollection AddCommands(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
+            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
+                .WithoutAttribute<DecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         return services;
@@ -25,7 +26,8 @@ internal static class Extensions
     private static IServiceCollection AddQueries(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
+            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>))
+                .WithoutAttribute<DecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         return services;
