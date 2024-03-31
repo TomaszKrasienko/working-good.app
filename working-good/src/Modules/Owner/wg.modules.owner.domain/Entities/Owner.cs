@@ -30,7 +30,7 @@ public sealed class Owner : AggregateRoot
     public void ChangeName(string name)
         => Name = name;
 
-    public void AddUser(Guid id, string email, string firstName, string lastName, string password,
+    public User AddUser(Guid id, string email, string firstName, string lastName, string password,
         string role)
     {
         if (!_users.Any() && role!= Role.Manager().Value)
@@ -48,7 +48,9 @@ public sealed class Owner : AggregateRoot
             throw new UserAlreadyRegisteredException(email);
         }
 
-        _users.Add(User.Create(id, email, firstName, lastName, password, role));
+        var user = User.Create(id, email, firstName, lastName, password, role);
+        _users.Add(user);
+        return user;
     }
 
     public void VerifyUser(string token, DateTime verificationDateTime)

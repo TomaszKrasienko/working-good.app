@@ -25,18 +25,17 @@ public sealed class OwnerTests
     }
     
     [Fact]
-    public void AddUser_GivenFirstUserAsManager_ShouldAddToUsers()
+    public void AddUser_GivenFirstUserAsManager_ShouldAddToUsersAndReturnUser()
     {
         //arrange
         var owner = OwnerFactory.Get();
         Guid userId = Guid.NewGuid();
         
         //act
-        owner.AddUser(userId, "test@test.pl", "Joe", "Doe",
+        var user = owner.AddUser(userId, "test@test.pl", "Joe", "Doe",
             "Pass123!", Role.Manager());
         
         //assert
-        var user = owner.Users.FirstOrDefault(x => x.Id.Value == userId);
         user.ShouldNotBeNull();
     }
 

@@ -27,4 +27,26 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
             Content = NotificationsDirectory.GetNewTicketContent(content)
         };
     }
+
+    public EmailNotification GetForNewUser(string recipient, string firstName, string lastName, string verificationToken)
+    {
+        if (string.IsNullOrWhiteSpace(recipient))
+            return null;
+        
+        if (string.IsNullOrWhiteSpace(firstName))
+            return null;
+        
+        if (string.IsNullOrWhiteSpace(lastName))
+            return null;
+        
+        if (string.IsNullOrWhiteSpace(verificationToken))
+            return null;
+
+        return new EmailNotification()
+        {
+            Recipient = recipient,
+            Subject = NotificationsDirectory.GetNewUserSubject(),
+            Content = NotificationsDirectory.GetNewUserContent(firstName, lastName, verificationToken)
+        };
+    }
 }
