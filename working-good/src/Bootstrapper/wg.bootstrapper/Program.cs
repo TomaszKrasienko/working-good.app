@@ -10,6 +10,7 @@ var assemblies = ModuleLoader.GetAssemblies(builder.Configuration);
 var modules = ModuleLoader.GetModules(assemblies);
 builder.Services.AddInfrastructure(assemblies, builder.Configuration);
 builder.Services.AddModulesConfiguration(modules);
+builder.UseInfrastructure();
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.MapHealthChecks("/wg");

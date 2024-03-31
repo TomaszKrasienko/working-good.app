@@ -11,6 +11,7 @@ using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
 using wg.shared.infrastructure.Events.Configuration;
 using wg.shared.infrastructure.Exceptions.Configuration;
+using wg.shared.infrastructure.Logging.Configuration;
 using wg.shared.infrastructure.Mailbox.Configuration;
 using wg.shared.infrastructure.Messaging.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
@@ -33,6 +34,7 @@ public static class Extensions
             .AddEvents(assemblies)
             .AddIdentityContext()
             .AddMailbox(configuration)
+            .AddLogging(assemblies)
             .AddUiDocumentation();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
@@ -60,6 +62,9 @@ public static class Extensions
             .UseExceptionMiddleware()
             .UseAuth();
 
+    public static WebApplicationBuilder UseInfrastructure(this WebApplicationBuilder app)
+        => app.UseSerilog();
+    
     private static WebApplication UseUiDocumentation(this WebApplication app)
     {
         app.UseSwagger();
