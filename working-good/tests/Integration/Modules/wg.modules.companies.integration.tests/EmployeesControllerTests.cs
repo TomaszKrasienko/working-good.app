@@ -83,23 +83,14 @@ public sealed class EmployeesControllerTests : BaseTestsController
     private async Task<Company> AddCompanyAsync()
     {
         var company = CompanyFactory.Get();
-        await _companiesDbContext.Companies.AddAsync(company);
-        await _companiesDbContext.SaveChangesAsync();
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
         return company;
     }
     
     private Task<Employee> GetEmployeeByIdAsync(Guid id)
-        => _companiesDbContext
+        => CompaniesDbContext
         .Employees
         .AsNoTracking()
         .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
-    
-    #region arrange
-    private readonly CompaniesDbContext _companiesDbContext;
-
-    public EmployeesControllerTests()
-    {
-        _companiesDbContext = TestAppDb.CompaniesDbContext;
-    }
-    #endregion
 }

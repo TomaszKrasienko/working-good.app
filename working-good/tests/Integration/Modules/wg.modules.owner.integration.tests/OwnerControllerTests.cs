@@ -152,7 +152,7 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     private Task<Owner?> GetOwnerAsync()
-        => _ownerDbContext
+        => OwnerDbContext
             .Owner
             .AsNoTracking()
             .FirstOrDefaultAsync();
@@ -160,17 +160,8 @@ public sealed class OwnerControllerTests : BaseTestsController
     private async Task<Owner> AddOwner()
     {
         var owner = OwnerFactory.Get();
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
         return owner;
     }
-    
-    #region arrange
-    private readonly OwnerDbContext _ownerDbContext;
-    
-    public OwnerControllerTests()
-    {
-        _ownerDbContext = TestAppDb.OwnerDbContext;
-    }
-    #endregion
 }

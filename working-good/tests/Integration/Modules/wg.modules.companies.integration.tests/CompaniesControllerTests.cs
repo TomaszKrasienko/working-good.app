@@ -130,23 +130,14 @@ public sealed class CompaniesControllerTests : BaseTestsController
         {
             var project = ProjectFactory.GetInCompany(company, withPlannedStart, withPlannedFinish);   
         }
-        await _companiesDbContext.Companies.AddAsync(company);
-        await _companiesDbContext.SaveChangesAsync();
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
         return company;
     }
     
     private Task<Company> GetCompanyByIdAsync(Guid id)
-        => _companiesDbContext
+        => CompaniesDbContext
             .Companies
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
-
-    #region arrange
-    private readonly CompaniesDbContext _companiesDbContext;
-
-    public CompaniesControllerTests()
-    {
-        _companiesDbContext = TestAppDb.CompaniesDbContext;
-    }
-    #endregion
 }

@@ -3,14 +3,11 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.application.CQRS.Messages.Commands.AddMessage;
 using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.Entities;
-using wg.modules.tickets.infrastructure.DAL;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Factories.Tickets;
 using wg.tests.shared.Integration;
@@ -119,8 +116,8 @@ public sealed class MessagesControllerTests : BaseTestsController
     private async Task<Ticket> AddTicketAsync()
     {
         var ticket = TicketsFactory.GetAll(State.New());
-        await _ticketsDbContext.Tickets.AddAsync(ticket);
-        await _ticketsDbContext.SaveChangesAsync();
+        await TicketsDbContext.Tickets.AddAsync(ticket);
+        await TicketsDbContext.SaveChangesAsync();
         return ticket;
     }
 
@@ -129,8 +126,8 @@ public sealed class MessagesControllerTests : BaseTestsController
         var message = MessagesFactory.Get().Single();
         ticket.AddMessage(message.Id, message.Sender, message.Subject, message.Content,
             message.CreatedAt);
-        _ticketsDbContext.Tickets.Update(ticket);
-        await _ticketsDbContext.SaveChangesAsync();
+        TicketsDbContext.Tickets.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
         return message;
     }
 
@@ -138,27 +135,15 @@ public sealed class MessagesControllerTests : BaseTestsController
     {
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
         return user;
     }
 
     private Task<Message> GetMessageByIdAsync(Guid id)
-        => _ticketsDbContext
+        => TicketsDbContext
             .Messages
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
-    
-    #region arrange
-    private readonly TicketsDbContext _ticketsDbContext;
-    private readonly CompaniesDbContext _companiesDbContext;
-    private readonly OwnerDbContext _ownerDbContext;
 
-    public MessagesControllerTests()
-    {
-        _ticketsDbContext = TestAppDb.TicketsDbContext;
-        _companiesDbContext = TestAppDb.CompaniesDbContext;
-        _ownerDbContext = TestAppDb.OwnerDbContext;
-    }
-    #endregion
 }

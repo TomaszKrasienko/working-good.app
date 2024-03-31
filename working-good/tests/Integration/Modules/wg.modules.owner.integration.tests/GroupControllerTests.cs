@@ -24,8 +24,8 @@ public sealed class GroupControllerTests : BaseTestsController
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
         var group = GroupFactory.GetGroupInOwner(owner);
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.Manager());
         var command = new AddUserToGroupCommand(Guid.Empty, user.Id);
 
@@ -45,8 +45,8 @@ public sealed class GroupControllerTests : BaseTestsController
         //arrange
         var owner = OwnerFactory.Get();
         var group = GroupFactory.GetGroupInOwner(owner);
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.Manager());
         var command = new AddUserToGroupCommand(Guid.Empty, Guid.NewGuid());
 
@@ -85,18 +85,9 @@ public sealed class GroupControllerTests : BaseTestsController
     }
 
     private Task<Group?> GetGroupByIdAsync(Guid id)
-        =>  _ownerDbContext
+        =>  OwnerDbContext
             .Groups
             .AsNoTracking()
             .Include(x => x.Users)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
-    
-    #region arrange
-    private readonly OwnerDbContext _ownerDbContext;
-
-    public GroupControllerTests()
-    {
-        _ownerDbContext = TestAppDb.OwnerDbContext;
-    }
-    #endregion
 }

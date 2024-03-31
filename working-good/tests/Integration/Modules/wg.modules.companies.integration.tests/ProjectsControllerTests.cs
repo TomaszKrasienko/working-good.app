@@ -84,23 +84,14 @@ public sealed class ProjectsControllerTests : BaseTestsController
     private async Task<Company> AddCompanyAsync()
     {
         var company = CompanyFactory.Get();
-        await _companiesDbContext.Companies.AddAsync(company);
-        await _companiesDbContext.SaveChangesAsync();
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
         return company;
     }
     
     private Task<Project> GetProjectByIdAsync(Guid id)
-        =>  _companiesDbContext
+        =>  CompaniesDbContext
         .Projects
         .AsNoTracking()
         .FirstOrDefaultAsync(x => x.Id.Equals(id))!;
-    
-    #region arrange
-    private readonly CompaniesDbContext _companiesDbContext;
-
-    public ProjectsControllerTests()
-    {
-        _companiesDbContext = TestAppDb.CompaniesDbContext;
-    }
-    #endregion
 }

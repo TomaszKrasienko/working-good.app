@@ -160,30 +160,24 @@ public sealed class UsersControllerTests : BaseTestsController
                 user.Verify(DateTime.Now);
             }
         }
-        await _ownerDbContext.Owner.AddAsync(owner);
-        await _ownerDbContext.SaveChangesAsync();
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
         return owner;
     }
     
     private Task<User> GetUser()
-        => _ownerDbContext
+        => OwnerDbContext
             .Users
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
     private Task<User> GetUserByEmail(string email)
-        => _ownerDbContext
+        => OwnerDbContext
             .Users
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Email == email);
 
     #region arrange
-    private readonly OwnerDbContext _ownerDbContext;
-    
-    public UsersControllerTests()
-    {
-        _ownerDbContext = TestAppDb.OwnerDbContext;
-    }
     protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IPasswordManager, TestPasswordManager>();

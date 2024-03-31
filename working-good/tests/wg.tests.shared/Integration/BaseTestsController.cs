@@ -1,6 +1,9 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using wg.modules.companies.infrastructure.DAL;
+using wg.modules.owner.infrastructure.DAL;
+using wg.modules.tickets.infrastructure.DAL;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
 using wg.tests.shared.Db;
@@ -12,12 +15,18 @@ public abstract class BaseTestsController : IDisposable
 {
     protected readonly HttpClient HttpClient;
     internal readonly TestAppDb TestAppDb;
+    internal readonly CompaniesDbContext CompaniesDbContext;
+    internal readonly OwnerDbContext OwnerDbContext;
+    internal readonly TicketsDbContext TicketsDbContext;
 
     protected BaseTestsController()
     {
         var app = new TestApp(ConfigureServices);
         HttpClient = app.HttpClient;
         TestAppDb = new TestAppDb();
+        CompaniesDbContext = TestAppDb.CompaniesDbContext;
+        OwnerDbContext = TestAppDb.OwnerDbContext;
+        TicketsDbContext = TestAppDb.TicketsDbContext;
     }
 
     protected virtual void ConfigureServices(IServiceCollection services)
