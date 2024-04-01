@@ -8,8 +8,14 @@ internal sealed class UserSignedUpHandler(
     IEmailNotificationProvider emailNotificationProvider,
     IEmailPublisher emailPublisher) : IEventHandler<UserSignedUp>
 {
-    public Task HandleAsync(UserSignedUp @event)
+    public async Task HandleAsync(UserSignedUp @event)
     {
-        throw new NotImplementedException();
+        var emailNotification = emailNotificationProvider
+            .GetForNewUser(@event.Email, @event.FirstName, @event.LastName, @event.VerificationToken);
+        
+        if (emailNotification is null)
+            return;
+        
+        await emailPublisher.PublishAsync(emailNotification, default);
     }
 }
