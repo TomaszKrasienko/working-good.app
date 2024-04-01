@@ -22,7 +22,7 @@ public sealed class EmailNotificationProviderTests
         
         //assert
         result.ShouldNotBeNull();
-        result.Recipient.ShouldBe(recipient);
+        result.Recipient[0].ShouldBe(recipient);
         result.Subject.ShouldBe($"Ticket number #{ticketNumber} - {subject}");
         result.Content.ShouldBe($"A ticket has been created to which you have been assigned with the following content\n{content}");
     }
@@ -85,7 +85,7 @@ public sealed class EmailNotificationProviderTests
         
         //assert
         result.ShouldNotBeNull();
-        result.Recipient.ShouldBe(recipient);
+        result.Recipient[0].ShouldBe(recipient);
         result.Subject.ShouldBe("Thank you for registration");
         result.Content.ShouldContain(firstName);
         result.Content.ShouldContain(lastName);

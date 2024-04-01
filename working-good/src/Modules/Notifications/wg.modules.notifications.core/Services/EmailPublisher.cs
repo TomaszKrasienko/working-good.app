@@ -31,11 +31,11 @@ internal sealed class EmailPublisher(
         await client.AuthenticateAsync(credentials, cancellationToken);
     }
     
-    private MimeMessage GetMessage(string recipient, string sender, string subject, string content)
+    private MimeMessage GetMessage(List<string> recipient, string sender, string subject, string content)
     {
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse(sender));
-        message.To.Add(MailboxAddress.Parse(recipient));
+        recipient.ForEach(r => message.To.Add(MailboxAddress.Parse(r)));
         message.Subject = subject;
         var builder = new BodyBuilder
         {

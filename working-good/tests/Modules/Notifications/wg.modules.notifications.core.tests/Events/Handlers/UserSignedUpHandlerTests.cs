@@ -20,7 +20,7 @@ public sealed class UserSignedUpHandlerTests
         var @event = new UserSignedUp("joe.doe@test.pl", "Joe", "Doe", Guid.NewGuid().ToString());
         var emailNotification = new EmailNotification()
         {
-            Recipient = @event.Email,
+            Recipient = [@event.Email],
             Subject = "Test first user subject",
             Content = $"New user {@event.FirstName} {@event.LastName}, verificationToken: {@event.VerificationToken}"
         };

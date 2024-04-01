@@ -22,8 +22,8 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
 
         return new EmailNotification()
         {
-            Recipient = recipient,
-            Subject = NotificationsDirectory.GetNewTicketSubject(ticketNumber, subject),
+            Recipient = [recipient],
+            Subject = NotificationsDirectory.GetTicketSubject(ticketNumber, subject),
             Content = NotificationsDirectory.GetNewTicketContent(content)
         };
     }
@@ -44,7 +44,7 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
 
         return new EmailNotification()
         {
-            Recipient = recipient,
+            Recipient = [recipient],
             Subject = NotificationsDirectory.GetNewUserSubject(),
             Content = NotificationsDirectory.GetNewUserContent(firstName, lastName, verificationToken)
         };

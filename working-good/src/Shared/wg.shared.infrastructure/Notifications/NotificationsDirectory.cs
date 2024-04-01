@@ -2,7 +2,7 @@ namespace wg.shared.infrastructure.Notifications;
 
 public static class NotificationsDirectory
 {
-    public static string GetNewTicketSubject(int ticketNumber, string subject)
+    public static string GetTicketSubject(int ticketNumber, string subject)
         => $"Ticket number #{ticketNumber} - {subject}";
 
     public static string GetNewTicketPattern()

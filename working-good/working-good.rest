@@ -1,5 +1,5 @@
 @url = http://localhost:5001
-@email = joe.doe@test.pl
+@email = tom.krasienko@gmail.pl
 @password = StrongPass123!
 
 ###
@@ -128,3 +128,12 @@ Content-Type: application/json
 ###
 GET {{url}}/tickets-module/tickets/{{ticketId}}
 Authorization: bearer {{token}}
+
+###
+POST {{url}}/tickets-module/messages/ticket/502c2e38-e06d-494a-ad1c-db4c33df200d/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "Content":"Przyjąłem, jesteś debilem"
+}

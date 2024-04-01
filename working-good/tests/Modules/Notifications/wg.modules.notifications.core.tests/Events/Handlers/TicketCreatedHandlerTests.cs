@@ -6,6 +6,7 @@ using wg.modules.notifications.core.Events.External.Handlers;
 using wg.modules.notifications.core.Models;
 using wg.modules.notifications.core.Providers.Abstractions;
 using wg.modules.notifications.core.Services.Abstractions;
+using wg.shared.abstractions.Events;
 using wg.tests.shared.Factories.Events;
 using Xunit;
 
@@ -33,7 +34,7 @@ public sealed class TicketCreatedHandlerTests
         {
             Subject = $"#{@event.TicketNumber} - {@event.Subject}",
             Content = $"Created ticket with content: \n{@event.Content}",
-            Recipient = employeeEmail
+            Recipient = [employeeEmail]
         };
         
         _emailNotificationProvider
@@ -105,7 +106,7 @@ public sealed class TicketCreatedHandlerTests
     private readonly ICompaniesApiClient _companiesApiClient;
     private readonly IEmailNotificationProvider _emailNotificationProvider;
     private readonly IEmailPublisher _emailPublisher;
-    private readonly TicketCreatedHandler _handler;
+    private readonly IEventHandler<TicketCreated> _handler;
 
     public TicketCreatedHandlerTests()
     {
