@@ -1,6 +1,6 @@
 using System;
 using wg.modules.tickets.domain.ValueObjects;
-using wg.modules.tickets.domain.ValueObjects.Sender;
+using wg.modules.tickets.domain.ValueObjects.Message;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Kernel.Types;
 
@@ -13,17 +13,20 @@ public sealed class Message
     public Subject Subject { get; }
     public Content Content { get;  }
     public CreatedAt CreatedAt { get; }
+    public IsStarter IsStarter { get; set; }
 
-    private Message(EntityId id, Sender sender, Subject subject, Content content, CreatedAt createdAt)
+    private Message(EntityId id, Sender sender, Subject subject, Content content, 
+        CreatedAt createdAt, IsStarter isStarter)
     {
         Id = id;
         Sender = sender;
         Subject = subject;
         Content = content;
         CreatedAt = createdAt;
+        IsStarter = isStarter;
     }
 
     internal static Message Create(Guid id, string sender, string subject, string content,
-        DateTime createdAd)
-        => new Message(id, sender, subject, content, createdAd);
+        DateTime createdAd, bool isStarter)
+        => new Message(id, sender, subject, content, createdAd, isStarter);
 }

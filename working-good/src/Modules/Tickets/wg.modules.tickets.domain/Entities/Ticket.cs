@@ -20,6 +20,7 @@ public sealed class Ticket : AggregateRoot
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
     public EntityId ProjectId  { get; private set; }
+    public IEnumerable<string> ConversationEmails { get; private set; }
 
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
@@ -48,7 +49,7 @@ public sealed class Ticket : AggregateRoot
 
     public static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
         Guid? createdBy, string state, DateTime stateChange, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
-        Guid? assignedUser = null, Guid? projectId = null)
+        Guid? assignedUser = null, Guid? projectId = null, string employeeEmail = null, string userEmail = null)
     {
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
@@ -70,8 +71,28 @@ public sealed class Ticket : AggregateRoot
             ticket.ChangeProject((Guid)projectId);
         }
 
+        if (IsCreatedByUser(createdBy))
+        {
+            if (string.IsNullOrWhiteSpace(userEmail))
+            {
+                throw new MissingUserEmailException();
+            }
+            ticket.AddMessage(Guid.NewGuid(), userEmail, subject, content, createdAt);
+        }
+        else
+        {
+            if (string.IsNullOrWhiteSpace(employeeEmail))
+            {
+                throw new MissingEmployeeEmailException();
+            }
+            ticket.AddMessage(Guid.NewGuid(), employeeEmail, subject, content, createdAt);
+        }
+
         return ticket;
     }
+
+    private static bool IsCreatedByUser(Guid? createdBy)
+        => createdBy is null || createdBy.Value == Guid.Empty;
 
     private void ChangeSubject(string subject)
         => Subject = subject;
@@ -104,5 +125,5 @@ public sealed class Ticket : AggregateRoot
 
     internal void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
-        => _messages.Add(Message.Create(id, sender, subject, content, createdAt));
+        => _messages.Add(Message.Create(id, sender, subject, content, createdAt, false));
 }

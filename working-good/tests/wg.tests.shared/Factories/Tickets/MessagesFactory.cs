@@ -13,7 +13,8 @@ internal static class MessagesFactory
                 f.Internet.Email(),
                 f.Lorem.Sentence(5),
                 f.Lorem.Sentence(10),
-                f.Date.Recent()));
+                f.Date.Recent(),
+                false));
 
         return messageFaker.Generate(count);
     }

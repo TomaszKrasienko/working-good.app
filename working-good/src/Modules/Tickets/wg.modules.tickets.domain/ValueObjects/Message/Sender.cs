@@ -1,6 +1,6 @@
 using wg.modules.tickets.domain.Exceptions;
 
-namespace wg.modules.tickets.domain.ValueObjects.Sender;
+namespace wg.modules.tickets.domain.ValueObjects.Message;
 
 public sealed record Sender
 {

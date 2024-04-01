@@ -25,10 +25,13 @@ internal sealed class AddMessageCommandHandler(
 
         var ticket = await newMessageDomainService.AddNewMessage(command.Id, user.Email, null, command.Content,
             clock.Now(), null, command.TicketId, null);
+        
         var recipients = ticket
             .Messages
             .Select(x => x.Sender.Value)
             .ToArray();
+        
+        
         var @event = new MessageAdded(ticket.Number, ticket.Subject, command.Content, recipients);
         await messageBroker.PublishAsync(@event);
     }

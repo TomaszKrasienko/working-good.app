@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.ValueObjects;
-using wg.modules.tickets.domain.ValueObjects.Sender;
+using wg.modules.tickets.domain.ValueObjects.Message;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.tickets.infrastructure.DAL.EntitiesConfiguration;

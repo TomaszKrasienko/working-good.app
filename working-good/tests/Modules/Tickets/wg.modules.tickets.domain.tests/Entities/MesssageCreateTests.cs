@@ -16,9 +16,10 @@ public sealed class MessageCreateTests
         var subject = "Test subject";
         var content = "Test content";
         var createdAt = DateTime.Now;
+        var isStarter = false;
         
         //act
-        var result = Message.Create(id, sender, subject, content, createdAt);
+        var result = Message.Create(id, sender, subject, content, createdAt, isStarter);
         
         //assert
         result.ShouldNotBeNull();
@@ -26,6 +27,7 @@ public sealed class MessageCreateTests
         result.Subject.Value.ShouldBe(subject);
         result.Content.Value.ShouldBe(content);
         result.CreatedAt.Value.ShouldBe(createdAt);
+        result.IsStarter.Value.ShouldBe(isStarter);
     }
     
     [Fact]
@@ -33,7 +35,7 @@ public sealed class MessageCreateTests
     {   
         //act
         var exception = Record.Exception(() => Message.Create(Guid.NewGuid(), string.Empty, "Test subject",
-            "Test content", DateTime.Now));
+            "Test content", DateTime.Now, false));
         
         //assert
         exception.ShouldBeOfType<EmptySenderException>();
@@ -44,7 +46,7 @@ public sealed class MessageCreateTests
     {   
         //act
         var exception = Record.Exception(() => Message.Create(Guid.NewGuid(), "joe@doe.pl", string.Empty,
-            "Test content", DateTime.Now));
+            "Test content", DateTime.Now, false));
         
         //assert
         exception.ShouldBeOfType<EmptySubjectException>();
@@ -55,7 +57,7 @@ public sealed class MessageCreateTests
     {   
         //act
         var exception = Record.Exception(() => Message.Create(Guid.NewGuid(), "joe@doe.pl", "Test subject",
-            string.Empty, DateTime.Now));
+            string.Empty, DateTime.Now, false));
         
         //assert
         exception.ShouldBeOfType<EmptyContentException>();

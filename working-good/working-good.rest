@@ -135,5 +135,5 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "Content":"Przyjąłem, jesteś debilem"
+    "Content":"Przyjąłem, jesteś debilem 1"
 }

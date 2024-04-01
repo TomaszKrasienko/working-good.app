@@ -28,7 +28,8 @@ public sealed class NewMessageDomainServiceTests
             .Returns(1);
         
         //act
-        var result = await _service.AddNewMessage(id, sender, subject, content, createdAt, null, null, employeeId);
+        var result = await _service.AddNewMessage(id, sender, subject, content, createdAt, 
+            null, null, employeeId);
         
         //assert
         await _ticketRepository
