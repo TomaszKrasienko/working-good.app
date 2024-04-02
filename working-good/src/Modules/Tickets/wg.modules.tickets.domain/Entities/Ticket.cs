@@ -130,7 +130,7 @@ public sealed class Ticket : AggregateRoot
         }
     }
 
-    internal void AddMessage(Guid id, string sender, string subject, string content,
+    public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
     {
         if (!Emails.Contains(sender))

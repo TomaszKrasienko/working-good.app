@@ -38,7 +38,9 @@ public static class TicketsFactory
                 f.Date.Future(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Guid.NewGuid()));
+                Guid.NewGuid(),
+                f.Internet.Email(),
+                f.Internet.Email()));
         
         var ticket = ticketFaker.Generate(1).Single();
         return ticket;
