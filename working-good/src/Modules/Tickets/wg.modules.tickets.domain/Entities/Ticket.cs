@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -20,7 +22,7 @@ public sealed class Ticket : AggregateRoot
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
     public EntityId ProjectId  { get; private set; }
-    public IEnumerable<string> ConversationEmails { get; private set; }
+    public HashSet<string> Emails { get; private set; } = [];
 
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
@@ -71,28 +73,25 @@ public sealed class Ticket : AggregateRoot
             ticket.ChangeProject((Guid)projectId);
         }
 
-        if (IsCreatedByUser(createdBy))
+        if (assignedUser is not null)
         {
             if (string.IsNullOrWhiteSpace(userEmail))
             {
                 throw new MissingUserEmailException();
             }
-            ticket.AddMessage(Guid.NewGuid(), userEmail, subject, content, createdAt);
+            ticket.AddEmail(userEmail);
         }
-        else
+        
+        if(assignedEmployee is not null)
         {
             if (string.IsNullOrWhiteSpace(employeeEmail))
             {
                 throw new MissingEmployeeEmailException();
             }
-            ticket.AddMessage(Guid.NewGuid(), employeeEmail, subject, content, createdAt);
+            ticket.AddEmail(employeeEmail);
         }
-
         return ticket;
     }
-
-    private static bool IsCreatedByUser(Guid? createdBy)
-        => createdBy is null || createdBy.Value == Guid.Empty;
 
     private void ChangeSubject(string subject)
         => Subject = subject;
@@ -123,7 +122,22 @@ public sealed class Ticket : AggregateRoot
     private void ChangeProject(Guid projectId)
         => ProjectId = projectId;
 
+    private void AddEmail(string email)
+    {
+        if (Emails.All(x => x != email))
+        {
+            Emails.Add(email);
+        }
+    }
+
     internal void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
-        => _messages.Add(Message.Create(id, sender, subject, content, createdAt, false));
+    {
+        if (!Emails.Contains(sender))
+        {
+            Emails.Add(sender);
+        }
+
+        _messages.Add(Message.Create(id, sender, subject, content, createdAt, false));
+    }
 }

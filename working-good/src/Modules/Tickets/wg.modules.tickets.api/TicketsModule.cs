@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using wg.modules.tickets.domain.Configuration;
 using wg.modules.tickets.infrastructure.Configuration;
 using wg.shared.abstractions.Modules;
 
@@ -14,8 +13,7 @@ internal sealed class TicketsModule : IModule
     public void Register(IServiceCollection services)
     {
         services
-            .AddInfrastructure()
-            .AddDomain();
+            .AddInfrastructure();
     }
 
     public void Use(WebApplication app)

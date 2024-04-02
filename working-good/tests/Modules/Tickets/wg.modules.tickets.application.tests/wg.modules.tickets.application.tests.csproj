@@ -29,4 +29,9 @@
       <ProjectReference Include="..\..\..\wg.tests.shared\wg.tests.shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="CQRS\Messages\Commands\" />
+      <Folder Include="Events\Handlers\" />
+    </ItemGroup>
+
 </Project>

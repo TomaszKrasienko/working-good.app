@@ -24,10 +24,13 @@ public sealed class TicketCreateTests
         var expirationDate = DateTime.Now.AddDays(1);
         var assignedEmployee = Guid.NewGuid();
         var assignedUser = Guid.NewGuid();
+        var userEmail = "user@user.pl";
+        var employeeEmail = "employee@employee.pl";
         
         //act
         var result = Ticket.Create(id, number, subject, content, createdAt, createdBy, state,
-            stateDate, isPriority, expirationDate, assignedEmployee, assignedUser);
+            stateDate, isPriority, expirationDate, assignedEmployee, assignedUser,
+            null, userEmail, employeeEmail);
         
         //assert
         result.ShouldNotBeNull();
@@ -43,6 +46,8 @@ public sealed class TicketCreateTests
         result.ExpirationDate.Value.ShouldBe(expirationDate);
         result.AssignedEmployee.Value.ShouldBe(assignedEmployee);
         result.AssignedUser.Value.ShouldBe(assignedUser);
+        result.Emails.ShouldContain(userEmail);
+        result.Emails.ShouldContain(employeeEmail);
     }
     
     [Fact]
@@ -77,6 +82,7 @@ public sealed class TicketCreateTests
         result.ExpirationDate.ShouldBeNull();
         result.AssignedEmployee.ShouldBeNull();
         result.AssignedUser.ShouldBeNull();
+        result.Emails.ShouldBeEmpty();
     }
     
     [Fact]
@@ -158,5 +164,31 @@ public sealed class TicketCreateTests
         
         //assert
         exception.ShouldBeOfType<UnavailableStateException>();
+    }
+    
+    [Fact]
+    public void Create_GivenAssignedUserAndNullUserEmail_ShouldThrowMissingUserEmailException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            DateTime.Now, false, null, null, Guid.NewGuid(), null, null,
+            null));
+        
+        //assert
+        exception.ShouldBeOfType<MissingUserEmailException>();
+    }
+    
+    [Fact]
+    public void Create_GivenAssignedEmployeeAndNullEmployeeEmail_ShouldThrowMissingUserEmailException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            DateTime.Now, false, null, Guid.NewGuid(),null,  null, null,
+            null));
+        
+        //assert
+        exception.ShouldBeOfType<MissingEmployeeEmailException>();
     }
 }
