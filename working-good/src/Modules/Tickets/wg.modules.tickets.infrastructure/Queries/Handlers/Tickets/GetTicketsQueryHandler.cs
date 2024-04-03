@@ -16,10 +16,11 @@ internal sealed class GetTicketsQueryHandler(
         var results = dbContext
             .Tickets
             .AsNoTracking()
-            .Where(x
-                => (query.TicketNumber == null || x.Number == query.TicketNumber)
-                   && (string.IsNullOrWhiteSpace(query.Subject) || x.Subject.Value.Contains(query.Subject)))
+            .AsEnumerable()
+             .Where(x
+                 => (query.TicketNumber == null || x.Number == query.TicketNumber)
+                 && (string.IsNullOrWhiteSpace(query.Subject) || x.Subject.Value.Contains(query.Subject)))
             .Select(x => x.AsDto());
-        return Task.FromResult(PagedList<TicketDto>.ToPagedList(results, query.PageNumber, query.PageSize));
+        return Task.FromResult(PagedList<TicketDto>.ToPagedList(results.AsQueryable(), query.PageNumber, query.PageSize));
     }
 }

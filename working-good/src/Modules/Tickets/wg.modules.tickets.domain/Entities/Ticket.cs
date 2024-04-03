@@ -104,6 +104,9 @@ public sealed class Ticket : AggregateRoot
 
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
-        => _messages.Add(Message.Create(id, sender, subject, content, createdAt));
-    
+    {
+        State = new State(State.Open(), createdAt);
+        _messages.Add(Message.Create(id, sender, subject, content, createdAt));
+    }
+
 }

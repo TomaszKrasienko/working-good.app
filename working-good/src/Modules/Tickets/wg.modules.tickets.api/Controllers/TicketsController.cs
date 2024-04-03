@@ -28,7 +28,7 @@ internal sealed class TicketsController(
         var result = await queryDispatcher.SendAsync(query, cancellationToken);
         var metaData = result.AsMetaData();
         AddPaginationMetaData(metaData);
-        return Ok(result);
+        return  result.Any() ? Ok(result) : NoContent();
     }
     
     [HttpGet("{id:guid}")]

@@ -7,5 +7,5 @@ namespace wg.modules.companies.api.Controllers;
 internal abstract class BaseController : ControllerBase
 {
     protected void AddResourceHeader(Guid id)
-        => Response.Headers.TryAdd("resource-id", id.ToString());
+        => Response.Headers.TryAdd("x-resource-id", id.ToString());
 }

@@ -100,6 +100,26 @@ public sealed class TicketsControllerTests : BaseTestsController
     }
     
     [Fact]
+    public async Task GetAll_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var query = new GetTicketsQuery
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetTicketsQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetTicketsQuery.PageNumber), query.PageNumber.ToString());
+        
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task GetById_GivenExistingTicketIdWithMessageAndAuthorized_ShouldReturnTicketDtoWithMessageDto()
     {
         //arrange

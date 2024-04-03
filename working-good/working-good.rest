@@ -135,5 +135,9 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "Content":"Przyjąłem, jesteś debilem 1"
+    "Content":"Przyjąłem"
 }
+
+###
+GET {{url}}/tickets-module/tickets?pageSize=3&pageNumber=1&subject=ticket
+Authorization: bearer {{token}}
