@@ -130,7 +130,7 @@ GET {{url}}/tickets-module/tickets/{{ticketId}}
 Authorization: bearer {{token}}
 
 ###
-POST {{url}}/tickets-module/messages/ticket/{{ticketId}}/add
+POST {{url}}/tickets-module/messages/ticket/840ae4cf-aae7-472b-bdde-6a590e684aea/add
 Authorization: bearer {{token}}
 Content-Type: application/json
 
