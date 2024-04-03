@@ -4,8 +4,10 @@ using Microsoft.Extensions.Options;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
+using wg.shared.abstractions.Pagination;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
+using wg.shared.infrastructure.Serialization;
 using wg.tests.shared.Db;
 using wg.tests.shared.Mocks;
 
@@ -51,7 +53,7 @@ public abstract class BaseTestsController : IDisposable
             throw new InvalidOperationException("Http response message is null");
         }
 
-        if (!httpResponseMessage.Headers.TryGetValues("resource-id", out var value))
+        if (!httpResponseMessage.Headers.TryGetValues("x-resource-id", out var value))
         {
             return null;
         }
@@ -63,6 +65,22 @@ public abstract class BaseTestsController : IDisposable
         }
 
         return id;
+    }
+
+    protected virtual MetaDataDto GetPaginationMetaDataFromHeader(HttpResponseMessage httpResponseMessage)
+    {
+        if (httpResponseMessage is null)
+        {
+            throw new InvalidOperationException("Http response message is null");
+        }
+
+        if (!httpResponseMessage.Headers.TryGetValues("x-pagination", out var value))
+        {
+            return null;
+        }
+        
+        var metaJson = value.Single();
+        return metaJson.ToObject<MetaDataDto>();
     }
     
     public virtual void Dispose()

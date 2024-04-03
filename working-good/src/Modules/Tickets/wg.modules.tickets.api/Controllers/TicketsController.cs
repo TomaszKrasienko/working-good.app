@@ -8,6 +8,7 @@ using wg.modules.tickets.application.DTOs;
 using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Pagination.Mappers;
 
 namespace wg.modules.tickets.api.Controllers;
 
@@ -16,6 +17,20 @@ internal sealed class TicketsController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
 {
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<TicketDto>>> GetAll([FromQuery] GetTicketsQuery query,
+        CancellationToken cancellationToken)
+    {
+        var result = await queryDispatcher.SendAsync(query, cancellationToken);
+        var metaData = result.AsMetaData();
+        AddPaginationMetaData(metaData);
+        return Ok(result);
+    }
+    
     [HttpGet("{id:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -7,7 +7,7 @@ namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public record State
 {
-    private static IEnumerable<string> _availableStates = new[]
+    public static IEnumerable<string> AvailableStates = new[]
     {
         "New", "Open", "InProgress", "WaitingForResponse", "Cancelled", "Done"
     };
@@ -22,7 +22,7 @@ public record State
             throw new EmptyStateException();
         }
 
-        if (!_availableStates.Contains(value))
+        if (!AvailableStates.Contains(value))
         {
             throw new UnavailableStateException(value);
         }

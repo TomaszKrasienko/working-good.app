@@ -76,7 +76,7 @@ public sealed class AddMessageCommandHandlerTests
     public async Task HandleAsync_GivenExistingTicketWithoutAssignedEmployee_ShouldUpdateTicketWithNewMessageAndSendEvent()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.Open());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         var command = new AddMessageCommand(Guid.NewGuid(), Guid.NewGuid(), "Test message contet",
             ticket.Id);
         
@@ -139,7 +139,7 @@ public sealed class AddMessageCommandHandlerTests
     public async Task HandleAsync_GivenNotExistingUserDto_ShouldThrowUserNotFoundException()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.Open());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         var command = new AddMessageCommand(Guid.NewGuid(), Guid.NewGuid(), "Test message contet",
             ticket.Id);
         

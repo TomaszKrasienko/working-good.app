@@ -21,7 +21,7 @@ public sealed class MessageReceivedHandlerTests
     public async Task HandleAsync_GivenExistingTicketNumber_ShouldAddNewMessageAndEmailToTicketAndChangeStatus()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.Done());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Done()).Single();
         var @event = new MessageReceived("joe.doe@test.pl", "Some problems with app", "I have some problems with app",
             DateTime.Now, Guid.NewGuid(), ticket.Number);
 
@@ -80,7 +80,7 @@ public sealed class MessageReceivedHandlerTests
     public async Task HandleAsync_GivenNotExistingTicketNumber_ShouldThrowTicketNumberNotFoundException()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.Done());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Done()).Single();
         var @event = new MessageReceived("joe.doe@test.pl", "Some problems with app", "I have some problems with app",
             DateTime.Now, Guid.NewGuid(), ticket.Number);
 

@@ -11,7 +11,7 @@ public sealed class TicketTests
     public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.New());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.New()).Single();
         var id = Guid.NewGuid();
         var sender = "joe@doe.pl";
         var subject = "Test subject";

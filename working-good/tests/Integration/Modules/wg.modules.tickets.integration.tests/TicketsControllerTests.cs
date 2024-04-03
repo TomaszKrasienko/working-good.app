@@ -1,12 +1,15 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.infrastructure.DAL;
@@ -23,6 +26,119 @@ namespace wg.modules.tickets.integration.tests;
 [Collection("#1")]
 public sealed class TicketsControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task GetAll_GivenPaginationFilters_ShouldReturnTicketsList()
+    {
+        //arrange
+        var tickets = await AddMultipleTickets(40);
+        var query = new GetTicketsQuery
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetTicketsQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetTicketsQuery.PageNumber), query.PageNumber.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var pagination = GetPaginationMetaDataFromHeader(response);
+        pagination.ShouldNotBeNull();
+        var result = await response.Content.ReadFromJsonAsync<List<TicketDto>>();
+        result.Count.ShouldBe(10);
+    }
+    
+    [Fact]
+    public async Task GetAll_GivenPaginationFiltersAndTicketNumber_ShouldReturnTicketsList()
+    {
+        //arrange
+        var tickets = (await AddMultipleTickets(30)).ToList();
+        var ticketNumber = tickets.First().Number;
+        var selectedTicket = tickets.Where(x => x.Number == ticketNumber).ToList();
+        var query = new GetTicketsQuery
+        {
+            PageNumber = 1,
+            PageSize = selectedTicket.Count,
+            TicketNumber = ticketNumber
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetTicketsQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetTicketsQuery.PageNumber), query.PageNumber.ToString());
+        queryString.Add(nameof(GetTicketsQuery.TicketNumber), query.TicketNumber.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<List<TicketDto>>($"tickets-module/tickets?{queryString.ToString()}");
+        
+        //assert
+        result.Count.ShouldBe(selectedTicket.Count);
+    }
+    
+    [Fact]
+    public async Task GetAll_GivenPaginationFiltersForEmptyTickets_ShouldReturnNoContentStatusCode()
+    {
+        //arrange
+        var query = new GetTicketsQuery
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetTicketsQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetTicketsQuery.PageNumber), query.PageNumber.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetById_GivenExistingTicketIdWithMessageAndAuthorized_ShouldReturnTicketDtoWithMessageDto()
+    {
+        //arrange
+        var ticket = await AddTicket(true);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetFromJsonAsync<TicketDto>($"tickets-module/tickets/{ticket.Id.Value}");
+        
+        //assert
+        response.ShouldNotBeNull();
+        response.Id.ShouldBe(ticket.Id.Value);
+        response.Messages.ShouldNotBeNull();
+        response.Messages.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task GetById_GivenNotExistingIdAndAuthorized_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401Unauthorized()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
     [Fact]
     public async Task AddTicket_GivenOnlyRequiredArgumentsAndAuthorized_ShouldReturn201StatusCodeWithResourceIdAndLocationHeaderAndAddTicketToDdb()
     {
@@ -117,49 +233,9 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Fact]
-    public async Task GetById_GivenExistingTicketIdWithMessageAndAuthorized_ShouldReturnTicketDtoWithMessageDto()
-    {
-        //arrange
-        var ticket = await AddTicket(true);
-        Authorize(Guid.NewGuid(), Role.User());
-        
-        //act
-        var response = await HttpClient.GetFromJsonAsync<TicketDto>($"tickets-module/tickets/{ticket.Id.Value}");
-        
-        //assert
-        response.ShouldNotBeNull();
-        response.Id.ShouldBe(ticket.Id.Value);
-        response.Messages.ShouldNotBeNull();
-        response.Messages.ShouldNotBeEmpty();
-    }
-
-    [Fact]
-    public async Task GetById_GivenNotExistingIdAndAuthorized_ShouldReturn204NoContentStatusCode()
-    {
-        //arrange
-        Authorize(Guid.NewGuid(), Role.User());
-        
-        //act
-        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
-        
-        //assert
-        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task GetById_Unauthorized_ShouldReturn401Unauthorized()
-    {
-        //act
-        var response = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}");
-        
-        //assert
-        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
-    }
-
     private async Task<Ticket> AddTicket(bool withMessage = false)
     {
-        var ticket = TicketsFactory.GetOnlyRequired(State.Open());
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         if (withMessage)
         {
             var message = MessagesFactory.Get().Single();
@@ -170,6 +246,14 @@ public sealed class TicketsControllerTests : BaseTestsController
         await _ticketsDbContext.Tickets.AddAsync(ticket);
         await _ticketsDbContext.SaveChangesAsync();
         return ticket;
+    }
+
+    private async Task<IEnumerable<Ticket>> AddMultipleTickets(int count)
+    {
+        var tickets = TicketsFactory.GetOnlyRequired(count:count);
+        await _ticketsDbContext.Tickets.AddRangeAsync(tickets);
+        await _ticketsDbContext.SaveChangesAsync();
+        return tickets;
     }
     
     private Task<Ticket> GetTicketByIdAsync(Guid id)

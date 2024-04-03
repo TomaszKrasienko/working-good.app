@@ -80,7 +80,7 @@ Content-Type: application/json
 }
 
 ###
-@companyId = {{add_company.response.headers.resource-id}}
+@companyId = {{add_company.response.headers.x-resource-id}}
 
 ###
 POST {{url}}/companies-module/projects/companies/{{companyId}}/add
@@ -104,7 +104,7 @@ Content-Type: application/json
 }
 
 ###
-@employeeId = {{add_employee.response.headers.resource-id}}
+@employeeId = {{add_employee.response.headers.x-resource-id}}
 
 
 ###
@@ -123,7 +123,7 @@ Content-Type: application/json
 }
 
 ###
-@ticketId = {{ticket_add.response.headers.resource-id}}
+@ticketId = {{ticket_add.response.headers.x-resource-id}}
 
 ###
 GET {{url}}/tickets-module/tickets/{{ticketId}}
