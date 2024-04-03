@@ -32,7 +32,7 @@ internal sealed class CompaniesModule : IModule
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetEmployeeByEmailQuery, EmployeeDto>("companies/employee/get/by-email/",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<GetEmployeeEmailQuery, EmployeeEmailDto>("companies/employee/email/get",
+            .Subscribe<GetEmployeeByIdQuery, EmployeeDto>("companies/employee/get/by-id/",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }

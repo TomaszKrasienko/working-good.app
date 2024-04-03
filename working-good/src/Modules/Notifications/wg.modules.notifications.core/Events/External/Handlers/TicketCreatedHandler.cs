@@ -18,11 +18,11 @@ internal sealed class TicketCreatedHandler(
             return;
         }
 
-        var recipientEmail = await companiesApiClient.GetEmployeeEmailAsync(new EmployeeIdDto()
+        var recipient = await companiesApiClient.GetEmployeeByIdAsync(new EmployeeIdDto()
         {
             Id = (Guid)@event.EmployeeId
         });
-        var notification = emailNotificationProvider.GetForNewTicket(recipientEmail.Value,
+        var notification = emailNotificationProvider.GetForNewTicket(recipient.Email,
             @event.TicketNumber, @event.Content, @event.Subject);
         if (notification is null)
         {

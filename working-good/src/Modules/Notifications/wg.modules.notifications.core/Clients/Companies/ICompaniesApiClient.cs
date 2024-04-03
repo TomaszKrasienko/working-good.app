@@ -4,5 +4,5 @@ namespace wg.modules.notifications.core.Clients.Companies;
 
 public interface ICompaniesApiClient
 {
-    Task<EmployeeEmailDto> GetEmployeeEmailAsync(EmployeeIdDto dto);
+    Task<EmployeeDto> GetEmployeeByIdAsync(EmployeeIdDto dto);
 }
