@@ -3,11 +3,13 @@ using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Events;
+using wg.shared.abstractions.Messaging;
 
 namespace wg.modules.tickets.application.Events.External.Handlers;
 
 internal sealed class MessageReceivedHandler(
-    ITicketRepository ticketRepository) : IEventHandler<MessageReceived>
+    ITicketRepository ticketRepository,
+    IMessageBroker messageBroker) : IEventHandler<MessageReceived>
 {
     public async Task HandleAsync(MessageReceived @event)
     {
@@ -30,5 +32,8 @@ internal sealed class MessageReceivedHandler(
             false, null, @event.AssignedEmployee, null, null,
             @event.Sender);
         await ticketRepository.AddAsync(newTicket);
+        var ticketCreated = new TicketCreated(newTicket.Id, newTicket.Number, newTicket.Subject,
+            newTicket.Content, newTicket.AssignedUser, newTicket.AssignedEmployee);
+        await messageBroker.PublishAsync(ticketCreated);
     }
 }
