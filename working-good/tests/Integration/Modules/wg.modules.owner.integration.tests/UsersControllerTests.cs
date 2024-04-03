@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -7,14 +8,13 @@ using wg.modules.owner.application.Auth;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
 using wg.modules.owner.application.CQRS.Users.Commands.VerifyUser;
+using wg.modules.owner.application.CQRS.Users.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.integration.tests._Helpers;
 using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.infrastructure.Exceptions.DTOs;
-using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -24,6 +24,104 @@ namespace wg.modules.owner.integration.tests;
 [Collection("#1")]
 public sealed class UsersControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task GetAll_GivenPaginationArgumentsForExistingUser_ShouldReturn200OkStatusCodeWithUserDto()
+    {
+        //arrange
+        await AddOwner(true, true);
+        Authorize(Guid.NewGuid(), Role.User());
+        var query = new GetUsersQuery()
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetUsersQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetUsersQuery.PageNumber), query.PageNumber.ToString());
+        
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/users?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        
+        var result = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+        result.ShouldNotBeEmpty();
+        
+        var pagination = GetPaginationMetaDataFromHeader(response);
+        pagination.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task GetAll_GivenPaginationArgumentsForNotExistingUsers_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        await AddOwner(false, false);
+        Authorize(Guid.NewGuid(), Role.User());
+        var query = new GetUsersQuery()
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetUsersQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetUsersQuery.PageNumber), query.PageNumber.ToString());
+        
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/users?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        
+        var pagination = GetPaginationMetaDataFromHeader(response);
+        pagination.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task GetAll_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var query = new GetUsersQuery()
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetUsersQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetUsersQuery.PageNumber), query.PageNumber.ToString());
+        
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/users?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task Me_GivenAuthorizedUser_ShouldReturnUserDto()
+    {
+        //arrange
+        await AddOwner(true, true);
+        var user = await GetUser();
+        Authorize(user.Id, user.Role);
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<UserDto>("owner-module/users/me");
+        
+        //assert
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Me_GivenUnauthorizedUser_ShouldReturnUnauthorized()
+    {
+        //act
+        var result = await HttpClient.GetAsync("owner-module/users/me");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
     [Fact]
     public async Task SignUp_GivenSignUpCommandWithExistingOwner_ShouldReturn200StatusCodeAndSaveUserInDb()
     {
@@ -122,31 +220,6 @@ public sealed class UsersControllerTests : BaseTestsController
         
         var response = await result.Content.ReadFromJsonAsync<ErrorDto>();
         response!.Message.ShouldBe("Wrong credentials");
-    }
-
-    [Fact]
-    public async Task Me_GivenAuthorizedUser_ShouldReturnUserDto()
-    {
-        //arrange
-        await AddOwner(true, true);
-        var user = await GetUser();
-        Authorize(user.Id, user.Role);
-        
-        //act
-        var result = await HttpClient.GetFromJsonAsync<UserDto>("owner-module/users/me");
-        
-        //assert
-        result.ShouldNotBeNull();
-    }
-
-    [Fact]
-    public async Task Me_GivenUnauthorizedUser_ShouldReturnUnauthorized()
-    {
-        //act
-        var result = await HttpClient.GetAsync("owner-module/users/me");
-        
-        //assert
-        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     private async Task<Owner> AddOwner(bool withUser, bool withVerifiedUser)

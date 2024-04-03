@@ -12,6 +12,7 @@ using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Pagination.Mappers;
 
 namespace wg.modules.owner.api.Controllers;
 
@@ -21,6 +22,29 @@ internal sealed class UsersController(
     ITokenStorage tokenStorage,
     IIdentityContext identityContext) : BaseController()
 {
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<UserDto>>> Get([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
+    {
+        var result = await queryDispatcher.SendAsync(query, cancellationToken);
+        var metaData = result.AsMetaData();
+        AddPaginationMetaData(metaData);
+        return result.Any() ? Ok(result) : NoContent();
+    }
+    
+    [HttpGet("me")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserDto>> Me(CancellationToken cancellationToken)
+    {
+        var userId = identityContext.UserId;
+        return await queryDispatcher.SendAsync(new GetUserByIdQuery(userId), cancellationToken);
+    }
+    
     [HttpPost("sign-up")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,14 +73,6 @@ internal sealed class UsersController(
         return Ok(jwtToken);
     }
 
-    [HttpGet("me")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<UserDto>> Me(CancellationToken cancellationToken)
-    {
-        var userId = identityContext.UserId;
-        return await queryDispatcher.SendAsync(new GetUserByIdQuery(userId), cancellationToken);
-    }
+
     
 }

@@ -23,6 +23,7 @@ public sealed class TicketTests
         
         //assert
         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+        ticket.State.Value.ShouldBe(State.Open());
         message.ShouldNotBeNull();
         message.Id.Value.ShouldBe(id);
         message.Sender.Value.ShouldBe(sender);

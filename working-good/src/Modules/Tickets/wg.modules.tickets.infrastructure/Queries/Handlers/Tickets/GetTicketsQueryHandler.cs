@@ -21,6 +21,7 @@ internal sealed class GetTicketsQueryHandler(
                  => (query.TicketNumber == null || x.Number == query.TicketNumber)
                  && (string.IsNullOrWhiteSpace(query.Subject) || x.Subject.Value.Contains(query.Subject)))
             .Select(x => x.AsDto());
+        
         return Task.FromResult(PagedList<TicketDto>.ToPagedList(results.AsQueryable(), query.PageNumber, query.PageSize));
     }
 }
