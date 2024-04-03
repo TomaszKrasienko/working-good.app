@@ -54,11 +54,11 @@ internal sealed class MessageSearcher(
             var senderAddress = message.From.Mailboxes.Single().Address;
             if (IsAddressCorrect(senderAddress))
             {
-                var employeeId = await companiesApiClient.GetEmployeeIdAsync(new EmployeeEmailDto(senderAddress));
-                if (employeeId?.Value is not null)
+                var employee = await companiesApiClient.GetEmployeeByEmailAsync(new EmployeeEmailDto(senderAddress));
+                if (employee is not null)
                 {
                     clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
-                        senderAddress, message.Date.DateTime, (Guid)employeeId.Value));
+                        senderAddress, message.Date.DateTime, employee.Id));
                 }
             }
             await inbox.MoveToAsync(uid, subfolder, cancellationToken);

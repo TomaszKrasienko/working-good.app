@@ -12,21 +12,18 @@ public sealed class Message
     public Sender Sender { get; }
     public Subject Subject { get; }
     public Content Content { get;  }
-    public CreatedAt CreatedAt { get; }
-    public IsStarter IsStarter { get; set; }
-
+    public CreatedAt CreatedAt { get; } 
     private Message(EntityId id, Sender sender, Subject subject, Content content, 
-        CreatedAt createdAt, IsStarter isStarter)
+        CreatedAt createdAt)
     {
         Id = id;
         Sender = sender;
         Subject = subject;
         Content = content;
         CreatedAt = createdAt;
-        IsStarter = isStarter;
     }
 
     internal static Message Create(Guid id, string sender, string subject, string content,
-        DateTime createdAd, bool isStarter)
-        => new Message(id, sender, subject, content, createdAd, isStarter);
+        DateTime createdAd)
+        => new Message(id, sender, subject, content, createdAd);
 }

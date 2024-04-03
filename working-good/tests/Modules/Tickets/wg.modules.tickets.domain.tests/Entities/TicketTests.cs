@@ -8,7 +8,7 @@ namespace wg.modules.tickets.domain.tests.Entities;
 public sealed class TicketTests
 {
     [Fact]
-    public void AddMessage_GivenMessageAnd_ShouldAddToMessagesAndSenderToEmails()
+    public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
     {
         //arrange
         var ticket = TicketsFactory.GetOnlyRequired(State.New());
@@ -29,6 +29,5 @@ public sealed class TicketTests
         message.Subject.Value.ShouldBe(subject);
         message.Content.Value.ShouldBe(content);
         message.CreatedAt.Value.ShouldBe(createdAt);
-        ticket.Emails.ShouldContain(sender);
     }
 }
