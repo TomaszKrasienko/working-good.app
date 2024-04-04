@@ -59,9 +59,19 @@ public sealed class User
     private void ChangeRole(string role)
         => Role = role;
     
-    public void Verify(DateTime verificationDateTime)
+    internal void Verify(DateTime verificationDateTime)
     {
         VerificationToken.Verify(verificationDateTime);
         State = State.Activate();
     }
+
+    internal void Deactivate()
+    {
+        _groups.Clear();
+        State = State.Deactivate();
+    }
+
+    //TODO: Tests
+    internal void AddGroup(Group group)
+        => _groups.Add(group);
 }
