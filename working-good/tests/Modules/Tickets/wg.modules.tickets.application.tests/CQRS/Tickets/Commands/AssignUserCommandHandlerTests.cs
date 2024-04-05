@@ -1,6 +1,7 @@
 using NSubstitute;
 using Shouldly;
 using wg.modules.tickets.application.Clients.Owner;
+using wg.modules.tickets.application.Clients.Owner.DTO;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
@@ -57,12 +58,21 @@ public sealed class AssignUserCommandHandlerTests
         _ticketRepository
             .GetByIdAsync(ticket.Id)
             .Returns(ticket);
+
+        _ownerApiClient
+            .IsUserInGroupAsync(Arg.Is<UserInGroupDto>(arg
+                => arg.UserId == command.UserId
+                   && arg.GroupId.Equals(ticket.ProjectId)))
+            .Returns(new IsUserInGroupDto()
+            {
+                Value = false
+            });
         
         //act
         var exception = await Record.ExceptionAsync(async () => await Act(command));
         
         //assert
-        exception.ShouldBeOfType<UserNotFoundException>();
+        exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
     }
     
     #region arrange
