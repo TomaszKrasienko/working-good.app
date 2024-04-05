@@ -86,6 +86,5 @@ public sealed class AssignUserCommandHandlerTests
         _ownerApiClient = Substitute.For<IOwnerApiClient>();
         _handler = new AssignUserCommandHandler(_ticketRepository, _ownerApiClient);
     }
-
     #endregion
 }

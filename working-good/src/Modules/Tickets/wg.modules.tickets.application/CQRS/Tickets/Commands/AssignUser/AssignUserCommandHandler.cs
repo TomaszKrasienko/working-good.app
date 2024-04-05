@@ -37,5 +37,7 @@ internal sealed class AssignUserCommandHandler(
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
             }
         }
+        
+        //ticket.ChangeAssignedUser(command.UserId);
     }
 }

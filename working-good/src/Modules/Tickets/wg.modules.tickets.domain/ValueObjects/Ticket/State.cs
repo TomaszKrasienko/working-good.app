@@ -48,4 +48,10 @@ public record State
 
     public static string Done()
         => "Done";
+
+    public static bool operator ==(State state, string stateValue)
+        => state?.Value == stateValue;
+
+    public static bool operator !=(State state, string stateValue) 
+        => state?.Value != stateValue;
 }

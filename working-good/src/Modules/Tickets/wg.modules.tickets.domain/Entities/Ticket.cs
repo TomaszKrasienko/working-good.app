@@ -48,13 +48,13 @@ public sealed class Ticket : AggregateRoot
     }
 
     public static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
-        Guid? createdBy, string state, DateTime stateChange, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
+        Guid? createdBy, string state, DateTime stateChangeDate, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
         Guid? assignedUser = null, Guid? projectId = null, string employeeEmail = null)
     {
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
         ticket.ChangeContent(content);
-        ticket.ChangeState(state, stateChange);
+        ticket.ChangeState(state, stateChangeDate);
         ticket.ChangePriority(isPriority, expirationDate);
         if (assignedEmployee is not null)
         {
@@ -63,7 +63,7 @@ public sealed class Ticket : AggregateRoot
 
         if (assignedUser is not null)
         {
-            ticket.ChangeAssignedUser((Guid)assignedUser);
+            ticket.ChangeAssignedUser((Guid)assignedUser, stateChangeDate);
         }
 
         if (projectId is not null)
@@ -96,8 +96,21 @@ public sealed class Ticket : AggregateRoot
     private void ChangeAssignedEmployee(Guid assignedEmployee)
         => AssignedEmployee = assignedEmployee;
 
-    private void ChangeAssignedUser(Guid assignedUser)
-        => AssignedUser = assignedUser;
+    public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
+    {
+        if (!IsStatusForAssigning())
+        {
+            throw new InvalidStateForAssignUserException(Id, State.Value);
+        }
+        AssignedUser = assignedUser;
+        if (State == State.New())
+        {
+            ChangeState(State.Open(), stateChangeDate);
+        }  
+    }
+
+    private bool IsStatusForAssigning()
+        => State != State.Cancelled() && State != State.Done();
 
     private void ChangeProject(Guid projectId)
         => ProjectId = projectId;
