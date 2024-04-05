@@ -253,6 +253,88 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task AssignUser_GivenExistingTicketIdAndUserId_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/assign/user/{user.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
+    }
+    
+    [Fact]
+    public async Task AssignUser_GivenExistingTicketIdAndUserIdAndProjectId_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        group.AddUser(user);
+        ticket.ChangeProject(group.Id);
+        _ticketsDbContext.Tickets.Update(ticket);
+        await _ticketsDbContext.SaveChangesAsync();
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/assign/user/{user.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
+    }
+    
+    [Fact]
+    public async Task AssignUser_GivenUserNotInProject_ShouldReturn400BadRequestStatusCodeAndNotUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        ticket.ChangeProject(group.Id);
+        _ticketsDbContext.Tickets.Update(ticket);
+        await _ticketsDbContext.SaveChangesAsync();
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/assign/user/{user.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.AssignedUser.ShouldBeNull();
+    }
+    
+    [Fact]
+    public async Task AssignUser_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{Guid.NewGuid()}/assign/user/{Guid.NewGuid()}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
     private async Task<Ticket> AddTicket(bool withMessage = false)
     {
         var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();

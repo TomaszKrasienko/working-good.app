@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
@@ -55,5 +57,15 @@ internal sealed class TicketsController(
         AddResourceHeader(ticketId);
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
-    
+
+    [HttpPatch("{id:guid}/assign/user/{userId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> AssignUser(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(new AssignUserCommand(userId, id), cancellationToken);
+        return Ok();
+    }
 }

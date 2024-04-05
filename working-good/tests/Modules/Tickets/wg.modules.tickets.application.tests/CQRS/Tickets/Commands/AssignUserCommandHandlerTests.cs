@@ -6,7 +6,6 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
-using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets;
 using wg.tests.shared.Factories.Tickets;
@@ -26,7 +25,7 @@ public sealed class AssignUserCommandHandlerTests
         var ticket = TicketsFactory.GetOnlyRequired().Single();
         var projectId = Guid.NewGuid();
         ticket.ChangeProject(projectId);
-        var command = new AssignUserCommand(projectId, ticket.Id);
+        var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
 
         _ticketRepository
             .GetByIdAsync(ticket.Id)
@@ -55,6 +54,37 @@ public sealed class AssignUserCommandHandlerTests
         await _ticketRepository
             .Received(1)
             .UpdateAsync(ticket);
+    }
+    
+    [Fact]
+    public async Task HandleAsync_GivenExistingTicketAndWithoutProjectId_ShouldUpdateTicketByRepositoryAndNotCheckUserInGroup()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired().Single();
+        var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
+
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+
+        var userDto = UserDtoFactory.Get(1).Single();
+        userDto.Id = command.UserId;
+
+        _ownerApiClient
+            .GetUserByIdAsync(Arg.Is<UserIdDto>(arg => arg.Id == command.UserId))
+            .Returns(userDto);
+        
+        //act
+        await Act(command);
+        
+        //assert
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
+
+        await _ownerApiClient
+            .Received(0)
+            .IsUserInGroupAsync(Arg.Any<UserInGroupDto>());
     }
     
     [Fact]
