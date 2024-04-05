@@ -79,7 +79,7 @@ public sealed class Ticket : AggregateRoot
     private void ChangeContent(string content)
         => Content = content;
 
-    private void ChangeState(string state, DateTime changeDate)
+    internal void ChangeState(string state, DateTime changeDate)
         => State = new State(state, changeDate);
 
     private void ChangePriority(bool priority, DateTime? expirationDate)
@@ -112,7 +112,7 @@ public sealed class Ticket : AggregateRoot
     private bool IsStatusForAssigning()
         => State != State.Cancelled() && State != State.Done();
 
-    private void ChangeProject(Guid projectId)
+    public void ChangeProject(Guid projectId)
         => ProjectId = projectId;
 
     public void AddMessage(Guid id, string sender, string subject, string content,

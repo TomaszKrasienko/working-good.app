@@ -38,7 +38,7 @@ public sealed class TicketCreateTests
         result.Content.Value.ShouldBe(content);
         result.CreatedAt.Value.ShouldBe(createdAt);
         result.CreatedBy.Value.ShouldBe(createdBy);
-        result.State.Value.ShouldBe(state);
+        result.State.Value.ShouldBe(State.Open());
         result.State.ChangeDate.ShouldBe(stateDate);
         result.IsPriority.Value.ShouldBe(isPriority);
         result.ExpirationDate.Value.ShouldBe(expirationDate);

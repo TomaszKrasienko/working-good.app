@@ -13,6 +13,6 @@ internal sealed class OwnerApiClient(
     public Task<IsUserExistsDto> IsUserExistsAsync(UserIdDto dto)
         => moduleClient.SendAsync<IsUserExistsDto>("owner/user/is-exists/get", dto);
 
-    public Task<UserDto> GetUserByIdAsyncAsync(UserIdDto dto)
+    public Task<UserDto> GetUserByIdAsync(UserIdDto dto)
         => moduleClient.SendAsync<UserDto>("owner/user/get", dto);
 }

@@ -65,7 +65,7 @@ public sealed class AddTicketCommandHandlerTests
                && arg.Subject.Value == command.Subject
                && arg.Content.Value == command.Content
                && arg.CreatedBy.Value == command.CreatedBy
-               && arg.State.Value == command.State
+               && arg.State.Value == State.Open()
                && arg.IsPriority.Value == command.IsPriority
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
@@ -113,7 +113,7 @@ public sealed class AddTicketCommandHandlerTests
                && arg.Subject.Value == command.Subject
                && arg.Content.Value == command.Content
                && arg.CreatedBy.Value == command.CreatedBy
-               && arg.State.Value == command.State
+               && arg.State.Value == State.Open()
                && arg.IsPriority.Value == command.IsPriority
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
@@ -177,7 +177,7 @@ public sealed class AddTicketCommandHandlerTests
                && arg.Subject.Value == command.Subject
                && arg.Content.Value == command.Content
                && arg.CreatedBy.Value == command.CreatedBy
-               && arg.State.Value == command.State
+               && arg.State.Value == State.Open()
                && arg.IsPriority.Value == command.IsPriority
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser

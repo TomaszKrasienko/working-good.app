@@ -6,5 +6,5 @@ public interface IOwnerApiClient
 {
     Task<IsUserInGroupDto> IsUserInGroupAsync(UserInGroupDto dto);
     Task<IsUserExistsDto> IsUserExistsAsync(UserIdDto dto);
-    Task<UserDto> GetUserByIdAsyncAsync(UserIdDto dto);
+    Task<UserDto> GetUserByIdAsync(UserIdDto dto);
 }

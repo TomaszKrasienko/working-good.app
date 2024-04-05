@@ -27,6 +27,7 @@ public static class TicketsFactory
 
     public static Ticket GetAll(string state)
     {
+        
         var ticketFaker = new Faker<Ticket>()
             .CustomInstantiator(f => Ticket.Create(
                 Guid.NewGuid(),
@@ -35,7 +36,7 @@ public static class TicketsFactory
                 f.Lorem.Sentence(),
                 DateTime.Now,
                 Guid.NewGuid(),
-                state,
+                State.New(),
                 DateTime.Now,
                 false,
                 f.Date.Future(),
@@ -44,6 +45,7 @@ public static class TicketsFactory
                 Guid.NewGuid()));
         
         var ticket = ticketFaker.Generate(1).Single();
+        ticket.ChangeState(state, DateTime.Now);
         return ticket;
     }
 }

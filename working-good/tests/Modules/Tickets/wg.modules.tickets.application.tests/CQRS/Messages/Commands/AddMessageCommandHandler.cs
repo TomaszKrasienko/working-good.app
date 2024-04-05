@@ -44,7 +44,7 @@ public sealed class AddMessageCommandHandlerTests
         };
 
         _ownerApiClient
-            .GetUserByIdAsyncAsync(new UserIdDto(command.UserId))
+            .GetUserByIdAsync(new UserIdDto(command.UserId))
             .Returns(userDto);
         
         //act
@@ -94,7 +94,7 @@ public sealed class AddMessageCommandHandlerTests
         };
 
         _ownerApiClient
-            .GetUserByIdAsyncAsync(new UserIdDto(command.UserId))
+            .GetUserByIdAsync(new UserIdDto(command.UserId))
             .Returns(userDto);
         
         //act

@@ -4,12 +4,14 @@ using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
+using wg.shared.abstractions.Time;
 
 namespace wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 
 internal sealed class AssignUserCommandHandler(
     ITicketRepository ticketRepository,
-    IOwnerApiClient ownerApiClient) : ICommandHandler<AssignUserCommand>
+    IOwnerApiClient ownerApiClient,
+    IClock clock) : ICommandHandler<AssignUserCommand>
 {
     public async Task HandleAsync(AssignUserCommand command, CancellationToken cancellationToken)
     {
@@ -19,7 +21,7 @@ internal sealed class AssignUserCommandHandler(
             throw new TicketNotFoundException(command.TicketId);
         }
 
-        var user = await ownerApiClient.GetUserByIdAsyncAsync(new UserIdDto(command.UserId));
+        var user = await ownerApiClient.GetUserByIdAsync(new UserIdDto(command.UserId));
         if (user is null)
         {
             throw new UserNotFoundException(command.UserId);
@@ -38,6 +40,7 @@ internal sealed class AssignUserCommandHandler(
             }
         }
         
-        //ticket.ChangeAssignedUser(command.UserId);
+        ticket.ChangeAssignedUser(command.UserId, clock.Now());
+        await ticketRepository.UpdateAsync(ticket);
     }
 }

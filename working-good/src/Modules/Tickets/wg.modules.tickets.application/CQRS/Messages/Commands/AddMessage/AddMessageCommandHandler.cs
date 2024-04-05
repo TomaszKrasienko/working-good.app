@@ -24,7 +24,7 @@ internal sealed class AddMessageCommandHandler(
             throw new TicketNotFoundException(command.TicketId);
         }
 
-        var user = await ownerApiClient.GetUserByIdAsyncAsync(new UserIdDto(command.UserId));
+        var user = await ownerApiClient.GetUserByIdAsync(new UserIdDto(command.UserId));
         if (user is null)
         {
             throw new UserNotFoundException(command.UserId);

@@ -82,4 +82,18 @@ public sealed class TicketTests
         //assert
         exception.ShouldBeOfType<InvalidStateForAssignUserException>();
     }
+    
+    [Fact]
+    public void ChangeProject_GivenProjectId_ChangeProjectId()
+    {        
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var projectId = Guid.NewGuid();
+        
+        //act
+        ticket.ChangeProject(projectId);
+        
+        //assert
+        ticket.ProjectId.Value.ShouldBe(projectId);
+    }
 }
