@@ -1,5 +1,6 @@
 using Bogus.DataSets;
 using Shouldly;
+using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
 using wg.tests.shared.Factories.Companies;
@@ -85,5 +86,40 @@ public sealed class CompanyTests
         
         //assert
         exception.ShouldBeOfType<ProjectAlreadyRegisteredException>();
+    }
+
+    [Fact]
+    public void EditProject_GivenExistingProject_ShouldEditProject()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var project = ProjectFactory.GetInCompany(company, false, false);
+        var newTitle = "ProjectNewTitle";
+        var newDescription = "ProjectNewDescription";
+        var newPlannedStart = DateTime.Now.AddDays(1);
+        var newPlannedFinish = DateTime.Now.AddDays(20);
+        
+        //act
+        company.EditProject(project.Id, newTitle, newDescription, newPlannedStart,
+            newPlannedFinish);
+        
+        //assert
+        project.Title.Value.ShouldBe(newTitle);
+        project.Description.Value.ShouldBe(newDescription);
+        project.PlannedStart.Value.ShouldBe(newPlannedStart);
+        project.PlannedFinish.Value.ShouldBe(newPlannedFinish);
+    }
+
+    [Fact]
+    public void EditProject_GivenNotExistingProject_ShouldThrowProjectNotFoundException()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => company.EditProject(Guid.NewGuid(), "test", "test", null, null));
+        
+        //assert
+        exception.ShouldBeOfType<ProjectNotFoundException>();
     }
 }

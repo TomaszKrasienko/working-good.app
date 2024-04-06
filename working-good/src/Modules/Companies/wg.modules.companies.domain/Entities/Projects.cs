@@ -39,13 +39,13 @@ public sealed class Project
         return project;
     }
 
-    private void ChangeTitle(string title)
+    internal void ChangeTitle(string title)
         => Title = title;
 
-    private void ChangeDescription(string description)
+    internal void ChangeDescription(string description)
         => Description = description;
 
-    private void ChangePlannedStart(DateTime? plannedStart)
+    internal void ChangePlannedStart(DateTime? plannedStart)
     {
         if (!IsDurationValid(plannedStart, PlannedFinish))
         {
@@ -55,7 +55,7 @@ public sealed class Project
         PlannedStart = plannedStart;
     }
     
-    private void ChangePlannedFinish(DateTime? plannedFinish)
+    internal void ChangePlannedFinish(DateTime? plannedFinish)
     {
         if (!IsDurationValid(PlannedStart, plannedFinish))
         {

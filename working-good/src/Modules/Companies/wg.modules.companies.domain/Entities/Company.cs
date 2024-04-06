@@ -63,4 +63,25 @@ public sealed class Company : AggregateRoot
 
         _projects.Add(Project.Create(id, title, description, plannedStart, plannedFinish));
     }
+
+    public void EditProject(Guid id, string title, string description, DateTime? plannedStart, DateTime? plannedFinish)
+    {
+        var project = _projects.FirstOrDefault(x => x.Id.Equals(id));
+        if (project is null)
+        {
+            throw new ProjectNotFoundException(id);
+        }
+        
+        project.ChangeTitle(title);
+        project.ChangeDescription(description);
+        if (plannedStart is not null)
+        {
+            project.ChangePlannedStart(plannedStart);
+        }
+
+        if (plannedFinish is not null)
+        {
+            project.ChangePlannedFinish(plannedFinish);
+        }
+    } 
 }
