@@ -106,6 +106,17 @@ public sealed class Owner : AggregateRoot
         group.AddUser(user);
     }
 
+    public void EditGroup(Guid id, string title)
+    {
+        var group = Groups.FirstOrDefault(x => x.Id.Equals(id));
+        if (group is null)
+        {
+            throw new GroupNotFoundException(id);
+        }
+        
+        group.ChangeTitle(title);
+    }
+
     // public void DeactivateUser(Guid userId, Guid substituteUserId)
     // {
     //     var user = _users.FirstOrDefault(x => x.Id.Equals(userId));

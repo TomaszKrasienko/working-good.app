@@ -28,7 +28,7 @@ public sealed class Group
         return group;
     }
 
-    private void ChangeTitle(string title)
+    internal void ChangeTitle(string title)
         => Title = title;
 
     internal void AddUser(User user)

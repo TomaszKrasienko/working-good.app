@@ -4,18 +4,18 @@ using wg.shared.abstractions.Events;
 
 namespace wg.modules.owner.application.Events.External.Handlers;
 
-internal sealed class ProjectAddedHandler(
-    IOwnerRepository ownerRepository) : IEventHandler<ProjectAdded>
+internal sealed class ProjectEditedHandler(
+    IOwnerRepository ownerRepository) : IEventHandler<ProjectEdited>
 {
-    public async Task HandleAsync(ProjectAdded @event)
+    public async Task HandleAsync(ProjectEdited @event)
     {
         var owner = await ownerRepository.GetAsync();
         if (owner is null)
         {
             throw new OwnerNotFoundException();
         }
-        
-        owner.AddGroup(@event.Id, @event.Title);
-        await ownerRepository.UpdateAsync(owner);
+
+        owner.EditGroup(@event.Id, @event.Title);
+        await ownerRepository.UpdateAsync(@owner);
     }
 }

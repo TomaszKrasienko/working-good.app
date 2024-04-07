@@ -6,6 +6,7 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets;
 using wg.tests.shared.Factories.Tickets;
@@ -22,7 +23,7 @@ public sealed class AssignUserCommandHandlerTests
     public async Task HandleAsync_GivenExistingTicketAndUserInProject_ShouldUpdateTicketByRepository()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired().Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
         var projectId = Guid.NewGuid();
         ticket.ChangeProject(projectId);
         var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);

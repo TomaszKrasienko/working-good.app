@@ -266,6 +266,35 @@ public sealed class OwnerTests
         //assert
         exception.ShouldBeOfType<UserAlreadyInGroupException>();
     }
+
+    [Fact]
+    public void EditGroup_GivenExistingGroupId_ShouldChangeGroupTitle()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        var newTitle = "TestNewTitle";
+        
+        //act
+        owner.EditGroup(group.Id, newTitle);
+        
+        //assert
+        var updatedGroup = owner.Groups.FirstOrDefault(x => x.Id.Equals(group.Id));
+        updatedGroup!.Title.Value.ShouldBe(group.Title);
+    }
+    
+    [Fact]
+    public void EditGroup_GivenNotExistingGroupId_ShouldThrowGroupNotFoundException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        
+        //act
+        var exception = Record.Exception( () =>  owner.EditGroup(Guid.NewGuid(), "TestNewTitle"));
+        
+        //assert
+        exception.ShouldBeOfType<GroupNotFoundException>();
+    }
     
     // [Fact]
     // public void DeactivateUser_GivenUserInGroup_Should()
