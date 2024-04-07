@@ -9,6 +9,7 @@ public sealed class Employee
     public EntityId Id { get; }
     public Email Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
+    public IsActive IsActive { get; private set; }
 
     private Employee(EntityId id)
     {
@@ -20,8 +21,15 @@ public sealed class Employee
         var employee = new Employee(id);
         employee.ChangeEmail(email);
         employee.ChangePhoneNumber(phoneNumber);
+        employee.Activate();
         return employee;
     }
+
+    private void Activate()
+        => IsActive = true;
+
+    private void Deactivate()
+        => IsActive = false;
     
     private void ChangeEmail(string email)
         => Email = email;
