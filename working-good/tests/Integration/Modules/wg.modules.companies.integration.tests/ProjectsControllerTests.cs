@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Projects.Commands.AddProject;
+using wg.modules.companies.application.CQRS.Projects.Commands.EditProject;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -79,6 +80,31 @@ public sealed class ProjectsControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task EditProject_GivenExistingProjectId_ShouldReturn200OkStatusCodeAndChangeProject()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var project = ProjectFactory.GetInCompany(company, true, false);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        var command = new EditProjectCommand(Guid.Empty, "NewProjectTitle", "NewProjectDescription",
+            DateTime.Now.AddDays(1), DateTime.Now.AddDays(30));
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/projects/edit/{project.Id.Value}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedProject = await GetProjectByIdAsync(project.Id);
+        updatedProject.Title.Value.ShouldBe(command.Title);
+        updatedProject.Description.Value.ShouldBe(command.Description);
+        updatedProject.PlannedStart.Value.ShouldBe((DateTime)command.PlannedStart!);
+        updatedProject.PlannedFinish.Value.ShouldBe((DateTime)command.PlannedFinish!);
     }
 
     private async Task<Company> AddCompanyAsync()
