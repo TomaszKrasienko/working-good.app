@@ -32,6 +32,11 @@ internal sealed class CompanyTypeConfiguration : IEntityTypeConfiguration<Compan
             .HasConversion(x => x.Value, y => new EmailDomain(y))
             .IsRequired()
             .HasMaxLength(20);
+
+        builder
+            .Property(x => x.IsActive)
+            .HasConversion(x => x.Value, y => new IsActive(y))
+            .IsRequired();
         
         builder
             .HasMany<Employee>(x => x.Employees)

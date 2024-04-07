@@ -29,6 +29,11 @@ internal sealed class EmployeeTypeConfiguration : IEntityTypeConfiguration<Emplo
             .HasMaxLength(40);
 
         builder
+            .Property(x => x.IsActive)
+            .HasConversion(x => x.Value, y => new IsActive(y))
+            .IsRequired();
+
+        builder
             .HasIndex(x => x.Email)
             .IsUnique();
     }
