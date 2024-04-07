@@ -23,6 +23,7 @@ public sealed class EmployeeCreateTests
         result.Id.Value.ShouldBe(id);
         result.Email.Value.ShouldBe(email);
         result.PhoneNumber.Value.ShouldBe(phoneNumber);
+        result.IsActive.Value.ShouldBeTrue();
     }
 
     [Fact]
