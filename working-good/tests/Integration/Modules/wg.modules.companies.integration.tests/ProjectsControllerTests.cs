@@ -107,6 +107,51 @@ public sealed class ProjectsControllerTests : BaseTestsController
         updatedProject.PlannedFinish.Value.ShouldBe((DateTime)command.PlannedFinish!);
     }
 
+    [Fact]
+    public async Task EditProject_GivenNotExistingProjectId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var command = new EditProjectCommand(Guid.Empty, "NewProjectTitle", "NewProjectDescription",
+            DateTime.Now.AddDays(1), DateTime.Now.AddDays(30));
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/projects/edit/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+    
+    [Fact]
+    public async Task EditProject_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new EditProjectCommand(Guid.Empty, "NewProjectTitle", "NewProjectDescription",
+            DateTime.Now.AddDays(1), DateTime.Now.AddDays(30));
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/projects/edit/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task EditProject_AuthorizedAsUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        var command = new EditProjectCommand(Guid.Empty, "NewProjectTitle", "NewProjectDescription",
+            DateTime.Now.AddDays(1), DateTime.Now.AddDays(30));
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/projects/edit/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+
     private async Task<Company> AddCompanyAsync()
     {
         var company = CompanyFactory.Get();
