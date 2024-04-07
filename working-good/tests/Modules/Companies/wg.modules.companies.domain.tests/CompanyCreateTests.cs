@@ -1,7 +1,6 @@
 using Shouldly;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
-using wg.modules.companies.domain.ValueObjects.Company;
 using wg.shared.abstractions.Kernel.Exceptions;
 using Xunit;
 
@@ -28,6 +27,7 @@ public sealed class CompanyCreateTests
         result.EmailDomain.Value.ShouldBe(emailDomain);
         result.Employees.Any().ShouldBeFalse();
         result.Projects.Any().ShouldBeFalse();
+        result.IsActive.Value.ShouldBeTrue();
     }
 
     [Fact]

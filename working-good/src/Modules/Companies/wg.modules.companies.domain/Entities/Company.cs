@@ -10,6 +10,7 @@ public sealed class Company : AggregateRoot
     public Name Name { get; private set; }
     public SlaTime SlaTime { get; private set; }
     public EmailDomain EmailDomain { get; private set; }
+    public IsActive IsActive { get; private set; }
     private readonly HashSet<Employee> _employees = new HashSet<Employee>();
     public IEnumerable<Employee> Employees => _employees;
     private readonly HashSet<Project> _projects = new HashSet<Project>();
@@ -26,6 +27,7 @@ public sealed class Company : AggregateRoot
         company.ChangeName(name);
         company.ChangeSlaTime(slaTime);
         company.ChangeEmailDomain(emailDomain);
+        company.Activate();
         return company;
     }
 
@@ -38,8 +40,19 @@ public sealed class Company : AggregateRoot
     private void ChangeEmailDomain(string emailDomain)
         => EmailDomain = emailDomain;
 
+    private void Activate()
+        => IsActive = true;
+
+    internal void Deactivate()
+        => IsActive = false;
+
     public void AddEmployee(Guid id, string email, string phoneNumber = null)
     {
+        if (!IsActive)
+        {
+            throw new CompanyNotActiveException(Id);
+        }
+        
         if (_employees.Any(x => x.Email == email))
         {
             throw new EmailAlreadyInUseException(email);
@@ -56,6 +69,11 @@ public sealed class Company : AggregateRoot
 
     public void AddProject(Guid id, string title, string description, DateTime? plannedStart, DateTime? plannedFinish)
     {
+        if (!IsActive)
+        {
+            throw new CompanyNotActiveException(Id);
+        }
+        
         if (_projects.Any(x => x.Title.Value.ToLowerInvariant() == title.ToLowerInvariant()))
         {
             throw new ProjectAlreadyRegisteredException(title);

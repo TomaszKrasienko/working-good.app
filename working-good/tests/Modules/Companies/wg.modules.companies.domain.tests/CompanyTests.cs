@@ -56,6 +56,20 @@ public sealed class CompanyTests
         //assert
         exception.ShouldBeOfType<EmailNotMatchToEmailDomainException>();
     }
+    
+    [Fact]
+    public void AddEmployee_GivenNoActiveCompany_ShouldThrowCompanyNotActiveException()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        company.Deactivate();
+        
+        //act
+        var exception = Record.Exception(() => company.AddEmployee(Guid.NewGuid(), "invalid@invalid.pl"));
+        
+        //assert
+        exception.ShouldBeOfType<CompanyNotActiveException>();
+    }
 
     [Fact]
     public void AddProject_GivenNotExistingTitle_ShouldAddProject()
@@ -86,6 +100,21 @@ public sealed class CompanyTests
         
         //assert
         exception.ShouldBeOfType<ProjectAlreadyRegisteredException>();
+    }
+    
+    [Fact]
+    public void AddProject_GivenNoActiveCompany_ShouldThrowCompanyNotActiveException()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        company.Deactivate();
+        
+        //act
+        var exception = Record.Exception(() => company.AddProject(Guid.NewGuid(), "TestProjectTitle",
+            "My project description", DateTime.Now, DateTime.Now.AddMonths(3)));
+        
+        //assert
+        exception.ShouldBeOfType<CompanyNotActiveException>();
     }
 
     [Fact]
