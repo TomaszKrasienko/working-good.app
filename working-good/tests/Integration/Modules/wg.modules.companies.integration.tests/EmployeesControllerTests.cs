@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
+using wg.modules.companies.application.CQRS.Employees.Commands.DeactivateEmployee;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -78,6 +79,76 @@ public sealed class EmployeesControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task DeactivateEmployee_GivenExistingEmployeeIdAndSubstituteEmployeeId_ShouldReturn200OkStatusCode()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        var substituteEmployee = EmployeeFactory.GetEmployeeInCompany(company);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        var command = new DeactivateEmployeeCommand(Guid.Empty, substituteEmployee.Id);
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"companies-module/employees/deactivate/{employee.Id.Value}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedEmployee = await GetEmployeeByIdAsync(employee.Id);
+        updatedEmployee.IsActive.Value.ShouldBeFalse();
+    }
+    
+    [Fact]
+    public async Task DeactivateEmployee_GivenExistingEmployeeIdAndNotExistingSubstituteEmployeeId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        var command = new DeactivateEmployeeCommand(Guid.Empty, Guid.NewGuid());
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"companies-module/employees/deactivate/{employee.Id.Value}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        var updatedEmployee = await GetEmployeeByIdAsync(employee.Id);
+        updatedEmployee.IsActive.Value.ShouldBeTrue();
+    }
+    
+    [Fact]
+    public async Task DeactivateEmployee_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new DeactivateEmployeeCommand(Guid.Empty, Guid.NewGuid());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"companies-module/employees/deactivate/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task DeactivateEmployee_GivenAuthorizedUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        var command = new DeactivateEmployeeCommand(Guid.Empty, Guid.NewGuid());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"companies-module/employees/deactivate/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
     private async Task<Company> AddCompanyAsync()
