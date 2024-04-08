@@ -1,3 +1,5 @@
+**For 100commitow (https://100commitow.pl) contest by devmentors.io**
+
 <div>
     <img src="assets/logo.png" width="500">
 </div>
