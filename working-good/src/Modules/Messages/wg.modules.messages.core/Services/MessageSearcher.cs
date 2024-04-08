@@ -55,7 +55,7 @@ internal sealed class MessageSearcher(
             if (IsAddressCorrect(senderAddress))
             {
                 var employee = await companiesApiClient.GetEmployeeByEmailAsync(new EmployeeEmailDto(senderAddress));
-                if (employee is not null)
+                if (employee is not null && employee.IsActive)
                 {
                     clientMessages.Add(ClientMessage.Create(message.Subject, message.TextBody, 
                         senderAddress, message.Date.DateTime, employee.Id));

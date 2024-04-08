@@ -27,7 +27,8 @@ internal static class Extensions
         {
             Id = employee.Id,
             Email = employee.Email,
-            PhoneNumber = employee.PhoneNumber
+            PhoneNumber = employee.PhoneNumber,
+            IsActive = employee.IsActive
         };
 
     internal static ProjectDto AsDto(this Project project)

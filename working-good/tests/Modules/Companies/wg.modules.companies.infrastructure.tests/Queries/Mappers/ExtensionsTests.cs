@@ -58,6 +58,7 @@ public sealed class ExtensionsTests
         result.Id.ShouldBe(employee.Id.Value);
         result.Email.ShouldBe(employee.Email.Value);
         result.PhoneNumber.ShouldBe(employee.PhoneNumber.Value);
+        result.IsActive.ShouldBe(employee.IsActive.Value);
     }
 
     [Fact]
