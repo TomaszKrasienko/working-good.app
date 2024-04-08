@@ -10,4 +10,5 @@ public interface ICompanyRepository
     Task<bool> ExistsDomainAsync(string emailDomain);
     Task<Company> GetByIdAsync(Guid id);
     Task<Company> GetByProjectIdAsync(Guid projectId);
+    Task<Company> GetByEmployeeIdAsync(Guid employeeId);
 }

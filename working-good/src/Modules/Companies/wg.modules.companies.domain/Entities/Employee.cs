@@ -28,7 +28,7 @@ public sealed class Employee
     private void Activate()
         => IsActive = true;
 
-    private void Deactivate()
+    internal void Deactivate()
         => IsActive = false;
     
     private void ChangeEmail(string email)

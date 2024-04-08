@@ -67,6 +67,17 @@ public sealed class Company : AggregateRoot
         _employees.Add(employee);
     }
 
+    public void DeactivateEmployee(Guid id)
+    {
+        var employee = _employees.FirstOrDefault(x => x.Id.Equals(id));
+        if (employee is null)
+        {
+            throw new EmployeeNotFoundException(id);
+        }
+        
+        employee.Deactivate();
+    }
+
     public void AddProject(Guid id, string title, string description, DateTime? plannedStart, DateTime? plannedFinish)
     {
         if (!IsActive)

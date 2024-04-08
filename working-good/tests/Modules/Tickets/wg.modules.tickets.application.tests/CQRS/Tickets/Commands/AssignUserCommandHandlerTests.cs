@@ -61,7 +61,7 @@ public sealed class AssignUserCommandHandlerTests
     public async Task HandleAsync_GivenExistingTicketAndWithoutProjectId_ShouldUpdateTicketByRepositoryAndNotCheckUserInGroup()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired().Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
 
         _ticketRepository

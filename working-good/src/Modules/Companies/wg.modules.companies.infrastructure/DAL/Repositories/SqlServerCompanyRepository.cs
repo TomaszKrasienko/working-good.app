@@ -34,5 +34,11 @@ internal sealed class SqlServerCompanyRepository(
         => _companies
             .Include(x => x.Projects)
             .Include(x => x.Employees)
-            .FirstOrDefaultAsync(x => x.Projects.Any(x => x.Id.Equals(projectId)));
+            .FirstOrDefaultAsync(x => x.Projects.Any(p => p.Id.Equals(projectId)));
+
+    public Task<Company> GetByEmployeeIdAsync(Guid employeeId)
+        => _companies
+            .Include(x => x.Projects)
+            .Include(x => x.Employees)
+            .FirstOrDefaultAsync(x => x.Employees.Any(e => e.Id.Equals(employeeId)));
 }

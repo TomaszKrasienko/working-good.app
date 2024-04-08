@@ -70,6 +70,33 @@ public sealed class CompanyTests
         //assert
         exception.ShouldBeOfType<CompanyNotActiveException>();
     }
+    
+    [Fact]
+    public void DeactivateEmployee_GivenExistingId_ShouldChangeIsActiveForFalse()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        
+        //act
+        company.DeactivateEmployee(employee.Id);
+        
+        //assert
+        employee.IsActive.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void DeactivateEmployee_GivenNotExistingId_ShouldThrowEmployeeNotFoundException()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => company.DeactivateEmployee(Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<EmployeeNotFoundException>();
+    }
 
     [Fact]
     public void AddProject_GivenNotExistingTitle_ShouldAddProject()
