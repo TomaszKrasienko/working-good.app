@@ -93,8 +93,14 @@ public sealed class Ticket : AggregateRoot
         ExpirationDate = expirationDate;
     }
 
-    private void ChangeAssignedEmployee(Guid assignedEmployee)
-        => AssignedEmployee = assignedEmployee;
+    //Todo: Tests
+    internal void ChangeAssignedEmployee(Guid assignedEmployee)
+    {
+        if (IsStatusForAssigning())
+        {
+            AssignedEmployee = assignedEmployee;
+        }
+    }
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {

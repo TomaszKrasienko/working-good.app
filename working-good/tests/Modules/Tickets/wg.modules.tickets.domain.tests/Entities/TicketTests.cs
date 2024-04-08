@@ -34,6 +34,34 @@ public sealed class TicketTests
     }
 
     [Fact]
+    public void ChangeAssignedEmployee_ForTicketWithStatusToAssigning_ShouldChangeAssignedEmployee()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var substituteEmployeeId = Guid.NewGuid();
+        
+        //act
+        ticket.ChangeAssignedEmployee(substituteEmployeeId);
+        
+        //assert
+        ticket.AssignedEmployee.Value.ShouldBe(substituteEmployeeId);
+    }
+    
+    [Fact]
+    public void ChangeAssignedEmployee_ForTicketWithStatusToNotAssigning_ShouldNotChangeAssignedEmployee()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Done());
+        var oldAssignedEmployee = ticket.AssignedEmployee;
+        
+        //act
+        ticket.ChangeAssignedEmployee(Guid.NewGuid());
+        
+        //assert
+        ticket.AssignedEmployee.ShouldBe(oldAssignedEmployee);
+    }
+
+    [Fact]
     public void ChangeAssignedUser_GivenUserIdAndDateForStateNew_ShouldChangeAssignedUserAndStateToOpenAndStateDate()
     {
         //arrange
