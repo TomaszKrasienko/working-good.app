@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using wg.modules.companies.infrastructure.DAL;
+using wg.modules.notifications.core.Services.Abstractions;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
 using wg.shared.abstractions.Pagination;
@@ -33,7 +34,7 @@ public abstract class BaseTestsController : IDisposable
 
     protected virtual void ConfigureServices(IServiceCollection services)
     {
-        
+        services.AddSingleton<IEmailPublisher, FakeEmailPublisher>();
     }
 
     protected virtual void Authorize(Guid userId, string role)
