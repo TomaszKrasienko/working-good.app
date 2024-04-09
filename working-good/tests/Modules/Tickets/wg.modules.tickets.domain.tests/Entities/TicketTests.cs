@@ -97,18 +97,19 @@ public sealed class TicketTests
     }
 
     [Fact]
-    public void ChangeAssignedUser_ForCancelledState_ShouldThrowInvalidStateForAssignUserException()
+    public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeState()
     {        
         //arrange
         var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var originalState = ticket.State;
         var userId = Guid.NewGuid();
         var date = DateTime.Now;
         
         //act
-        var exception = Record.Exception(() => ticket.ChangeAssignedUser(userId, date));
+        ticket.ChangeAssignedUser(userId, date);
         
         //assert
-        exception.ShouldBeOfType<InvalidStateForAssignUserException>();
+        ticket.State.ShouldBe(originalState);
     }
     
     [Fact]

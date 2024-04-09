@@ -104,15 +104,12 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {
-        if (!IsStatusForAssigning())
-        {
-            throw new InvalidStateForAssignUserException(Id, State.Value);
-        }
+        if (!IsStatusForAssigning()) return;
         AssignedUser = assignedUser;
         if (State == State.New())
         {
             ChangeState(State.Open(), stateChangeDate);
-        }  
+        }
     }
 
     private bool IsStatusForAssigning()
