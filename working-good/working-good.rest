@@ -99,7 +99,7 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "email": "tomasz.krasienko@outlook.com",
+    "email": "tom.krasienko@outlook.com",
     "phoneNumber": "555000111"
 }
 
@@ -114,8 +114,8 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "subject": "Test ticket subject",
-    "content": "Test ticket content",
+    "subject": "Test ticket subject2",
+    "content": "Test ticket content3",
     "state": "New",
     "isPriority": false,
     "assignedEmployee": "{{employeeId}}",
@@ -141,3 +141,12 @@ Content-Type: application/json
 ###
 GET {{url}}/tickets-module/tickets?pageSize=3&pageNumber=1&subject=ticket
 Authorization: bearer {{token}}
+
+###
+PATCH {{url}}/companies-module/employees/deactivate/4d83ebed-5980-4363-a64f-acca5449539b
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "substitutionEmployeeId":"b602fd3b-9d9f-4f92-8465-b1ff85338e78"
+}

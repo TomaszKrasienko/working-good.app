@@ -14,6 +14,6 @@ internal sealed class GetEmployeeByEmailQueryHandler(
         => (await dbContext
                 .Employees
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == query.Email, cancellationToken))
+                .FirstOrDefaultAsync(x => x.Email == query.Email, cancellationToken))?
             .AsDto();
 }

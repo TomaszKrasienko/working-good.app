@@ -11,7 +11,7 @@ internal sealed class BackgroundSearcher(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var periodicTimer = new PeriodicTimer(TimeSpan.FromMinutes(2));
+        using var periodicTimer = new PeriodicTimer(TimeSpan.FromMinutes(1));
         while (await periodicTimer.WaitForNextTickAsync(stoppingToken))
         {
             await Search(stoppingToken);
