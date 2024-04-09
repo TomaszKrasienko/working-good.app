@@ -1,12 +1,20 @@
+using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.Events;
+using wg.shared.abstractions.Time;
 
 namespace wg.modules.tickets.application.Events.External.Handlers;
 
 internal sealed class EmployeeDeactivatedHandler(
-    ) : IEventHandler<EmployeeDeactivated>
+    ITicketRepository ticketRepository,
+    IClock clock) : IEventHandler<EmployeeDeactivated>
 {
-    public Task HandleAsync(EmployeeDeactivated @event)
+    public async Task HandleAsync(EmployeeDeactivated @event)
     {
-        var tickets = 
+        var tickets = await ticketRepository.GetAllForAssignedEmployee(@event.EmployeeId);
+        foreach (var ticket in tickets)
+        {
+            ticket.ChangeAssignedUser(@event.SubstituteEmployeeId, clock.Now());
+            await ticketRepository.UpdateAsync(ticket);
+        }
     }
 }

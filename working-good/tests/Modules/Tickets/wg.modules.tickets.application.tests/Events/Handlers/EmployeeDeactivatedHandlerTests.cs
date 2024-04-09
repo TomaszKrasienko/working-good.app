@@ -4,7 +4,9 @@ using wg.modules.tickets.application.Events.External.Handlers;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
+using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.Tickets;
+using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.Events.Handlers;
@@ -39,12 +41,14 @@ public sealed class EmployeeDeactivatedHandlerTests
     
     #region arrange
     private readonly ITicketRepository _ticketRepository;
+    private readonly IClock _clock;
     private readonly EmployeeDeactivatedHandler _handler;
 
     public EmployeeDeactivatedHandlerTests()
     {
         _ticketRepository = Substitute.For<ITicketRepository>();
-        _handler = new EmployeeDeactivatedHandler();
+        _clock = TestsClock.Create();
+        _handler = new EmployeeDeactivatedHandler(_ticketRepository, _clock);
     }
     #endregion
 }

@@ -16,6 +16,12 @@ internal sealed class SqlServerTicketRepository : ITicketRepository
         _tickets = _dbContext.Tickets;
     }
 
+    public Task<List<Ticket>> GetAllForAssignedEmployee(Guid employeeId)
+        => _tickets
+            .Include(x => x.Messages)
+            .Where(x => x.AssignedEmployee.Equals(employeeId))
+            .ToListAsync();
+
     public Task<Ticket> GetByNumberAsync(int number)
         => _tickets
             .Include(x => x.Messages)
