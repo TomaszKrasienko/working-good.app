@@ -9,31 +9,6 @@ namespace wg.modules.tickets.domain.tests.Entities;
 public sealed class TicketTests
 {
     [Fact]
-    public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
-    {
-        //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.New()).Single();
-        var id = Guid.NewGuid();
-        var sender = "joe@doe.pl";
-        var subject = "Test subject";
-        var content = "Test content";
-        var createdAt = DateTime.Now;
-        
-        //act
-        ticket.AddMessage(id, sender, subject, content, createdAt);
-        
-        //assert
-        var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
-        ticket.State.Value.ShouldBe(State.Open());
-        message.ShouldNotBeNull();
-        message.Id.Value.ShouldBe(id);
-        message.Sender.Value.ShouldBe(sender);
-        message.Subject.Value.ShouldBe(subject);
-        message.Content.Value.ShouldBe(content);
-        message.CreatedAt.Value.ShouldBe(createdAt);
-    }
-
-    [Fact]
     public void ChangeAssignedEmployee_ForTicketWithStatusToAssigning_ShouldChangeAssignedEmployee()
     {
         //arrange
@@ -153,5 +128,60 @@ public sealed class TicketTests
         
         //assert
         ticket.ProjectId.Value.ShouldBe(projectId);
+    }
+    
+    [Fact]
+    public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.New()).Single();
+        var id = Guid.NewGuid();
+        var sender = "joe@doe.pl";
+        var subject = "Test subject";
+        var content = "Test content";
+        var createdAt = DateTime.Now;
+        
+        //act
+        ticket.AddMessage(id, sender, subject, content, createdAt);
+        
+        //assert
+        var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+        ticket.State.Value.ShouldBe(State.Open());
+        message.ShouldNotBeNull();
+        message.Id.Value.ShouldBe(id);
+        message.Sender.Value.ShouldBe(sender);
+        message.Subject.Value.ShouldBe(subject);
+        message.Content.Value.ShouldBe(content);
+        message.CreatedAt.Value.ShouldBe(createdAt);
+    }
+
+    [Fact]
+    public void AddActivity_GivenStatusForChanges_ShouldAddActivityToTicket()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var activityId = Guid.NewGuid();
+        
+        //act
+        ticket.AddActivity(activityId, DateTime.Now, DateTime.Now.AddMinutes(30),
+            "Test note",true, Guid.NewGuid());
+        
+        //assert
+        ticket.Activities.Any(x => x.Id.Equals(activityId)).ShouldBeTrue();
+    }
+    
+    [Fact]
+    public void AddActivity_GivenStatusForChanges_ShouldThrowTicketHasNoStatusToAddActivityException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Cancelled());
+        
+        //act
+        var exception = Record.Exception(() => ticket.AddActivity(Guid.NewGuid(), 
+            DateTime.Now, DateTime.Now.AddMinutes(30),
+            "Test note",true, Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<TicketHasNoStatusToAddActivityException>();
     }
 }

@@ -22,6 +22,8 @@ public sealed class Ticket : AggregateRoot
     public EntityId ProjectId  { get; private set; }
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
+    private List<Activity> _activities = new List<Activity>();
+    public IReadOnlyList<Activity> Activities => _activities;
 
     private Ticket(AggregateId id, Number number, CreatedAt createdAt, EntityId createdBy)
     {
@@ -93,7 +95,7 @@ public sealed class Ticket : AggregateRoot
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
     {
-        if (IsStatusForAssigning())
+        if (IsStatusForChanges())
         {
             AssignedEmployee = assignedEmployee;
         }
@@ -101,16 +103,13 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {
-        if (!IsStatusForAssigning()) return;
+        if (!IsStatusForChanges()) return;
         AssignedUser = assignedUser;
         if (State == State.New())
         {
             ChangeState(State.Open(), stateChangeDate);
         }
     }
-
-    private bool IsStatusForAssigning()
-        => State != State.Cancelled() && State != State.Done();
 
     public void ChangeProject(Guid projectId)
         => ProjectId = projectId;
@@ -122,4 +121,19 @@ public sealed class Ticket : AggregateRoot
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 
+    public void AddActivity(Guid id, DateTime timeFrom, DateTime timeTo, string note,
+        bool isPaid, EntityId userId)
+    {
+        if (!IsStatusForChanges())
+        {
+            throw new TicketHasNoStatusToAddActivityException(Id);
+        }
+
+        var activity = Activity.Create(id, timeFrom, timeTo, note, isPaid,
+            userId);
+        _activities.Add(activity);
+    }
+
+    private bool IsStatusForChanges()
+        => State != State.Cancelled() && State != State.Done();
 }

@@ -43,7 +43,7 @@ public sealed class ActivityCreateTests
         var userId = Guid.NewGuid();
         
         //act
-        var result = Activity.Create(id, timeFrom, note, isPaid, userId);
+        var result = Activity.Create(id, timeFrom, null, note, isPaid, userId);
         
         //assert
         result.ShouldNotBeNull();

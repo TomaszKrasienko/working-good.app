@@ -18,22 +18,8 @@ public sealed class Activity
         Id = id;
     }
 
-    internal static Activity Create(Guid id, DateTime timeFrom, DateTime timeTo, 
+    internal static Activity Create(Guid id, DateTime timeFrom, DateTime? timeTo, 
         string note, bool isPaid, EntityId userId)
-    {
-        var activity = Create(id, note, isPaid);
-        activity.ChangeActivityTime(timeFrom, timeTo);
-        return activity;
-    }
-
-    internal static Activity Create(Guid id, DateTime timeFrom, string note, bool isPaid, EntityId userId)
-    {
-        var activity = Create(id, note, isPaid);
-        activity.ChangeActivityTime(timeFrom);
-        return activity;
-    }
-    
-    private static Activity Create(Guid id,string note, bool isPaid)
     {
         var activity = new Activity(id);
         if (isPaid)
@@ -45,6 +31,15 @@ public sealed class Activity
             activity.MarkAsNoPaid();
         }
         activity.ChangeNote(note);
+        if (timeTo is null)
+        {
+            activity.ChangeActivityTime(timeFrom);
+        }
+        else
+        {
+            activity.ChangeActivityTime(timeFrom, (DateTime)timeTo);
+        }
+
         return activity;
     }
 
