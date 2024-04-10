@@ -15,8 +15,8 @@ public record ActivityTime
         {
             throw new TimeToCanNotBeEarlierThanTimeFromException(timeFrom, timeTo);
         }
-        TimeFrom = timeFrom;
-        TimeTo = timeTo;
+        TimeFrom = new DateTime(timeFrom.Year, timeFrom.Month, timeFrom.Day, timeFrom.Hour, timeFrom.Minute, 0);
+        TimeTo = new DateTime(timeTo.Year, timeTo.Month, timeTo.Day, timeTo.Hour, timeTo.Minute, 0);;
     }
     
     public ActivityTime(DateTime timeFrom)

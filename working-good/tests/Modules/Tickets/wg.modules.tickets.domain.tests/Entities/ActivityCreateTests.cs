@@ -1,5 +1,6 @@
 using Shouldly;
 using wg.modules.tickets.domain.Entities;
+using wg.modules.tickets.domain.Exceptions;
 using Xunit;
 
 namespace wg.modules.tickets.domain.tests.Entities;
@@ -11,8 +12,9 @@ public sealed class ActivityCreateTests
     {
         //arrange
         var id = Guid.NewGuid();
-        var timeFrom = DateTime.Now.AddHours(-1);
-        var timeTo = DateTime.Now.AddHours(1);
+        var now = new DateTime(2024, 4, 10, 10, 10, 0);
+        var timeFrom = now.AddHours(-1);
+        var timeTo = now.AddHours(1);
         var note = "Test note";
         var isPaid = true;
         
@@ -49,5 +51,27 @@ public sealed class ActivityCreateTests
         result.ActivityTime.Summary.ShouldBe(TimeSpan.Zero);
         result.Note.Value.ShouldBe(note);
         result.IsPaid.Value.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void Create_GivenEmptyNote_ShouldThrowEmptyNoteException()
+    {
+        //act
+        var exception = Record.Exception(() => Activity.Create(Guid.NewGuid(), DateTime.Now.AddHours(-1), 
+            DateTime.Now.AddHours(1), string.Empty, true));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyNoteException>();
+    }
+
+    [Fact]
+    public void Create_GivenTimeToBeforeTimeFrom_ShouldThrowTimeToCanNotBeEarlierThanTimeFromException()
+    {
+        //act
+        var exception = Record.Exception(() => Activity.Create(Guid.NewGuid(), DateTime.Now.AddHours(1), 
+            DateTime.Now.AddHours(-1), "Test note", true));
+        
+        //assert
+        exception.ShouldBeOfType<TimeToCanNotBeEarlierThanTimeFromException>();
     }
 }
