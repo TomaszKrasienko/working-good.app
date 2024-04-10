@@ -17,9 +17,10 @@ public sealed class ActivityCreateTests
         var timeTo = now.AddHours(1);
         var note = "Test note";
         var isPaid = true;
+        var userId = Guid.NewGuid();
         
         //act
-        var result = Activity.Create(id, timeFrom, timeTo, note, isPaid);
+        var result = Activity.Create(id, timeFrom, timeTo, note, isPaid, userId);
         
         //assert
         result.ShouldNotBeNull();
@@ -39,9 +40,10 @@ public sealed class ActivityCreateTests
         var timeFrom = DateTime.Now.AddHours(-1);
         var note = "Test note";
         var isPaid = true;
+        var userId = Guid.NewGuid();
         
         //act
-        var result = Activity.Create(id, timeFrom, note, isPaid);
+        var result = Activity.Create(id, timeFrom, note, isPaid, userId);
         
         //assert
         result.ShouldNotBeNull();
@@ -58,7 +60,7 @@ public sealed class ActivityCreateTests
     {
         //act
         var exception = Record.Exception(() => Activity.Create(Guid.NewGuid(), DateTime.Now.AddHours(-1), 
-            DateTime.Now.AddHours(1), string.Empty, true));
+            DateTime.Now.AddHours(1), string.Empty, true, Guid.NewGuid()));
         
         //assert
         exception.ShouldBeOfType<EmptyNoteException>();
@@ -69,7 +71,7 @@ public sealed class ActivityCreateTests
     {
         //act
         var exception = Record.Exception(() => Activity.Create(Guid.NewGuid(), DateTime.Now.AddHours(1), 
-            DateTime.Now.AddHours(-1), "Test note", true));
+            DateTime.Now.AddHours(-1), "Test note", true, Guid.NewGuid()));
         
         //assert
         exception.ShouldBeOfType<TimeToCanNotBeEarlierThanTimeFromException>();

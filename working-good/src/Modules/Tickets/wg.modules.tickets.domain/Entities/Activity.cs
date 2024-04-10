@@ -11,6 +11,7 @@ public sealed class Activity
     public ActivityTime ActivityTime { get; private set; }
     public Note Note { get; private set; }
     public IsPaid IsPaid { get; private set; }
+    public EntityId UserId { get; private set; }
 
     private Activity(EntityId id)
     {
@@ -18,14 +19,14 @@ public sealed class Activity
     }
 
     internal static Activity Create(Guid id, DateTime timeFrom, DateTime timeTo, 
-        string note, bool isPaid)
+        string note, bool isPaid, EntityId userId)
     {
         var activity = Create(id, note, isPaid);
         activity.ChangeActivityTime(timeFrom, timeTo);
         return activity;
     }
 
-    internal static Activity Create(Guid id, DateTime timeFrom, string note, bool isPaid)
+    internal static Activity Create(Guid id, DateTime timeFrom, string note, bool isPaid, EntityId userId)
     {
         var activity = Create(id, note, isPaid);
         activity.ChangeActivityTime(timeFrom);
