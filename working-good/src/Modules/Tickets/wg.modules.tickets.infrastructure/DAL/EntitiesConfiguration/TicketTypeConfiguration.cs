@@ -83,6 +83,10 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
             .WithOne();
         
         builder
+            .HasMany<Activity>(x => x.Activities)
+            .WithOne();
+        
+        builder
             .HasIndex(x => x.Number)
             .IsUnique();
     }
