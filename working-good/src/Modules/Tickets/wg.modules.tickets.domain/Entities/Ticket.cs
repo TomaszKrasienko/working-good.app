@@ -91,7 +91,6 @@ public sealed class Ticket : AggregateRoot
         ExpirationDate = expirationDate;
     }
 
-    //Todo: Tests
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
     {
         if (IsStatusForAssigning())

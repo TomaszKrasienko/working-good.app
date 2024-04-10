@@ -113,6 +113,35 @@ public sealed class TicketTests
     }
     
     [Fact]
+    public void ChangeAssignedEmployee_GivenEmployeeIddForStateInProgress_ShouldChangeAssignedEmployee()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress()).Single();
+        var employeeId = Guid.NewGuid();
+        
+        //act
+        ticket.ChangeAssignedEmployee(employeeId);
+        
+        //assert
+        ticket.AssignedEmployee.Value.ShouldBe(employeeId);
+    }
+
+    [Fact]
+    public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeAssigning()
+    {        
+        //arrange
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var originalEmployee = ticket.AssignedEmployee;
+        var employeeId = Guid.NewGuid();
+        
+        //act
+        ticket.ChangeAssignedEmployee(employeeId);
+        
+        //assert
+        ticket.AssignedEmployee.ShouldBe(originalEmployee);
+    }
+    
+    [Fact]
     public void ChangeProject_GivenProjectId_ChangeProjectId()
     {        
         //arrange
