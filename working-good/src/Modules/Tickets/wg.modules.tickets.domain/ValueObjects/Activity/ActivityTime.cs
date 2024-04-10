@@ -6,8 +6,8 @@ namespace wg.modules.tickets.domain.ValueObjects.Activity;
 public record ActivityTime
 {
     public DateTime TimeFrom { get; }
-    public DateTime TimeTo { get; }
-    public TimeSpan Summary => TimeTo - TimeFrom;
+    public DateTime? TimeTo { get; }
+    public TimeSpan Summary => (TimeSpan)(TimeTo is null ? TimeSpan.Zero : TimeTo - (DateTime)TimeFrom);
 
     public ActivityTime(DateTime timeFrom, DateTime timeTo)
     {
@@ -17,5 +17,10 @@ public record ActivityTime
         }
         TimeFrom = timeFrom;
         TimeTo = timeTo;
+    }
+    
+    public ActivityTime(DateTime timeFrom)
+    {
+        TimeFrom = timeFrom;
     }
 }
