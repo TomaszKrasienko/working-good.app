@@ -121,7 +121,7 @@ public sealed class Ticket : AggregateRoot
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 
-    public void AddActivity(Guid id, DateTime timeFrom, DateTime timeTo, string note,
+    public void AddActivity(Guid id, DateTime timeFrom, DateTime? timeTo, string note,
         bool isPaid, EntityId userId)
     {
         if (!IsStatusForChanges())
