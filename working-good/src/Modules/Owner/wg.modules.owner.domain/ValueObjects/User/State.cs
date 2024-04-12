@@ -15,13 +15,13 @@ public sealed record State
         Value = value;
     }
 
-    internal static State Registered()
+    public static State Registered()
         => new State("Registered");
 
-    internal static State Activate()
+    public static State Activate()
         => new State("Active");
 
-    internal static State Deactivate()
+    public static State Deactivate()
         => new State("Deactivated");
     
     public static implicit operator string(State state)

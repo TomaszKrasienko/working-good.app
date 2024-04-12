@@ -7,6 +7,7 @@ internal sealed class TicketsDbContext : DbContext
 {
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Activity> Activities { get; set; }
 
     public TicketsDbContext(DbContextOptions<TicketsDbContext> dbContextOptions) : base(dbContextOptions)
     {
