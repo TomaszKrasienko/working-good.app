@@ -15,7 +15,7 @@ internal sealed class IsEmployeeExistsQueryHandler(
             Value = (await dbContext
                 .Employees
                 .AsNoTracking()
-                .AnyAsync(e => e.Id.Equals(query.Id), cancellationToken))
+                .AnyAsync(e => e.Id.Equals(query.EmployeeId), cancellationToken))
         };
 
 

@@ -35,7 +35,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -92,7 +92,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _ownerApiClient
             .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
@@ -136,7 +136,7 @@ public sealed class AddTicketCommandHandlerTests
         var assignedUser = Guid.NewGuid();
         var projectId = Guid.NewGuid();
         var maxNumber = 1;
-        var slaTimeDto = new CompanySlaTimeDto()
+        var companyDto = new CompanyDto()
         {
             SlaTime = TimeSpan.FromHours(1)
         };
@@ -144,15 +144,15 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
                 => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
             .Returns(new IsProjectExistsDto(){ Value = true});
         _companiesApiClient
-            .GetSlaTimeByEmployeeAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
-            .Returns(slaTimeDto);
+            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+            .Returns(companyDto);
         _ownerApiClient
             .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
             .Returns(new IsUserExistsDto(){Value = true});
@@ -182,7 +182,7 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId.Value == command.ProjectId
-               && arg.ExpirationDate.Value == _clock.Now().Add(slaTimeDto.SlaTime)));
+               && arg.ExpirationDate.Value == _clock.Now().Add(companyDto.SlaTime)));
         await _messageBroker
             .Received(1)
             .PublishAsync(Arg.Is<TicketCreated>(x 
@@ -209,7 +209,7 @@ public sealed class AddTicketCommandHandlerTests
             .IsProjectExistsAsync(Arg.Any<EmployeeWithProjectDto>());
         await _companiesApiClient
             .Received(0)
-            .GetSlaTimeByEmployeeAsync(Arg.Any<EmployeeIdDto>());
+            .GetCompanyByEmployeeIdAsync(Arg.Any<EmployeeIdDto>());
         await _ownerApiClient
             .Received(0)
             .IsUserExistsAsync(Arg.Any<UserIdDto>());
@@ -263,7 +263,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = false});
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
@@ -293,7 +293,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -324,7 +324,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
@@ -363,7 +363,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
         _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == assignedEmployee))
+            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
             .Returns(new IsEmployeeExistsDto(){ Value = true});
         _companiesApiClient
             .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 

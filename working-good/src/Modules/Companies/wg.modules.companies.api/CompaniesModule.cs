@@ -24,7 +24,7 @@ internal sealed class CompaniesModule : IModule
     {
         app
             .UseModuleRequest()
-            .Subscribe<GetSlaTimeByEmployeeIdQuery, CompanySlaTimeDto>("companies/employee/sla-time/get",
+            .Subscribe<GetCompanyByEmployeeIdQuery, CompanyDto>("companies/get/by-employee-id",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsEmployeeExistsQuery, IsEmployeeExistsDto>("companies/employee/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
@@ -32,7 +32,7 @@ internal sealed class CompaniesModule : IModule
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetEmployeeByEmailQuery, EmployeeDto>("companies/employee/get/by-email/",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<GetEmployeeByIdQuery, EmployeeDto>("companies/employee/get/by-id/",
+            .Subscribe<GetEmployeeByIdQuery, EmployeeDto>("companies/employee/get/by-id",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }

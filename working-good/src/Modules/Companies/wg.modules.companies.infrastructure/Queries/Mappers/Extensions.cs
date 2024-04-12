@@ -5,12 +5,6 @@ namespace wg.modules.companies.infrastructure.Queries.Mappers;
 
 internal static class Extensions
 {
-    internal static CompanySlaTimeDto AsSlaTimeDto(this Company company)
-        => new CompanySlaTimeDto()
-        {
-            SlaTime = company.SlaTime
-        };
-
     internal static CompanyDto AsDto(this Company company)
         => new CompanyDto()
         {
@@ -18,8 +12,8 @@ internal static class Extensions
             Name = company.Name,
             SlaTime = company.SlaTime,
             EmailDomain = company.EmailDomain,
-            Employees = company.Employees.Select(x => x.AsDto()).ToList(),
-            Projects = company.Projects.Select(x => x.AsDto()).ToList()
+            Employees = company.Employees?.Select(x => x?.AsDto()).ToList(),
+            Projects = company.Projects?.Select(x => x?.AsDto()).ToList()
         };
 
     internal static EmployeeDto AsDto(this Employee employee)

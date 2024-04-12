@@ -9,22 +9,9 @@ namespace wg.modules.companies.infrastructure.tests.Queries.Mappers;
 public sealed class ExtensionsTests
 {
     [Fact]
-    public void AsSlaTimeDto_GivenCompany_ShouldReturnCompanySlaTimeDto()
-    {
-        //arrange
-        var company = CompanyFactory.Get();
-        
-        //assert
-        var result = company.AsSlaTimeDto();
-        
-        //assert
-        result.ShouldNotBeNull();
-        result.SlaTime.ShouldBe(company.SlaTime.Value);
-    }
-
-    [Fact]
     public void AsDto_GivenCompany_ShouldReturnCompanyDto()
     {
+        //Todo: Add unit tests withoud employee and project
         //arrange
         var company = CompanyFactory.Get();
         var employee = EmployeeFactory.GetEmployeeInCompany(company);

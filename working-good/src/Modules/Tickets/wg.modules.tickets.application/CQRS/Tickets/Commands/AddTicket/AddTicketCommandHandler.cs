@@ -71,8 +71,8 @@ internal sealed class AddTicketCommandHandler(
         var now = clock.Now();
         if (command is { IsPriority: true, AssignedEmployee: not null })
         {
-            var slaTimeSpan = await companiesApiClient.GetSlaTimeByEmployeeAsync(new EmployeeIdDto((Guid)command.AssignedEmployee));
-            expirationDate = now.Add(slaTimeSpan.SlaTime);
+            var companyDto = await companiesApiClient.GetCompanyByEmployeeIdAsync(new EmployeeIdDto((Guid)command.AssignedEmployee));
+            expirationDate = now.Add(companyDto.SlaTime);
         }
         
         var maxNumber = await ticketRepository.GetMaxNumberAsync();

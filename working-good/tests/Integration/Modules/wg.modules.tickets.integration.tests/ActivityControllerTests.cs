@@ -14,6 +14,7 @@ using State = wg.modules.tickets.domain.ValueObjects.Ticket.State;
 
 namespace wg.modules.tickets.integration.tests;
 
+[Collection("#1")]
 public sealed class ActivityControllerTests : BaseTestsController
 {
     [Fact]
