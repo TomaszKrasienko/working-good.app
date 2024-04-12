@@ -30,6 +30,7 @@ public sealed class ActivityCreateTests
         result.ActivityTime.Summary.ShouldBe(TimeSpan.FromHours(2));
         result.Note.Value.ShouldBe(note);
         result.IsPaid.Value.ShouldBeTrue();
+        result.UserId.Value.ShouldBe(userId);
     }
     
     [Fact]
@@ -53,6 +54,7 @@ public sealed class ActivityCreateTests
         result.ActivityTime.Summary.ShouldBe(TimeSpan.Zero);
         result.Note.Value.ShouldBe(note);
         result.IsPaid.Value.ShouldBeTrue();
+        result.UserId.Value.ShouldBe(userId);
     }
 
     [Fact]

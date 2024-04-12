@@ -1,5 +1,4 @@
 using System;
-using Microsoft.AspNetCore.Http.HttpResults;
 using wg.modules.tickets.domain.ValueObjects.Activity;
 using wg.shared.abstractions.Kernel.Types;
 
@@ -39,7 +38,7 @@ public sealed class Activity
         {
             activity.ChangeActivityTime(timeFrom, (DateTime)timeTo);
         }
-
+        activity.ChangeUser(userId);
         return activity;
     }
 
@@ -51,6 +50,9 @@ public sealed class Activity
 
     private void ChangeNote(string note)
         => Note = note;
+
+    private void ChangeUser(Guid userId)
+        => UserId = userId;
 
     private void MarkAsPaid()
         => IsPaid = true;
