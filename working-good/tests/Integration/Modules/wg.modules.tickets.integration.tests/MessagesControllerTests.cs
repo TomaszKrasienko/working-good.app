@@ -135,6 +135,7 @@ public sealed class MessagesControllerTests : BaseTestsController
     {
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();
         return user;

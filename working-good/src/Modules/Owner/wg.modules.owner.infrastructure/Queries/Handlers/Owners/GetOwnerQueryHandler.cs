@@ -19,6 +19,7 @@ internal sealed class GetOwnerQueryHandler
             .AsNoTracking()
             .Include(x =>  x.Users.Where(u => query.WithOnlyActiveUsers == false || u.State == State.Activate()))
             .Include(x => x.Groups)
+            .ThenInclude(x => x.Users)
             .Select(x => x.AsDto())
             .FirstOrDefaultAsync(cancellationToken);
 }
