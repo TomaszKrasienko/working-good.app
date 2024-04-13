@@ -21,15 +21,22 @@ internal sealed class AssignUserCommandHandler(
             throw new TicketNotFoundException(command.TicketId);
         }
 
-        var user = await ownerApiClient.GetUserByIdAsync(new UserIdDto(command.UserId));
-        if (user is null)
+        if (ticket.ProjectId is null)
         {
-            throw new UserNotFoundException(command.UserId);
+            var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
+            if (user is null)
+            {
+                throw new UserNotFoundException(command.UserId);
+            }
         }
-
-        if (ticket.ProjectId is not null)
+        else
         {
             var owner = await ownerApiClient.GetOwnerAsync();
+            if (!owner.Users.Any(u => u.Id.Equals(command.UserId)))
+            {
+                throw new UserNotFoundException(command.UserId);
+            }
+            
             if (!owner.Groups.Any(g => g.Id.Equals(ticket.ProjectId) && g.Users.Any(x => x.Equals(command.UserId))))
             {
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
