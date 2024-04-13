@@ -10,7 +10,9 @@ internal static class Extensions
         => new OwnerDto
         {
             Id = owner.Id,
-            Name = owner.Name
+            Name = owner.Name,
+            Users = owner.Users?.Select(x => x.AsDto()).ToImmutableList(),
+            Groups = owner.Groups?.Select(g => g.AsDto()).ToImmutableList()
         };
 
     internal static UserDto AsDto(this User user)
