@@ -1,9 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Web;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.application.CQRS.Owners.Commands.AddOwner;
 using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
+using wg.modules.owner.application.CQRS.Owners.Queries;
+using wg.modules.owner.application.CQRS.Users.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -133,6 +136,50 @@ public sealed class OwnerControllerTests : BaseTestsController
     }
     
     [Fact]
+    public async Task GetOwner_GivenOnlyActiveUserConditionWithoutActiveUsersWithAuthorized_ShouldReturnOwnerDtoWithoutUser()
+    {
+        //arrange
+        var owner = await AddOwner();
+        await AddUserToOwner(owner);
+        await AddGroupToOwner(owner);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetOwnerQuery.WithOnlyActiveUsers), "true");
+        
+        //act
+        var response = await HttpClient.GetFromJsonAsync<OwnerDto>($"owner-module/owner?{queryString.ToString()}");
+        
+        //assert
+        response.ShouldNotBeNull();
+        response.ShouldBeOfType<OwnerDto>();
+        response.Users.ShouldBeEmpty();
+        response.Groups.ShouldNotBeEmpty();
+    }
+    
+    [Fact]
+    public async Task GetOwner_GivenOnlyActiveUserConditionWithActiveUsersWithAuthorized_ShouldReturnOwnerDtoWithoutUser()
+    {
+        //arrange
+        var owner = await AddOwner();
+        await AddUserToOwner(owner, true);
+        await AddGroupToOwner(owner);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetOwnerQuery.WithOnlyActiveUsers), "true");
+        
+        //act
+        var response = await HttpClient.GetFromJsonAsync<OwnerDto>($"owner-module/owner?{queryString.ToString()}");
+        
+        //assert
+        response.ShouldNotBeNull();
+        response.ShouldBeOfType<OwnerDto>();
+        response.Users.ShouldNotBeEmpty();
+        response.Groups.ShouldNotBeEmpty();
+    }
+    
+    [Fact]
     public async Task GetOwner_ForNoExistingOwnerWithAuthorized_ShouldReturn204NoContentStatusCode()
     {
         //arrange
@@ -169,9 +216,14 @@ public sealed class OwnerControllerTests : BaseTestsController
         return owner;
     }
 
-    private async Task<User> AddUserToOwner(Owner owner)
+    private async Task<User> AddUserToOwner(Owner owner, bool isActive = false)
     {
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        if (isActive)
+        {
+            user.Verify(DateTime.Now);
+        }
+
         OwnerDbContext.Owner.Update(owner);
         await OwnerDbContext.SaveChangesAsync();
         return user;
