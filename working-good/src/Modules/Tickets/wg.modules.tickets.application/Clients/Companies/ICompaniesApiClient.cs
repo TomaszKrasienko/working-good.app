@@ -5,6 +5,4 @@ namespace wg.modules.tickets.application.Clients.Companies;
 public interface ICompaniesApiClient
 {
     Task<CompanyDto> GetCompanyByEmployeeIdAsync(EmployeeIdDto dto);
-    Task<IsEmployeeExistsDto> IsEmployeeExistsAsync(EmployeeIdDto dto);
-    Task<IsProjectExistsDto> IsProjectExistsAsync(EmployeeWithProjectDto dto);
 }
