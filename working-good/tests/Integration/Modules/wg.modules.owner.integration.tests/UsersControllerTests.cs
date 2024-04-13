@@ -96,6 +96,50 @@ public sealed class UsersControllerTests : BaseTestsController
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task GetActiveUserById_GivenExistingActiveUserId_ShouldReturnUserDto()
+    {
+        //arrange
+        await AddOwner(true, true);
+        var user = await GetUser();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<UserDto>($"owner-module/users/{user.Id.Value}/active");
+        
+        //assert
+        result.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task GetActiveUserById_GivenNotExistingActiveUserId_ShouldReturnUserDto()
+    {
+        //arrange
+        await AddOwner(true, false);
+        var user = await GetUser();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/users/{user.Id.Value}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetActiveUserById_Unauthorized_ShouldReturnUserDto()
+    {
+        //arrange
+        await AddOwner(true, true);
+        var user = await GetUser();
+        
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/users/{user.Id.Value}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
     
     [Fact]
     public async Task Me_GivenAuthorizedUser_ShouldReturnUserDto()

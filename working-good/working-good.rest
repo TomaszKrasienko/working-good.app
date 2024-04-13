@@ -47,9 +47,6 @@ Content-Type: application/json
 }
 
 ###
-GET {{url}}/owner-module/owner
-
-###
 # @name sign_in
 POST {{url}}/owner-module/users/sign-in
 Content-Type: application/json
@@ -61,6 +58,14 @@ Content-Type: application/json
 
 ###
 @token = {{sign_in.response.body.$.token}}
+
+###
+GET {{url}}/owner-module/owner
+Authorization: bearer {{token}}
+
+###
+GET {{url}}/owner-module/users/5b53750b-26af-4130-a1f3-78992d320386/active
+Authorization: bearer {{token}}
 
 ###
 # @name me

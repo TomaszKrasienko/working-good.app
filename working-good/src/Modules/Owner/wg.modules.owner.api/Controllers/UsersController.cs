@@ -27,12 +27,23 @@ internal sealed class UsersController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<UserDto>>> Get([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
+    public async Task<ActionResult<List<UserDto>>> GetAll([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {
         var result = await queryDispatcher.SendAsync(query, cancellationToken);
         var metaData = result.AsMetaData();
         AddPaginationMetaData(metaData);
         return result.Any() ? Ok(result) : NoContent();
+    }
+
+    [HttpGet("{id:guid}/active")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserDto>> GetActiveUserById(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken);
+        return Ok(result);
     }
     
     [HttpGet("me")]
