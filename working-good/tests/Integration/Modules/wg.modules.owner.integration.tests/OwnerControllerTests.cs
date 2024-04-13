@@ -117,7 +117,9 @@ public sealed class OwnerControllerTests : BaseTestsController
     public async Task GetOwner_ForExistingOwnerWithAuthorized_ShouldReturnOwnerDto()
     {
         //arrange
-        await AddOwner();
+        var owner = await AddOwner();
+        await AddUserToOwner(owner);
+        await AddGroupToOwner(owner);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -126,6 +128,8 @@ public sealed class OwnerControllerTests : BaseTestsController
         //assert
         response.ShouldNotBeNull();
         response.ShouldBeOfType<OwnerDto>();
+        response.Users.ShouldNotBeEmpty();
+        response.Groups.ShouldNotBeEmpty();
     }
     
     [Fact]
@@ -151,7 +155,7 @@ public sealed class OwnerControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     
-    private Task<Owner?> GetOwnerAsync()
+    private Task<Owner> GetOwnerAsync()
         => OwnerDbContext
             .Owner
             .AsNoTracking()
@@ -163,5 +167,21 @@ public sealed class OwnerControllerTests : BaseTestsController
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();
         return owner;
+    }
+
+    private async Task<User> AddUserToOwner(Owner owner)
+    {
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        OwnerDbContext.Owner.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        return user;
+    }
+
+    private async Task<Group> AddGroupToOwner(Owner owner)
+    {
+        var group = GroupFactory.GetGroupInOwner(owner);
+        OwnerDbContext.Owner.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        return group;
     }
 }

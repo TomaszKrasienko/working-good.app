@@ -15,7 +15,7 @@ internal sealed class OwnerController(
     IQueryDispatcher queryDispatcher) : BaseController()
 {
     [HttpGet]
-    //[Authorize]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
