@@ -260,6 +260,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
         await _ownerDbContext.Owner.AddAsync(owner);
         await _ownerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.User());
@@ -282,6 +283,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var owner = OwnerFactory.Get();
         var group = GroupFactory.GetGroupInOwner(owner);
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
         group.AddUser(user);
         ticket.ChangeProject(group.Id);
         _ticketsDbContext.Tickets.Update(ticket);
