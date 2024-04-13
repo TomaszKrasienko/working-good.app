@@ -29,12 +29,8 @@ internal sealed class AssignUserCommandHandler(
 
         if (ticket.ProjectId is not null)
         {
-            var isUserInProject = await ownerApiClient.IsUserInGroupAsync(new UserInGroupDto()
-            {
-                UserId = command.UserId,
-                GroupId = ticket.ProjectId
-            });
-            if (!isUserInProject.Value)
+            var owner = await ownerApiClient.GetOwnerAsync();
+            if (!owner.Groups.Any(g => g.Id.Equals(ticket.ProjectId) && g.Users.Any(x => x.Equals(command.UserId))))
             {
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
             }

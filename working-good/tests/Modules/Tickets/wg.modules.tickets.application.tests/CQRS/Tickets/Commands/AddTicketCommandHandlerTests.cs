@@ -26,7 +26,6 @@ public sealed class AddTicketCommandHandlerTests
     public async Task HandleAsync_GivenNotPriorityTicketExistingAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
     {
         //arrange
-        var assignedUser = Guid.NewGuid();
         var maxNumber = 1;
 
         var employeeDto = new EmployeeDto()
@@ -61,17 +60,37 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
 
+        var userDto = new UserDto()
+        {
+            Id = Guid.NewGuid(),
+            Email = "joe.doe@user.pl",
+            FirstName = "Joe",
+            LastName = "Doe",
+            Role = "Manager",
+            State = "active"
+        };
+
+        var groupDto = new GroupDto()
+        {
+            Id = projectDto.Id,
+            Title = "Group test title",
+            Users = [userDto.Id],
+        };
+
+        var ownerDto = new OwnerDto()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Owner name",
+            Groups = [groupDto],
+            Users = [userDto]
+        };
+
         _ownerApiClient
-            .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
-            .Returns(new IsUserExistsDto(){Value = true});
-        _ownerApiClient
-            .IsUserInGroupAsync(Arg.Is<UserInGroupDto>(arg
-                => arg.UserId == assignedUser
-                   && arg.GroupId == projectDto.Id))
-            .Returns(new IsUserInGroupDto(){Value = true});
+            .GetOwnerAsync()
+            .Returns(ownerDto);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, employeeDto.Id, assignedUser, 
+            Guid.NewGuid(), State.New(), false, employeeDto.Id, userDto.Id, 
             projectDto.Id);
         
         //act
@@ -90,6 +109,7 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId.Value == command.ProjectId));
+        
         await _messageBroker
             .Received(1)
             .PublishAsync(Arg.Is<TicketCreated>(x 
@@ -97,29 +117,59 @@ public sealed class AddTicketCommandHandlerTests
                 && x.Content == command.Content
                 && x.TicketNumber == maxNumber + 1
                 && x.EmployeeId == employeeDto.Id
-                && x.UserId == assignedUser));
+                && x.UserId == userDto.Id));
     }
     
    [Fact]
     public async Task HandleAsync_GivenNotPriorityTicketWithoutProject_ShouldAddTicketByRepositoryAndSendEvent()
     {
         //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var maxNumber = 1;
+        var employeeDto = new EmployeeDto()
+        {
+            Id = Guid.NewGuid(),
+            Email = "test@test.pl",
+            IsActive = true,
+            PhoneNumber = "515515515"
+        };
+        
+        var companyDto = new CompanyDto()
+        {
+            SlaTime = TimeSpan.FromHours(8),
+            Employees = [employeeDto]
+        };
+        
+        _companiesApiClient
+            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
+            .Returns(companyDto);
+        
+        var userDto = new UserDto()
+        {
+            Id = Guid.NewGuid(),
+            Email = "joe.doe@user.pl",
+            FirstName = "Joe",
+            LastName = "Doe",
+            Role = "Manager",
+            State = "active"
+        };
+        
+        var ownerDto = new OwnerDto()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Owner name",
+            Users = [userDto]
+        };
+        
+        _ownerApiClient
+            .GetOwnerAsync()
+            .Returns(ownerDto);
 
+        var maxNumber = 1;
         _ticketRepository
             .GetMaxNumberAsync()
             .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = true});
-        _ownerApiClient
-            .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
-            .Returns(new IsUserExistsDto(){Value = true});
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
+            Guid.NewGuid(), State.New(), false, employeeDto.Id, userDto.Id, 
             null);
         
         //act
@@ -138,271 +188,294 @@ public sealed class AddTicketCommandHandlerTests
                && arg.AssignedEmployee.Value == command.AssignedEmployee
                && arg.AssignedUser.Value == command.AssignedUser
                && arg.ProjectId == null));
+        
         await _messageBroker
             .Received(1)
             .PublishAsync(Arg.Is<TicketCreated>(x 
                 => x.Subject == command.Subject
                 && x.Content == command.Content
                 && x.TicketNumber == maxNumber + 1
-                && x.EmployeeId == assignedEmployee
-                && x.UserId == assignedUser));
+                && x.EmployeeId == employeeDto.Id
+                && x.UserId == userDto.Id));
     }
-    
-    [Fact]
-    public async Task HandleAsync_GivenPriorityTicketExistingAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
-    {
-        //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
-        var maxNumber = 1;
-        var companyDto = new CompanyDto()
-        {
-            SlaTime = TimeSpan.FromHours(1)
-        };
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = true});
-        _companiesApiClient
-            .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
-                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
-            .Returns(new IsProjectExistsDto(){ Value = true});
-        _companiesApiClient
-            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(companyDto);
-        _ownerApiClient
-            .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
-            .Returns(new IsUserExistsDto(){Value = true});
-        _ownerApiClient
-            .IsUserInGroupAsync(Arg.Is<UserInGroupDto>(arg
-                => arg.UserId == assignedUser
-                   && arg.GroupId == projectId))
-            .Returns(new IsUserInGroupDto(){Value = true});
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), true, assignedEmployee, assignedUser, 
-            projectId);
-        
-        //act
-        await Act(command);
-        
-        //assert
-        await _ticketRepository
-            .Received(1)
-            .AddAsync(Arg.Is<Ticket>(arg
-                => arg.Id.Value == command.Id
-               && arg.Subject.Value == command.Subject
-               && arg.Content.Value == command.Content
-               && arg.CreatedBy.Value == command.CreatedBy
-               && arg.State.Value == State.Open()
-               && arg.IsPriority.Value == command.IsPriority
-               && arg.AssignedEmployee.Value == command.AssignedEmployee
-               && arg.AssignedUser.Value == command.AssignedUser
-               && arg.ProjectId.Value == command.ProjectId
-               && arg.ExpirationDate.Value == _clock.Now().Add(companyDto.SlaTime)));
-        await _messageBroker
-            .Received(1)
-            .PublishAsync(Arg.Is<TicketCreated>(x 
-                => x.Subject == command.Subject
-                && x.Content == command.Content
-                && x.TicketNumber == maxNumber + 1
-                && x.EmployeeId == assignedEmployee
-                && x.UserId == assignedUser));
-    }
-    
-    [Fact]
-    public async Task HandleAsync_GivenNotPriorityTicketWithoutAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
-    {
-        //arrange
-        var maxNumber = 1;
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        await _companiesApiClient
-            .Received(0)
-            .IsEmployeeExistsAsync(Arg.Any<EmployeeIdDto>());
-        await _companiesApiClient
-            .Received(0)
-            .IsProjectExistsAsync(Arg.Any<EmployeeWithProjectDto>());
-        await _companiesApiClient
-            .Received(0)
-            .GetCompanyByEmployeeIdAsync(Arg.Any<EmployeeIdDto>());
-        await _ownerApiClient
-            .Received(0)
-            .IsUserExistsAsync(Arg.Any<UserIdDto>());
-        await _ownerApiClient
-            .Received(0)
-            .IsUserInGroupAsync(Arg.Any<UserInGroupDto>());
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, null, null, null);
-        
-        //act
-        await Act(command);
-        
-        //assert
-        await _ticketRepository
-            .Received(1)
-            .AddAsync(Arg.Is<Ticket>(arg
-                => arg.Id.Value == command.Id
-                   && arg.Subject.Value == command.Subject
-                   && arg.Content.Value == command.Content
-                   && arg.CreatedBy.Value == command.CreatedBy
-                   && arg.State.Value == command.State
-                   && arg.IsPriority.Value == command.IsPriority
-                   && arg.AssignedEmployee == null
-                   && arg.AssignedUser == null
-                   && arg.ProjectId == null
-                   && arg.ExpirationDate == null));
-        await _messageBroker
-            .Received(1)
-            .PublishAsync(Arg.Is<TicketCreated>(x 
-                => x.Subject == command.Subject
-                   && x.Content == command.Content
-                   && x.TicketNumber == maxNumber + 1
-                   && x.EmployeeId == null
-                   && x.UserId == null));
-    }
-    
-    [Fact]
-    public async Task HandleAsync_GivenNotExistingEmployee_ShouldThrowEmployeeDoesNotExistException()
-    {
-        //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
-        var maxNumber = 1;
-        var slaTimeDto = new CompanySlaTimeDto()
-        {
-            SlaTime = TimeSpan.FromHours(1)
-        };
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = false});
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), true, assignedEmployee, assignedUser, 
-            projectId);
-        
-        //act
-        var exception = await Record.ExceptionAsync( async () => await Act(command));
-        
-        //assert
-        exception.ShouldBeOfType<EmployeeDoesNotExistException>();
-    }
-    
-    [Fact]
-    public async Task HandleAsync_GivenNotExistingProject_ShouldThrowProjectDoesNotExists()
-    {
-        //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
-        var maxNumber = 1;
-        var slaTimeDto = new CompanySlaTimeDto()
-        {
-            SlaTime = TimeSpan.FromHours(1)
-        };
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = true});
-        _companiesApiClient
-            .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
-                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
-            .Returns(new IsProjectExistsDto(){ Value = false});
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), true, assignedEmployee, assignedUser, 
-            projectId);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async () =>  await Act(command));
-        
-        //assert
-        exception.ShouldBeOfType<ProjectDoesNotExists>();
-    }
-    
-    [Fact]
-    public async Task HandleAsync_GivenUserNotInGroup_ShouldThrowUserDoesNotBelongToGroupException()
-    {
-        //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
-        var maxNumber = 1;
+   
+   [Fact]
+   public async Task HandleAsync_GivenPriorityTicketExistingAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
+   {
+       //arrange
+       var employeeDto = new EmployeeDto()
+       {
+           Id = Guid.NewGuid(),
+           Email = "test@test.pl",
+           IsActive = true,
+           PhoneNumber = "515515515"
+       };
 
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = true});
-        _companiesApiClient
-            .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
-                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
-            .Returns(new IsProjectExistsDto(){ Value = true});
-        _ownerApiClient
-            .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
-            .Returns(new IsUserExistsDto(){Value = true});
-        _ownerApiClient
-            .IsUserInGroupAsync(Arg.Is<UserInGroupDto>(arg
-                => arg.UserId == assignedUser
-                   && arg.GroupId == projectId))
-            .Returns(new IsUserInGroupDto(){Value = false});
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
-            projectId);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async () => await Act(command));
-        
-        //assert
-        exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
-    }
-    
-    [Fact]
-    public async Task HandleAsync_GivenNotExistingUser_ShouldThrowUserDoesNotExistException()
-    {
-        //arrange
-        var assignedEmployee = Guid.NewGuid();
-        var assignedUser = Guid.NewGuid();
-        var projectId = Guid.NewGuid();
-        var maxNumber = 1;
+       var projectDto = new ProjectDto()
+       {
+           Id = Guid.NewGuid(),
+           Description = "MyTestProject",
+           PlannedStart = DateTime.Now.AddMonths(-1),
+           PlannedFinish = DateTime.Now.AddMonths(5),
+           Title = "Test"
+       };
 
-        _ticketRepository
-            .GetMaxNumberAsync()
-            .Returns(maxNumber);
-        _companiesApiClient
-            .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
-            .Returns(new IsEmployeeExistsDto(){ Value = true});
-        _companiesApiClient
-            .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
-                => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
-            .Returns(new IsProjectExistsDto(){ Value = true});
-        _ownerApiClient
-            .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
-            .Returns(new IsUserExistsDto(){Value = false});
-        
-        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
-            projectId);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async () => await Act(command));
-        
-        //assert
-        exception.ShouldBeOfType<UserDoesNotExistException>();
-    }
+       var companyDto = new CompanyDto()
+       {
+           SlaTime = TimeSpan.FromHours(8),
+           Employees = [employeeDto],
+           Projects = [projectDto]
+       };
+
+       _companiesApiClient
+           .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
+           .Returns(companyDto);
+
+       var userDto = new UserDto()
+       {
+           Id = Guid.NewGuid(),
+           Email = "joe.doe@user.pl",
+           FirstName = "Joe",
+           LastName = "Doe",
+           Role = "Manager",
+           State = "active"
+       };
+
+       var groupDto = new GroupDto()
+       {
+           Id = projectDto.Id,
+           Title = "Group test title",
+           Users = [userDto.Id],
+       };
+
+       var ownerDto = new OwnerDto()
+       {
+           Id = Guid.NewGuid(),
+           Name = "Owner name",
+           Groups = [groupDto],
+           Users = [userDto]
+       };
+
+       _ownerApiClient
+           .GetOwnerAsync()
+           .Returns(ownerDto);
+       
+       var maxNumber = 1;
+       _ticketRepository
+           .GetMaxNumberAsync()
+           .Returns(maxNumber);
+
+       
+       var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+           Guid.NewGuid(), State.New(), true, employeeDto.Id, userDto.Id, 
+           projectDto.Id);
+       
+       //act
+       await Act(command);
+       
+       //assert
+       await _ticketRepository
+           .Received(1)
+           .AddAsync(Arg.Is<Ticket>(arg
+               => arg.Id.Value == command.Id
+              && arg.Subject.Value == command.Subject
+              && arg.Content.Value == command.Content
+              && arg.CreatedBy.Value == command.CreatedBy
+              && arg.State.Value == State.Open()
+              && arg.IsPriority.Value == command.IsPriority
+              && arg.AssignedEmployee.Value == command.AssignedEmployee
+              && arg.AssignedUser.Value == command.AssignedUser
+              && arg.ProjectId.Value == command.ProjectId
+              && arg.ExpirationDate.Value == _clock.Now().Add(companyDto.SlaTime)));
+       
+       await _messageBroker
+           .Received(1)
+           .PublishAsync(Arg.Is<TicketCreated>(x 
+               => x.Subject == command.Subject
+               && x.Content == command.Content
+               && x.TicketNumber == maxNumber + 1
+               && x.EmployeeId == employeeDto.Id
+               && x.UserId == userDto.Id));
+   }
+   
+   [Fact]
+   public async Task HandleAsync_GivenNotPriorityTicketWithoutAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
+   {
+       //arrange
+       var maxNumber = 1;
+       _ticketRepository
+           .GetMaxNumberAsync()
+           .Returns(maxNumber);
+       
+       var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+           Guid.NewGuid(), State.New(), false, null, null, null);
+       
+       //act
+       await Act(command);
+       
+       //assert
+       await _companiesApiClient
+           .Received(0)
+           .GetCompanyByEmployeeIdAsync(Arg.Any<EmployeeIdDto>());
+       
+       await _ownerApiClient
+           .Received(0)
+           .GetOwnerAsync();
+       
+       await _ticketRepository
+           .Received(1)
+           .AddAsync(Arg.Is<Ticket>(arg
+               => arg.Id.Value == command.Id
+                  && arg.Subject.Value == command.Subject
+                  && arg.Content.Value == command.Content
+                  && arg.CreatedBy.Value == command.CreatedBy
+                  && arg.State.Value == command.State
+                  && arg.IsPriority.Value == command.IsPriority
+                  && arg.AssignedEmployee == null
+                  && arg.AssignedUser == null
+                  && arg.ProjectId == null
+                  && arg.ExpirationDate == null));
+       
+       await _messageBroker
+           .Received(1)
+           .PublishAsync(Arg.Is<TicketCreated>(x 
+               => x.Subject == command.Subject
+                  && x.Content == command.Content
+                  && x.TicketNumber == maxNumber + 1
+                  && x.EmployeeId == null
+                  && x.UserId == null));
+   }
+   
+   [Fact]
+   public async Task HandleAsync_GivenNotExistingEmployee_ShouldThrowEmployeeDoesNotExistException()
+   {
+       //arrange
+       var maxNumber = 1;       
+       _ticketRepository
+           .GetMaxNumberAsync()
+           .Returns(maxNumber);
+       
+       var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+           Guid.NewGuid(), State.New(), true, Guid.NewGuid(), Guid.NewGuid(), 
+           Guid.NewGuid());
+       
+       //act
+       var exception = await Record.ExceptionAsync( async () => await Act(command));
+       
+       //assert
+       exception.ShouldBeOfType<EmployeeDoesNotExistException>();
+   }
+   
+   [Fact]
+   public async Task HandleAsync_GivenNotExistingProject_ShouldThrowProjectDoesNotExistsException()
+   {
+       //arrange
+       var employeeDto = new EmployeeDto()
+       {
+           Id = Guid.NewGuid(),
+           Email = "test@test.pl",
+           IsActive = true,
+           PhoneNumber = "515515515"
+       };
+
+       var companyDto = new CompanyDto()
+       {
+           SlaTime = TimeSpan.FromHours(8),
+           Employees = [employeeDto]
+       };
+
+       _companiesApiClient
+           .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
+           .Returns(companyDto);
+       
+       var maxNumber = 1;
+       _ticketRepository
+           .GetMaxNumberAsync()
+           .Returns(maxNumber);
+       
+       var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+           Guid.NewGuid(), State.New(), true, employeeDto.Id, Guid.NewGuid(), 
+           Guid.NewGuid());
+       
+       //act
+       var exception = await Record.ExceptionAsync(async () =>  await Act(command));
+       
+       //assert
+       exception.ShouldBeOfType<ProjectDoesNotExists>();
+   }
+   
+   //  [Fact]
+   //  public async Task HandleAsync_GivenUserNotInGroup_ShouldThrowUserDoesNotBelongToGroupException()
+   //  {
+   //      //arrange
+   //      var assignedEmployee = Guid.NewGuid();
+   //      var assignedUser = Guid.NewGuid();
+   //      var projectId = Guid.NewGuid();
+   //      var maxNumber = 1;
+   //
+   //      _ticketRepository
+   //          .GetMaxNumberAsync()
+   //          .Returns(maxNumber);
+   //      _companiesApiClient
+   //          .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+   //          .Returns(new IsEmployeeExistsDto(){ Value = true});
+   //      _companiesApiClient
+   //          .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
+   //              => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
+   //          .Returns(new IsProjectExistsDto(){ Value = true});
+   //      _ownerApiClient
+   //          .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
+   //          .Returns(new IsUserExistsDto(){Value = true});
+   //      _ownerApiClient
+   //          .IsUserInGroupAsync(Arg.Is<UserInGroupDto>(arg
+   //              => arg.UserId == assignedUser
+   //                 && arg.GroupId == projectId))
+   //          .Returns(new IsUserInGroupDto(){Value = false});
+   //      
+   //      var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+   //          Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
+   //          projectId);
+   //      
+   //      //act
+   //      var exception = await Record.ExceptionAsync(async () => await Act(command));
+   //      
+   //      //assert
+   //      exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
+   //  }
+   //  
+   //  [Fact]
+   //  public async Task HandleAsync_GivenNotExistingUser_ShouldThrowUserDoesNotExistException()
+   //  {
+   //      //arrange
+   //      var assignedEmployee = Guid.NewGuid();
+   //      var assignedUser = Guid.NewGuid();
+   //      var projectId = Guid.NewGuid();
+   //      var maxNumber = 1;
+   //
+   //      _ticketRepository
+   //          .GetMaxNumberAsync()
+   //          .Returns(maxNumber);
+   //      _companiesApiClient
+   //          .IsEmployeeExistsAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == assignedEmployee))
+   //          .Returns(new IsEmployeeExistsDto(){ Value = true});
+   //      _companiesApiClient
+   //          .IsProjectExistsAsync(Arg.Is<EmployeeWithProjectDto>(arg 
+   //              => arg.ProjectId == projectId && arg.EmployeeId == assignedEmployee))
+   //          .Returns(new IsProjectExistsDto(){ Value = true});
+   //      _ownerApiClient
+   //          .IsUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == assignedUser))
+   //          .Returns(new IsUserExistsDto(){Value = false});
+   //      
+   //      var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+   //          Guid.NewGuid(), State.New(), false, assignedEmployee, assignedUser, 
+   //          projectId);
+   //      
+   //      //act
+   //      var exception = await Record.ExceptionAsync(async () => await Act(command));
+   //      
+   //      //assert
+   //      exception.ShouldBeOfType<UserDoesNotExistException>();
+   //  }
     
     #region arrange
     private readonly ITicketRepository _ticketRepository;

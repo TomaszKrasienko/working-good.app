@@ -7,11 +7,8 @@ namespace wg.modules.tickets.infrastructure.Clients.Owner;
 internal sealed class OwnerApiClient(
     IModuleClient moduleClient) : IOwnerApiClient
 {
-    public Task<IsUserInGroupDto> IsUserInGroupAsync(UserInGroupDto dto)
-        => moduleClient.SendAsync<IsUserInGroupDto>("owner/user-in-group/is-exists/get", dto);
-
-    public Task<IsUserExistsDto> IsUserExistsAsync(UserIdDto dto)
-        => moduleClient.SendAsync<IsUserExistsDto>("owner/user/is-exists/get", dto);
+    public Task<OwnerDto> GetOwnerAsync()
+        => moduleClient.SendAsync<OwnerDto>("owner/get", null);
 
     public Task<UserDto> GetUserByIdAsync(UserIdDto dto)
         => moduleClient.SendAsync<UserDto>("owner/user/get", dto);

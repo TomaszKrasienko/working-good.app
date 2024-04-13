@@ -21,8 +21,6 @@ internal sealed class AddTicketCommandHandler(
 {
     public async Task HandleAsync(AddTicketCommand command, CancellationToken cancellationToken)
     {
-        //Todo: Should I get company with all properties?
-        //Todo: Here I can get company with projects and employees
         DateTime? expirationDate = null;
         var now = clock.Now();
         if (command.AssignedEmployee is not null)
@@ -35,7 +33,7 @@ internal sealed class AddTicketCommandHandler(
 
             if (!IsProjectAssignedAndInProject(companyDto, command.ProjectId))
             {
-                throw new ProjectDoesNotExists((Guid)command.ProjectId, (Guid)command.AssignedEmployee);
+                throw new ProjectDoesNotExists((Guid)command.ProjectId!, (Guid)command.AssignedEmployee);
             }
             
             if (IsPriority(command))
@@ -43,29 +41,21 @@ internal sealed class AddTicketCommandHandler(
                 expirationDate = now.Add(companyDto.SlaTime);
             }
         }
-        
+
         if (command.AssignedUser is not null)
         {
-            var isExistsDto = await ownerApiClient.IsUserExistsAsync(new UserIdDto((Guid)command.AssignedUser));
-            if (!isExistsDto.Value)
+            var owner = await ownerApiClient.GetOwnerAsync();
+            if (!IsUserExists(owner, command.AssignedUser))
             {
                 throw new UserDoesNotExistException((Guid)command.AssignedUser);
             }
-        }
 
-        if (command.AssignedUser is not null && command.ProjectId is not null)
-        {
-            var dto = new UserInGroupDto()
+            if (!IsGroupAssignedAndUserInGroup(owner, command.AssignedUser, command.ProjectId))
             {
-                GroupId = (Guid)command.ProjectId,
-                UserId = (Guid)command.AssignedUser
-            };
-            var isInGroupDto = await ownerApiClient.IsUserInGroupAsync(dto);
-            if (!isInGroupDto.Value)
-            {
-                throw new UserDoesNotBelongToGroupException((Guid)command.ProjectId, (Guid)command.AssignedUser);
+                throw new UserDoesNotBelongToGroupException((Guid)command.ProjectId!, (Guid)command.AssignedUser);
             }
         }
+        
         var maxNumber = await ticketRepository.GetMaxNumberAsync();
         var ticket = Ticket.Create(command.Id, maxNumber + 1, command.Subject, command.Content,
             now, command.CreatedBy, command.State, now, command.IsPriority,
@@ -78,9 +68,23 @@ internal sealed class AddTicketCommandHandler(
     private bool IsProjectAssignedAndInProject(CompanyDto companyDto, Guid? projectId)
     {
         if (projectId is null) return true;
-        return companyDto.Projects.Any(p => p.Id.Equals((Guid)projectId));
+        return companyDto.Projects?
+            .Any(p => p.Id.Equals((Guid)projectId)) 
+            ?? false;
     }
 
     private bool IsPriority(AddTicketCommand command)
         => command.IsPriority;
+
+    private bool IsUserExists(OwnerDto dto, Guid? userId)
+        => dto.Users?
+            .Any(u => u.Id.Equals(userId))
+            ?? false;
+    private bool IsGroupAssignedAndUserInGroup(OwnerDto ownerDto, Guid? userId, Guid? projectId)
+    {
+        if (projectId is null) return true;
+        return ownerDto.Groups?
+            .Any(g => g.Id.Equals(projectId) && g.Users.Any(x => x.Equals(userId)))
+            ?? false;
+    }
 }

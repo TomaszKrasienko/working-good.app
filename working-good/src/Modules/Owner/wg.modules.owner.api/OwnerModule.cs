@@ -27,10 +27,6 @@ internal sealed class OwnerModule : IModule
             .UseModuleRequest()
             .Subscribe<GetOwnerQuery, OwnerDto>("owner/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<IsUserInGroupQuery, IsUserInGroupDto>("owner/user-in-group/is-exists/get",
-                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<IsUserExistsQuery, IsUserExistsDto>("owner/user/is-exists/get",
-                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetUserByIdQuery, UserDto>("owner/user/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetActiveUserByIdQuery, UserDto>("owner/user/active/get",
