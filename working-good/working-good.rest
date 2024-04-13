@@ -47,6 +47,9 @@ Content-Type: application/json
 }
 
 ###
+GET {{url}}/owner-module/owner
+
+###
 # @name sign_in
 POST {{url}}/owner-module/users/sign-in
 Content-Type: application/json

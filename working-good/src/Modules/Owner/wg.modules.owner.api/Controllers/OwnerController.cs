@@ -15,12 +15,12 @@ internal sealed class OwnerController(
     IQueryDispatcher queryDispatcher) : BaseController()
 {
     [HttpGet]
-    [Authorize]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<OwnerDto>> GetOwner(CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetOwnerQuery(), cancellationToken));
+    public async Task<ActionResult<OwnerDto>> GetOwner([FromQuery]GetOwnerQuery query, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(query, cancellationToken));
     
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
