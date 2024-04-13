@@ -86,7 +86,7 @@ public sealed class AddTicketCommandHandlerTests
         };
 
         _ownerApiClient
-            .GetOwnerAsync()
+            .GetOwnerAsync(Arg.Any<GetOwnerDto>())
             .Returns(ownerDto);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
@@ -160,7 +160,7 @@ public sealed class AddTicketCommandHandlerTests
         };
         
         _ownerApiClient
-            .GetOwnerAsync()
+            .GetOwnerAsync(Arg.Any<GetOwnerDto>())
             .Returns(ownerDto);
 
         var maxNumber = 1;
@@ -257,7 +257,7 @@ public sealed class AddTicketCommandHandlerTests
        };
 
        _ownerApiClient
-           .GetOwnerAsync()
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>())
            .Returns(ownerDto);
        
        var maxNumber = 1;
@@ -320,7 +320,7 @@ public sealed class AddTicketCommandHandlerTests
        
        await _ownerApiClient
            .Received(0)
-           .GetOwnerAsync();
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>());
        
        await _ticketRepository
            .Received(1)
@@ -457,7 +457,7 @@ public sealed class AddTicketCommandHandlerTests
        };
 
        _ownerApiClient
-           .GetOwnerAsync()
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>())
            .Returns(ownerDto);
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
@@ -535,7 +535,7 @@ public sealed class AddTicketCommandHandlerTests
        };
 
        _ownerApiClient
-           .GetOwnerAsync()
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>())
            .Returns(ownerDto);
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",

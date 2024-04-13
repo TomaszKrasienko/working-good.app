@@ -4,6 +4,6 @@ namespace wg.modules.tickets.application.Clients.Owner;
 
 public interface IOwnerApiClient
 {
-    Task<OwnerDto> GetOwnerAsync();
+    Task<OwnerDto> GetOwnerAsync(GetOwnerDto dto);
     Task<UserDto> GetActiveUserByIdAsync(UserIdDto dto);
 }

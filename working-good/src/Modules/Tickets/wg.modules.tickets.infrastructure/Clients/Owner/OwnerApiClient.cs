@@ -7,8 +7,8 @@ namespace wg.modules.tickets.infrastructure.Clients.Owner;
 internal sealed class OwnerApiClient(
     IModuleClient moduleClient) : IOwnerApiClient
 {
-    public Task<OwnerDto> GetOwnerAsync()
-        => moduleClient.SendAsync<OwnerDto>("owner/get", null);
+    public Task<OwnerDto> GetOwnerAsync(GetOwnerDto dto)
+        => moduleClient.SendAsync<OwnerDto>("owner/get", dto);
     public Task<UserDto> GetActiveUserByIdAsync(UserIdDto dto)
         => moduleClient.SendAsync<UserDto>("owner/user/active/get", dto);
 }

@@ -31,7 +31,7 @@ internal sealed class AssignUserCommandHandler(
         }
         else
         {
-            var owner = await ownerApiClient.GetOwnerAsync();
+            var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
             if (!owner.Users.Any(u => u.Id.Equals(command.UserId)))
             {
                 throw new UserNotFoundException(command.UserId);

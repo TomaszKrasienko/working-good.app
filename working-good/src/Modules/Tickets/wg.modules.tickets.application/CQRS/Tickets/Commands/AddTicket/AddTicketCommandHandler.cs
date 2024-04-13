@@ -44,7 +44,7 @@ internal sealed class AddTicketCommandHandler(
 
         if (command.AssignedUser is not null)
         {
-            var owner = await ownerApiClient.GetOwnerAsync();
+            var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
             if (!IsUserExists(owner, command.AssignedUser))
             {
                 throw new UserDoesNotExistException((Guid)command.AssignedUser);

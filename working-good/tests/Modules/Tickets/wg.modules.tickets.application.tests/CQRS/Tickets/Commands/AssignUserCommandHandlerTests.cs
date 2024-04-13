@@ -8,7 +8,6 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Time;
-using wg.tests.shared.Factories.DTOs.Tickets;
 using wg.tests.shared.Factories.Tickets;
 using wg.tests.shared.Mocks;
 using Xunit;
@@ -49,7 +48,7 @@ public sealed class AssignUserCommandHandlerTests
          };
 
          _ownerApiClient
-             .GetOwnerAsync()
+             .GetOwnerAsync(Arg.Any<GetOwnerDto>())
              .Returns(ownerDto);
          
          var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
@@ -109,7 +108,7 @@ public sealed class AssignUserCommandHandlerTests
 
          await _ownerApiClient
              .Received(0)
-             .GetOwnerAsync();
+             .GetOwnerAsync(Arg.Any<GetOwnerDto>());
      }
      
      [Fact]
@@ -147,7 +146,6 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenProjectIdAndNoExistingUserInProject_ShouldUserDoesNotBelongToGroupException()
      {
          //arrange
-//arrange
          var userDto = new UserDto()
          {
              Id = Guid.NewGuid(),
@@ -174,7 +172,7 @@ public sealed class AssignUserCommandHandlerTests
          };
 
          _ownerApiClient
-             .GetOwnerAsync()
+             .GetOwnerAsync(Arg.Any<GetOwnerDto>())
              .Returns(ownerDto);
          
          var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
