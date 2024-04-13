@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using wg.modules.owner.application.CQRS.Owners.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
+using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.owner.infrastructure.Queries.Mappers;
 using wg.shared.abstractions.CQRS.Queries;
@@ -16,7 +17,8 @@ internal sealed class GetOwnerQueryHandler
     public Task<OwnerDto> HandleAsync(GetOwnerQuery query, CancellationToken cancellationToken)
         => _owners
             .AsNoTracking()
-            .Include(x => x.Users)
+            .Include(x => query.WithOnlyActiveUsers ?
+                x.Users.Where(u => u.State.Value == State.Activate()) : x.Users)
             .Include(x => x.Groups)
             .Select(x => x.AsDto())
             .FirstOrDefaultAsync(cancellationToken);
