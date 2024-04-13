@@ -13,6 +13,7 @@ using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
+using wg.tests.shared.Factories.DTOs.Tickets.Company;
 using wg.tests.shared.Mocks;
 using Xunit;
 
@@ -498,12 +499,9 @@ public sealed class AddTicketCommandHandlerTests
            Title = "Test"
        };
 
-       var companyDto = new CompanyDto()
-       {
-           SlaTime = TimeSpan.FromHours(8),
-           Employees = [employeeDto],
-           Projects = [projectDto]
-       };
+       var companyDto = CompanyDtoFactory.Get(1, null, null, null).Single();
+       companyDto.Employees = [employeeDto];
+       companyDto.Projects = [projectDto];
 
        _companiesApiClient
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
