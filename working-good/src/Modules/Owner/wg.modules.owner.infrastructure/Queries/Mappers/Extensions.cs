@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 
@@ -21,5 +22,13 @@ internal static class Extensions
             LastName = user.FullName.LastName,
             Role = user.Role,
             State = user.State
+        };
+
+    internal static GroupDto AsDto(this Group group)
+        => new GroupDto()
+        {
+            Id = group.Id,
+            Title = group.Title,
+            Users = group.Users?.Select(x => x.Id.Value).ToImmutableList()
         };
 }

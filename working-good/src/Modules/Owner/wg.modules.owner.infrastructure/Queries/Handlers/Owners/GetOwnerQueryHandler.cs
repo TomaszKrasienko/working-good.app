@@ -16,6 +16,8 @@ internal sealed class GetOwnerQueryHandler
     public Task<OwnerDto> HandleAsync(GetOwnerQuery query, CancellationToken cancellationToken)
         => _owners
             .AsNoTracking()
+            .Include(x => x.Users)
+            .Include(x => x.Groups)
             .Select(x => x.AsDto())
             .FirstOrDefaultAsync(cancellationToken);
 }

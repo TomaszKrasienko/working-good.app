@@ -23,6 +23,27 @@ public sealed class ExtensionsTests
         result.Id.ShouldBe(owner.Id.Value);
         result.Name.ShouldBe(owner.Name.Value);
     }
+    
+    [Fact]
+    public void AsDto_GivenOwnerWithUsersAndGroups_ShouldReturnOwnerDto()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.User());
+        var group = GroupFactory.GetGroupInOwner(owner);
+        owner.AddUserToGroup(group.Id, user.Id);
+        
+        //act
+        var result = owner.AsDto();
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(owner.Id.Value);
+        result.Name.ShouldBe(owner.Name.Value);
+        result.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeTrue();
+        result.Groups.Any(x => x.Id.Equals(group.Id)).ShouldBeTrue();
+        result.Groups.Single().Users.ShouldContain(user.Id);
+    }
 
     [Fact]
     public void AsDto_GivenUser_ShouldReturnUserDto()
@@ -41,5 +62,39 @@ public sealed class ExtensionsTests
         result.LastName.ShouldBe(user.FullName.LastName);
         result.Role.ShouldBe(user.Role.Value);
         result.State.ShouldBe(user.State.Value);
+    }
+
+    [Fact]
+    public void AsDto_GivenGroup_ShouldReturnGroupDto()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        
+        //act
+        var result = group.AsDto();
+        
+        //assert
+        result.Id.ShouldBe(group.Id.Value);
+        result.Title.ShouldBe(group.Title.Value);
+        result.Users.ShouldBeEmpty();
+    }
+    
+    [Fact]
+    public void AsDto_GivenGroupWithUsers_ShouldReturnGroupDto()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var group = GroupFactory.GetGroupInOwner(owner);
+        var user = UserFactory.GetUserInOwner(owner, Role.User());
+        owner.AddUserToGroup(group.Id, user.Id);
+        
+        //act
+        var result = group.AsDto();
+        
+        //assert
+        result.Id.ShouldBe(group.Id.Value);
+        result.Title.ShouldBe(group.Title.Value);
+        result.Users.Single().ShouldBe(user.Id.Value);
     }
 }

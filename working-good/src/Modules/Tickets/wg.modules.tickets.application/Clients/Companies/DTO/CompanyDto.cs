@@ -6,4 +6,6 @@ public class CompanyDto
     public string Name { get; set; }
     public TimeSpan SlaTime { get; set; }
     public string EmailDomain { get; set; }
+    public List<EmployeeDto> Employees { get; set; }
+    public List<ProjectDto> Projects { get; set; }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using wg.modules.owner.application.CQRS.Groups.Queries;
+using wg.modules.owner.application.CQRS.Owners.Queries;
 using wg.modules.owner.application.CQRS.Users.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.infrastructure.Configuration;
@@ -24,6 +25,8 @@ internal sealed class OwnerModule : IModule
     {
         app
             .UseModuleRequest()
+            .Subscribe<GetOwnerQuery, OwnerDto>("owner/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsUserInGroupQuery, IsUserInGroupDto>("owner/user-in-group/is-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsUserExistsQuery, IsUserExistsDto>("owner/user/is-exists/get",
