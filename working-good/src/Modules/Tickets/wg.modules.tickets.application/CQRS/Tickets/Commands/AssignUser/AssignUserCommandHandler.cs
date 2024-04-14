@@ -32,12 +32,12 @@ internal sealed class AssignUserCommandHandler(
         else
         {
             var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
-            if (!owner.Users.Any(u => u.Id.Equals(command.UserId)))
+            if (!IsUserExists(owner, command.UserId))
             {
                 throw new UserNotFoundException(command.UserId);
             }
             
-            if (!owner.Groups.Any(g => g.Id.Equals(ticket.ProjectId) && g.Users.Any(x => x.Equals(command.UserId))))
+            if (!IsGroupAssignedAndUserInGroup(owner, command.UserId, ticket.ProjectId))
             {
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
             }
@@ -45,5 +45,17 @@ internal sealed class AssignUserCommandHandler(
         
         ticket.ChangeAssignedUser(command.UserId, clock.Now());
         await ticketRepository.UpdateAsync(ticket);
+    }
+    
+    private bool IsUserExists(OwnerDto dto, Guid? userId)
+        => dto.Users?.Any(u => u.Id.Equals(userId)) ?? false;
+    
+    private bool IsGroupAssignedAndUserInGroup(OwnerDto ownerDto, Guid? userId, Guid? projectId)
+    {
+        if (projectId is null) return true;
+        return ownerDto.Groups?.Any(g 
+                   => g.Id.Equals(projectId) 
+                   && (g.Users?.Any(x => x == userId) ?? false))
+               ?? false;
     }
 }

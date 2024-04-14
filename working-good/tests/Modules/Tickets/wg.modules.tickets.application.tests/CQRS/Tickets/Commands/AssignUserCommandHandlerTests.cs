@@ -8,6 +8,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Time;
+using wg.tests.shared.Factories.DTOs.Tickets.Owner;
 using wg.tests.shared.Factories.Tickets;
 using wg.tests.shared.Mocks;
 using Xunit;
@@ -22,30 +23,12 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenExistingTicketAndUserInProject_ShouldUpdateTicketByRepository()
      {
          //arrange
-         var userDto = new UserDto()
-         {
-             Id = Guid.NewGuid(),
-             Email = "joe.doe@user.pl",
-             FirstName = "Joe",
-             LastName = "Doe",
-             Role = "Manager",
-             State = "active"
-         };
-
-         var groupDto = new GroupDto()
-         {
-             Id = Guid.NewGuid(),
-             Title = "Group test title",
-             Users = [userDto.Id],
-         };
-
-         var ownerDto = new OwnerDto()
-         {
-             Id = Guid.NewGuid(),
-             Name = "Owner name",
-             Groups = [groupDto],
-             Users = [userDto]
-         };
+         var userDto = UserDtoFactory.Get().Single();
+         var groupDto = GroupDtoFactory.Get().Single();
+         var ownerDto = OwnerDtoFactory.Get();
+         groupDto.Users = [userDto.Id];
+         ownerDto.Users = [userDto];
+         ownerDto.Groups = [groupDto];
 
          _ownerApiClient
              .GetOwnerAsync(Arg.Any<GetOwnerDto>())
@@ -59,6 +42,7 @@ public sealed class AssignUserCommandHandlerTests
              .Returns(ticket);
          
          var command = new AssignUserCommand(userDto.Id, ticket.Id);
+         
          //act
          await Act(command);
          
@@ -76,15 +60,7 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenExistingTicketAndWithoutProjectId_ShouldUpdateTicketByRepositoryAndNotCheckUserInGroup()
      {
          //arrange
-         var userDto = new UserDto()
-         {
-             Id = Guid.NewGuid(),
-             Email = "joe.doe@user.pl",
-             FirstName = "Joe",
-             LastName = "Doe",
-             Role = "Manager",
-             State = "active"
-         };
+         var userDto = UserDtoFactory.Get().Single();
 
          _ownerApiClient
              .GetActiveUserByIdAsync(Arg.Is<UserIdDto>(arg => arg.Id == userDto.Id))
@@ -146,30 +122,11 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenProjectIdAndNoExistingUserInProject_ShouldUserDoesNotBelongToGroupException()
      {
          //arrange
-         var userDto = new UserDto()
-         {
-             Id = Guid.NewGuid(),
-             Email = "joe.doe@user.pl",
-             FirstName = "Joe",
-             LastName = "Doe",
-             Role = "Manager",
-             State = "active"
-         };
-
-         var groupDto = new GroupDto()
-         {
-             Id = Guid.NewGuid(),
-             Title = "Group test title",
-             Users = [],
-         };
-
-         var ownerDto = new OwnerDto()
-         {
-             Id = Guid.NewGuid(),
-             Name = "Owner name",
-             Groups = [groupDto],
-             Users = [userDto]
-         };
+         var userDto = UserDtoFactory.Get().Single();
+         var groupDto = GroupDtoFactory.Get().Single();
+         var ownerDto = OwnerDtoFactory.Get();
+         ownerDto.Users = [userDto];
+         ownerDto.Groups = [groupDto];
 
          _ownerApiClient
              .GetOwnerAsync(Arg.Any<GetOwnerDto>())

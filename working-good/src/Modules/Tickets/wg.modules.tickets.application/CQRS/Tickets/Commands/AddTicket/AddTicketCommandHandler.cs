@@ -77,14 +77,14 @@ internal sealed class AddTicketCommandHandler(
         => command.IsPriority;
 
     private bool IsUserExists(OwnerDto dto, Guid? userId)
-        => dto.Users?
-            .Any(u => u.Id.Equals(userId))
-            ?? false;
+        => dto.Users?.Any(u => u.Id.Equals(userId)) ?? false;
+    
     private bool IsGroupAssignedAndUserInGroup(OwnerDto ownerDto, Guid? userId, Guid? projectId)
     {
         if (projectId is null) return true;
-        return ownerDto.Groups?
-            .Any(g => g.Id.Equals(projectId) && (g.Users?.Any(x => x == userId) ?? false))
-            ?? false;
+        return ownerDto.Groups?.Any(g 
+                   => g.Id.Equals(projectId) 
+                   && (g.Users?.Any(x => x == userId) ?? false))
+               ?? false;
     }
 }
