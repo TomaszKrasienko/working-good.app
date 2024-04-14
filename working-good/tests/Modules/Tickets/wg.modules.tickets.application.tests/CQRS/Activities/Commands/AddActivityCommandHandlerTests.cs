@@ -8,6 +8,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.tests.shared.Factories.DTOs.Tickets;
+using wg.tests.shared.Factories.DTOs.Tickets.Owner;
 using wg.tests.shared.Factories.Tickets;
 using Xunit;
 using UserState = wg.modules.owner.domain.ValueObjects.User.State;

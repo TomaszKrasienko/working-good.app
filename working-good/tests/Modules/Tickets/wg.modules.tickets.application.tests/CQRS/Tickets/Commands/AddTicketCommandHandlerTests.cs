@@ -14,6 +14,7 @@ using wg.shared.abstractions.Events;
 using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets.Company;
+using wg.tests.shared.Factories.DTOs.Tickets.Owner;
 using wg.tests.shared.Mocks;
 using Xunit;
 
@@ -43,31 +44,12 @@ public sealed class AddTicketCommandHandlerTests
             .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
             .Returns(companyDto);
 
-        var userDto = new UserDto()
-        {
-            Id = Guid.NewGuid(),
-            Email = "joe.doe@user.pl",
-            FirstName = "Joe",
-            LastName = "Doe",
-            Role = "Manager",
-            State = "active"
-        };
-
-        var groupDto = new GroupDto()
-        {
-            Id = projectDto.Id,
-            Title = "Group test title",
-            Users = [userDto.Id],
-        };
-
-        var ownerDto = new OwnerDto()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Owner name",
-            Groups = [groupDto],
-            Users = [userDto]
-        };
-
+        var userDto = UserDtoFactory.Get().Single();
+        var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+        groupDto.Users = [userDto.Id];
+        var ownerDto = OwnerDtoFactory.Get();
+        ownerDto.Users = [userDto];
+        ownerDto.Groups = [groupDto];
         _ownerApiClient
             .GetOwnerAsync(Arg.Any<GetOwnerDto>())
             .Returns(ownerDto);
