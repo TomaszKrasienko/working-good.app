@@ -482,6 +482,8 @@ public sealed class AddTicketCommandHandlerTests
            .GetMaxNumberAsync()
            .Returns(maxNumber);
 
+       var employeeDtoFaker = EmployeeDtoFactory.GetFaker();
+       var projectDtoFaker = ProjectDtoFactory.GetFaker();
        var employeeDto = new EmployeeDto()
        {
            Id = Guid.NewGuid(),
