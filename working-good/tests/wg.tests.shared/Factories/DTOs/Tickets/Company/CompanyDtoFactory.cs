@@ -8,17 +8,23 @@ internal static class CompanyDtoFactory
     internal static List<CompanyDto> Get(int count = 1, string emailDomain = null, 
         int? employeesCount = null, int? projectsCount = null)
     {
-        
-
         var companies = GetFaker(emailDomain).Generate(count);
 
         if (employeesCount is not null)
         {
             foreach (var companyDto in companies)
             {
-                var employees = employeeDtoFaker.Generate(new Random().Next(10),
-                    );
-                companyDto
+                var employees = EmployeeDtoFactory.Get(companyDto.EmailDomain, (int)employeesCount);
+                companyDto.Employees.AddRange(employees);
+            }
+        }
+
+        if (projectsCount is not null)
+        {
+            foreach (var company in companies)
+            {
+                var projects = ProjectDtoFactory.Get(false, false, (int)projectsCount);
+                company.Projects.AddRange(projects);
             }
         }
 

@@ -29,37 +29,19 @@ public sealed class AddTicketCommandHandlerTests
         //arrange
         var maxNumber = 1;
 
-        var employeeDto = new EmployeeDto()
-        {
-            Id = Guid.NewGuid(),
-            Email = "test@test.pl",
-            IsActive = true,
-            PhoneNumber = "515515515"
-        };
-
-        var projectDto = new ProjectDto()
-        {
-            Id = Guid.NewGuid(),
-            Description = "MyTestProject",
-            PlannedStart = DateTime.Now.AddMonths(-1),
-            PlannedFinish = DateTime.Now.AddMonths(5),
-            Title = "Test"
-        };
-
-        var companyDto = new CompanyDto()
-        {
-            SlaTime = TimeSpan.FromHours(8),
-            Employees = [employeeDto],
-            Projects = [projectDto]
-        };
-
-        _companiesApiClient
-            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
-            .Returns(companyDto);
-
         _ticketRepository
             .GetMaxNumberAsync()
             .Returns(maxNumber);
+
+        var companyDto = CompanyDtoFactory.Get().Single();
+        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+        var projectDto = ProjectDtoFactory.Get(true, true).Single();
+        companyDto.Employees = [employeeDto];
+        companyDto.Projects = [projectDto];
+        
+        _companiesApiClient
+            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
+            .Returns(companyDto);
 
         var userDto = new UserDto()
         {
