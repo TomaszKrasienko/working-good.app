@@ -46,8 +46,8 @@ public sealed class AddTicketCommandHandlerTests
 
         var userDto = UserDtoFactory.Get().Single();
         var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
-        groupDto.Users = [userDto.Id];
         var ownerDto = OwnerDtoFactory.Get();
+        groupDto.Users = [userDto.Id];
         ownerDto.Users = [userDto];
         ownerDto.Groups = [groupDto];
         _ownerApiClient
@@ -89,40 +89,17 @@ public sealed class AddTicketCommandHandlerTests
     public async Task HandleAsync_GivenNotPriorityTicketWithoutProject_ShouldAddTicketByRepositoryAndSendEvent()
     {
         //arrange
-        var employeeDto = new EmployeeDto()
-        {
-            Id = Guid.NewGuid(),
-            Email = "test@test.pl",
-            IsActive = true,
-            PhoneNumber = "515515515"
-        };
-        
-        var companyDto = new CompanyDto()
-        {
-            SlaTime = TimeSpan.FromHours(8),
-            Employees = [employeeDto]
-        };
+        var companyDto = CompanyDtoFactory.Get().Single();
+        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+        companyDto.Employees = [employeeDto];
         
         _companiesApiClient
             .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
             .Returns(companyDto);
         
-        var userDto = new UserDto()
-        {
-            Id = Guid.NewGuid(),
-            Email = "joe.doe@user.pl",
-            FirstName = "Joe",
-            LastName = "Doe",
-            Role = "Manager",
-            State = "active"
-        };
-        
-        var ownerDto = new OwnerDto()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Owner name",
-            Users = [userDto]
-        };
+        var userDto = UserDtoFactory.Get().Single();
+        var ownerDto = OwnerDtoFactory.Get();
+        ownerDto.Users = [userDto];
         
         _ownerApiClient
             .GetOwnerAsync(Arg.Any<GetOwnerDto>())
@@ -168,58 +145,22 @@ public sealed class AddTicketCommandHandlerTests
    public async Task HandleAsync_GivenPriorityTicketExistingAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
    {
        //arrange
-       var employeeDto = new EmployeeDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "test@test.pl",
-           IsActive = true,
-           PhoneNumber = "515515515"
-       };
-
-       var projectDto = new ProjectDto()
-       {
-           Id = Guid.NewGuid(),
-           Description = "MyTestProject",
-           PlannedStart = DateTime.Now.AddMonths(-1),
-           PlannedFinish = DateTime.Now.AddMonths(5),
-           Title = "Test"
-       };
-
-       var companyDto = new CompanyDto()
-       {
-           SlaTime = TimeSpan.FromHours(8),
-           Employees = [employeeDto],
-           Projects = [projectDto]
-       };
+       var companyDto = CompanyDtoFactory.Get().Single();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       companyDto.Employees = [employeeDto];
+       companyDto.Projects = [projectDto];
 
        _companiesApiClient
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
-
-       var userDto = new UserDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "joe.doe@user.pl",
-           FirstName = "Joe",
-           LastName = "Doe",
-           Role = "Manager",
-           State = "active"
-       };
-
-       var groupDto = new GroupDto()
-       {
-           Id = projectDto.Id,
-           Title = "Group test title",
-           Users = [userDto.Id],
-       };
-
-       var ownerDto = new OwnerDto()
-       {
-           Id = Guid.NewGuid(),
-           Name = "Owner name",
-           Groups = [groupDto],
-           Users = [userDto]
-       };
+       
+       var userDto = UserDtoFactory.Get().Single();
+       var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+       var ownerDto = OwnerDtoFactory.Get();
+       groupDto.Users = [userDto.Id];
+       ownerDto.Users = [userDto];
+       ownerDto.Groups = [groupDto];
 
        _ownerApiClient
            .GetOwnerAsync(Arg.Any<GetOwnerDto>())
@@ -229,7 +170,6 @@ public sealed class AddTicketCommandHandlerTests
        _ticketRepository
            .GetMaxNumberAsync()
            .Returns(maxNumber);
-
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
            Guid.NewGuid(), State.New(), true, employeeDto.Id, userDto.Id, 
@@ -335,19 +275,9 @@ public sealed class AddTicketCommandHandlerTests
    public async Task HandleAsync_GivenNotExistingProject_ShouldThrowProjectDoesNotExistsException()
    {
        //arrange
-       var employeeDto = new EmployeeDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "test@test.pl",
-           IsActive = true,
-           PhoneNumber = "515515515"
-       };
-
-       var companyDto = new CompanyDto()
-       {
-           SlaTime = TimeSpan.FromHours(8),
-           Employees = [employeeDto]
-       };
+       var companyDto = CompanyDtoFactory.Get().Single();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       companyDto.Employees = [employeeDto];
 
        _companiesApiClient
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
@@ -378,48 +308,18 @@ public sealed class AddTicketCommandHandlerTests
        _ticketRepository
            .GetMaxNumberAsync()
            .Returns(maxNumber);
-
-       var employeeDto = new EmployeeDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "test@test.pl",
-           IsActive = true,
-           PhoneNumber = "515515515"
-       };
-
-       var projectDto = new ProjectDto()
-       {
-           Id = Guid.NewGuid(),
-           Description = "MyTestProject",
-           PlannedStart = DateTime.Now.AddMonths(-1),
-           PlannedFinish = DateTime.Now.AddMonths(5),
-           Title = "Test"
-       };
-
-       var companyDto = new CompanyDto()
-       {
-           SlaTime = TimeSpan.FromHours(8),
-           Employees = [employeeDto],
-           Projects = [projectDto]
-       };
+       
+       var companyDto = CompanyDtoFactory.Get().Single();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       companyDto.Employees = [employeeDto];
+       companyDto.Projects = [projectDto];
 
        _companiesApiClient
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
-
-       var groupDto = new GroupDto()
-       {
-           Id = projectDto.Id,
-           Title = "Group test title",
-           Users = [],
-       };
-
-       var ownerDto = new OwnerDto()
-       {
-           Id = Guid.NewGuid(),
-           Name = "Owner name",
-           Groups = [groupDto]
-       };
+       
+       var ownerDto = OwnerDtoFactory.Get();
 
        _ownerApiClient
            .GetOwnerAsync(Arg.Any<GetOwnerDto>())
@@ -440,63 +340,26 @@ public sealed class AddTicketCommandHandlerTests
    public async Task HandleAsync_GivenUserNotInGroup_ShouldThrowUserDoesNotBelongToGroupException()
    {
        //arrange
-       //arrange
        var maxNumber = 1;       
        _ticketRepository
            .GetMaxNumberAsync()
            .Returns(maxNumber);
-
-       var employeeDtoFaker = EmployeeDtoFactory.GetFaker();
-       var projectDtoFaker = ProjectDtoFactory.GetFaker();
-       var employeeDto = new EmployeeDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "test@test.pl",
-           IsActive = true,
-           PhoneNumber = "515515515"
-       };
-
-       var projectDto = new ProjectDto()
-       {
-           Id = Guid.NewGuid(),
-           Description = "MyTestProject",
-           PlannedStart = DateTime.Now.AddMonths(-1),
-           PlannedFinish = DateTime.Now.AddMonths(5),
-           Title = "Test"
-       };
-
-       var companyDto = CompanyDtoFactory.Get(1, null, null, null).Single();
+       
+       var companyDto = CompanyDtoFactory.Get().Single();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       var projectDto = ProjectDtoFactory.Get(true, true).Single();
        companyDto.Employees = [employeeDto];
        companyDto.Projects = [projectDto];
 
        _companiesApiClient
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
-
-       var userDto = new UserDto()
-       {
-           Id = Guid.NewGuid(),
-           Email = "joe.doe@user.pl",
-           FirstName = "Joe",
-           LastName = "Doe",
-           Role = "Manager",
-           State = "active"
-       };
-
-       var groupDto = new GroupDto()
-       {
-           Id = projectDto.Id,
-           Title = "Group test title",
-           Users = [],
-       };
-
-       var ownerDto = new OwnerDto()
-       {
-           Id = Guid.NewGuid(),
-           Name = "Owner name",
-           Groups = [groupDto],
-           Users = [userDto]
-       };
+       
+       var userDto = UserDtoFactory.Get().Single();
+       var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+       var ownerDto = OwnerDtoFactory.Get();
+       ownerDto.Users = [userDto];
+       ownerDto.Groups = [groupDto];
 
        _ownerApiClient
            .GetOwnerAsync(Arg.Any<GetOwnerDto>())

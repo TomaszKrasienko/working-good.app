@@ -84,7 +84,7 @@ internal sealed class AddTicketCommandHandler(
     {
         if (projectId is null) return true;
         return ownerDto.Groups?
-            .Any(g => g.Id.Equals(projectId) && g.Users.Any(x => x.Equals(userId)))
+            .Any(g => g.Id.Equals(projectId) && (g.Users?.Any(x => x == userId) ?? false))
             ?? false;
     }
 }
