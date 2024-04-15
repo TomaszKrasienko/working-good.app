@@ -20,8 +20,9 @@ public sealed class DeactivateEmployeeCommandHandlerTests
     {
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
-        var substituteEmployee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employees = EmployeeFactory.GetInCompany(2, company).ToList();
+        var employee = employees[0];
+        var substituteEmployee = employees[1];
 
         _companyRepository
             .GetByEmployeeIdAsync(employee.Id)
@@ -84,8 +85,9 @@ public sealed class DeactivateEmployeeCommandHandlerTests
     {
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
-        var substituteEmployee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employees = EmployeeFactory.GetInCompany(2, company).ToList();
+        var employee = employees[0];
+        var substituteEmployee = employees[1];
         substituteEmployee.Deactivate();
 
         _companyRepository

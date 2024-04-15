@@ -86,8 +86,10 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
-        var substituteEmployee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employees = EmployeeFactory.GetInCompany(2, company).ToList();
+        var employee = employees[0];
+        var substituteEmployee = employees[1];
+        
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
         var command = new DeactivateEmployeeCommand(Guid.Empty, substituteEmployee.Id);
