@@ -26,7 +26,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
       <ProjectReference Include="..\..\wg.tests.shared\wg.tests.shared.csproj" />
-      <ProjectReference Include="..\wg.shared.infrastructure.shared.tests\wg.shared.infrastructure.shared.tests.csproj" />
     </ItemGroup>
     
     

@@ -4,7 +4,7 @@ using wg.shared.abstractions.Modules;
 using wg.shared.infrastructure.Modules;
 using wg.shared.infrastructure.Modules.Abstractions;
 using wg.shared.infrastructure.Modules.Models;
-using wg.shared.infrastructure.shared.tests.Modules.Models;
+using wg.tests.shared.Models;
 using Xunit;
 
 namespace wg.shared.infrastructure.tests.Modules;

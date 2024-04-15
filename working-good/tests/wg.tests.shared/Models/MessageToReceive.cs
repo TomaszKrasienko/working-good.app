@@ -1,4 +1,4 @@
-namespace wg.shared.infrastructure.shared.tests.Modules.Models;
+namespace wg.tests.shared.Models;
 
 public class MessageToReceive
 {
