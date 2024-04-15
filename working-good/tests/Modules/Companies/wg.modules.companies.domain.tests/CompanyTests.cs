@@ -76,7 +76,7 @@ public sealed class CompanyTests
     {
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        var employee = EmployeeFactory.Get(company);
         
         //act
         company.DeactivateEmployee(employee.Id);
