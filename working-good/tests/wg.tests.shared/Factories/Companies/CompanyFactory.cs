@@ -5,14 +5,11 @@ namespace wg.tests.shared.Factories.Companies;
 
 public static class CompanyFactory
 {
-    public static Company Get()
-    {
-        var companyFaker = new Faker<Company>()
-            .CustomInstantiator(f => Company.Create(
-                Guid.NewGuid(),
-                f.Company.CompanyName(),
-                TimeSpan.FromHours(12),
-                "test.pl"));
-        return companyFaker.Generate(1).Single();
-    }
+    public static List<Company> Get(int count = 1, string emailDomain = "test.pl")
+        => GetFaker(emailDomain).Generate(count);
+    
+     private static Faker<Company> GetFaker(string emailDomain)
+        => new Faker<Company>()
+            .CustomInstantiator(f => Company.Create(Guid.NewGuid(), f.Company.CompanyName(),
+                TimeSpan.FromHours(12), emailDomain));
 }

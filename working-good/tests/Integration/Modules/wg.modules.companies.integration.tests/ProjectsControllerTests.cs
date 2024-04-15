@@ -154,7 +154,7 @@ public sealed class ProjectsControllerTests : BaseTestsController
 
     private async Task<Company> AddCompanyAsync()
     {
-        var company = CompanyFactory.Get();
+        var company = CompanyFactory.Get().Single();;
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();
         return company;

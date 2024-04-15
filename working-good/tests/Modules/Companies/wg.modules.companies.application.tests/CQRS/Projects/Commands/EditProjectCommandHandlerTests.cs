@@ -20,7 +20,7 @@ public sealed class EditProjectCommandHandlerTests
     public async Task HandleAsync_GivenExistingProjectId_ShouldUpdateProjectByRepository()
     {
         //arrange
-        var company = CompanyFactory.Get();
+        var company = CompanyFactory.Get().Single();;
         var project = ProjectFactory.GetInCompany(company, true, true);
         _companyRepository
             .GetByProjectIdAsync(project.Id)

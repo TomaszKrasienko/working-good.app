@@ -191,7 +191,7 @@ public sealed class TicketsControllerTests : BaseTestsController
     {
         //arrange
         var existingTicket = await AddTicket();
-        var company = CompanyFactory.Get();
+        var company = CompanyFactory.Get().Single();;
         var employee = EmployeeFactory.GetEmployeeInCompany(company); 
         var project = ProjectFactory.GetInCompany(company, true, true);  
         var owner = OwnerFactory.Get();         
