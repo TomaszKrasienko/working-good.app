@@ -184,4 +184,44 @@ public sealed class TicketTests
         //assert
         exception.ShouldBeOfType<TicketHasNoStatusToAddActivityException>();
     }
+
+    [Fact]
+    public void ChangeActivityType_GivenIsPaidActivity_ShouldMarkActivityIsPaidAsFalse()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var activity = ActivityFactory.GetInTicket(ticket, isPaid: true).Single();
+
+        //act
+        ticket.ChangeActivityType(activity.Id);
+        
+        //assert
+        activity.IsPaid.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void ChangeActivityType_GivenNoExistingActivity_ShouldThrowActivityNotFoundException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+
+        //act
+        var exception = Record.Exception(() => ticket.ChangeActivityType(Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<ActivityNotFoundException>();
+    }
+    
+    [Fact]
+    public void ChangeActivityType_GivenDoneTicketStatus_ShouldThrowTicketHasNoStatusToChangeActivityException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Done());
+
+        //act
+        var exception = Record.Exception(() => ticket.ChangeActivityType(Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<TicketHasNoStatusToChangeActivityException>();
+    }
 }

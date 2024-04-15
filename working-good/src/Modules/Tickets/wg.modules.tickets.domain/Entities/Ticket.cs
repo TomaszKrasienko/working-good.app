@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -132,6 +133,21 @@ public sealed class Ticket : AggregateRoot
         var activity = Activity.Create(id, timeFrom, timeTo, note, isPaid,
             userId);
         _activities.Add(activity);
+    }
+
+    public void ChangeActivityType(Guid activityId)
+    {
+        if (!IsStatusForChanges())
+        {
+            throw new TicketHasNoStatusToChangeActivityException(Id);
+        }
+        
+        var activity = _activities.FirstOrDefault(x => x.Id.Equals(activityId));
+        if (activity is null)
+        {
+            throw new ActivityNotFoundException(activityId);
+        }
+        activity.ChangeType();
     }
 
     private bool IsStatusForChanges()

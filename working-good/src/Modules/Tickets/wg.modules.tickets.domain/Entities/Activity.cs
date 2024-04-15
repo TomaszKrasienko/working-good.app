@@ -54,6 +54,14 @@ public sealed class Activity
     private void ChangeUser(Guid userId)
         => UserId = userId;
 
+    internal void ChangeType()
+    {
+        if (IsPaid)
+            MarkAsNoPaid();
+        else
+            MarkAsPaid();
+    }
+
     private void MarkAsPaid()
         => IsPaid = true;
 
