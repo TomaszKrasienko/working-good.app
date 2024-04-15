@@ -14,7 +14,7 @@ public sealed class ExtensionsTests
         //Todo: Add unit tests withoud employee and project
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        var employee = EmployeeFactory.GetInCompany(1, company);
         var project = ProjectFactory.GetInCompany(company, true, true);
         
         //act
@@ -34,8 +34,7 @@ public sealed class ExtensionsTests
     public void AsDto_GivenEmployee_ShouldReturnEmployeeDto()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        var employee = EmployeeFactory.Get().Single();
         
         //act
         var result = employee.AsDto();

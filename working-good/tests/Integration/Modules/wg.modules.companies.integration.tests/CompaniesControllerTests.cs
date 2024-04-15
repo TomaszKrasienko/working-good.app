@@ -123,12 +123,12 @@ public sealed class CompaniesControllerTests : BaseTestsController
         var company = CompanyFactory.Get().Single();;
         if (withEmployee)
         {
-            var employee = EmployeeFactory.GetEmployeeInCompany(company);   
+            EmployeeFactory.GetInCompany(1, company);
         }
 
         if (withProject)
         {
-            var project = ProjectFactory.GetInCompany(company, withPlannedStart, withPlannedFinish);   
+            ProjectFactory.GetInCompany(company, withPlannedStart, withPlannedFinish);   
         }
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();

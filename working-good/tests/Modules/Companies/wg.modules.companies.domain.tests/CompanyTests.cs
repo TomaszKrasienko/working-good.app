@@ -34,7 +34,7 @@ public sealed class CompanyTests
     {
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetEmployeeInCompany(company);
+        var employee = EmployeeFactory.GetInCompany(1, company).Single();
         
         //act
         var exception = Record.Exception(() => company.AddEmployee(Guid.NewGuid(),
@@ -76,7 +76,7 @@ public sealed class CompanyTests
     {
         //arrange
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.Get(company);
+        var employee = EmployeeFactory.GetInCompany(1, company).Single();
         
         //act
         company.DeactivateEmployee(employee.Id);
@@ -117,7 +117,7 @@ public sealed class CompanyTests
     public void AddProject_GivenExistingTitle_ShouldThrowProjectAlreadyRegisteredException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get().Single();
         var projectTitle = "My project title";
         company.AddProject(Guid.NewGuid(), projectTitle, "My project description", DateTime.Now, DateTime.Now.AddMonths(3));
         

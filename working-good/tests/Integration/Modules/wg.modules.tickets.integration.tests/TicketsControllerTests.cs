@@ -4,6 +4,7 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shouldly;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -192,7 +193,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         //arrange
         var existingTicket = await AddTicket();
         var company = CompanyFactory.Get().Single();;
-        var employee = EmployeeFactory.GetEmployeeInCompany(company); 
+        var employee = EmployeeFactory.GetInCompany(1, company).Single(); 
         var project = ProjectFactory.GetInCompany(company, true, true);  
         var owner = OwnerFactory.Get();         
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());

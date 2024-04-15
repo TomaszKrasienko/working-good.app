@@ -5,7 +5,7 @@ namespace wg.tests.shared.Factories.Companies;
 
 internal static class EmployeeFactory
 {
-    internal static IEnumerable<Employee> GetEmployeeInCompany(int count = 1, Company company = null)
+    internal static IEnumerable<Employee> GetInCompany(int count = 1, Company company = null)
     {
         var faker = GetFaker(company?.EmailDomain.Value);
         var employees = faker.Generate(count);
