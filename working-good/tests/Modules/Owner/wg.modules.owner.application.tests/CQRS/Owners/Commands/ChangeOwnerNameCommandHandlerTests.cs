@@ -5,7 +5,6 @@ using wg.modules.owner.application.CQRS.Owners.Commands.ChangeOwnerName;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Repositories;
-using wg.modules.owner.tests.shared.Factories;
 using wg.tests.shared.Factories.Owners;
 using Xunit;
 

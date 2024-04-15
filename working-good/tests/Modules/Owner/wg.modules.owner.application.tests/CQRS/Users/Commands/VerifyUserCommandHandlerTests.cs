@@ -4,7 +4,6 @@ using wg.modules.owner.application.CQRS.Users.Commands.VerifyUser;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.tests.shared.Factories;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Mocks;

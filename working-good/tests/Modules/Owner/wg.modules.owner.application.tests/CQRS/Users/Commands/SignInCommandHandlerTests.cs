@@ -5,9 +5,9 @@ using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.Exceptions;
 using wg.modules.owner.domain.Repositories;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.tests.shared.Factories;
 using wg.shared.abstractions.Auth;
 using wg.shared.abstractions.Time;
+using wg.tests.shared.Factories.DTOs.JWT;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Mocks;
 using Xunit;
@@ -21,12 +21,13 @@ public sealed class SignInCommandHandlerTests
     [Fact]
     public async Task Handle_GivenExistingEmailWithValidPassword_ShouldSaveTokenInStorage()
     {
+        //TODO: Refactor
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
         owner.VerifyUser(user.VerificationToken.Token, _clock.Now());
         var command = new SignInCommand(user.Email, user.Password);
-        var jwtDto = JwtDtoFactory.Get();
+        var jwtDto = JwtDtoFactory.Get().Single();
         _ownerRepository
             .GetAsync()
             .Returns(owner);

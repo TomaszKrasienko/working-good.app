@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using Shouldly;
 using wg.modules.owner.infrastructure.Auth;
-using wg.modules.owner.tests.shared.Factories;
+using wg.tests.shared.Factories.DTOs.JWT;
 using Xunit;
 
 namespace wg.modules.owner.infrastructure.tests.Auth;
@@ -13,7 +13,7 @@ public sealed class HttpContextTokenStorageTests
     public void Set_GivenToken_ShouldSetTokenToHttpContext()
     {
         //arrange
-        var jwtToken = JwtDtoFactory.Get();
+        var jwtToken = JwtDtoFactory.Get().Single();
         _httpContextAccessor.HttpContext = new DefaultHttpContext();
         
         //act
@@ -28,7 +28,7 @@ public sealed class HttpContextTokenStorageTests
     public void Get_ForExistingJwtToken_ShouldReturnJwtToken()
     {
         //arrange
-        var jwtToken = JwtDtoFactory.Get();
+        var jwtToken = JwtDtoFactory.Get().Single();
         _httpContextAccessor.HttpContext!.Items.TryAdd("user_jwt_token", jwtToken);
         
         //act
