@@ -10,5 +10,5 @@ internal static class Extensions
     internal static IServiceCollection AddDal(this IServiceCollection services)
         => services
             .AddContext<TicketsDbContext>()
-            .AddScoped<ITicketRepository, SqlServerTicketRepository>();
+            .AddScoped<ITicketRepository, TicketRepository>();
 }

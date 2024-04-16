@@ -5,12 +5,12 @@ using wg.modules.tickets.domain.Repositories;
 
 namespace wg.modules.tickets.infrastructure.DAL.Repositories;
 
-internal sealed class SqlServerTicketRepository : ITicketRepository
+internal sealed class TicketRepository : ITicketRepository
 {
     private readonly TicketsDbContext _dbContext;
     private readonly DbSet<Ticket> _tickets;
 
-    public SqlServerTicketRepository(TicketsDbContext dbContext)
+    public TicketRepository(TicketsDbContext dbContext)
     {
         _dbContext = dbContext;
         _tickets = _dbContext.Tickets;
@@ -31,6 +31,12 @@ internal sealed class SqlServerTicketRepository : ITicketRepository
         => _tickets
             .Include(x => x.Messages)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+    public Task<Ticket> GetByActivityId(Guid id)
+        => _tickets
+            .Include(x => x.Messages)
+            .Include(x => x.Activities)
+            .FirstOrDefaultAsync(x => x.Activities.Any(x => x.Id.Equals(id)));
 
     public async Task<int> GetMaxNumberAsync()
     {
