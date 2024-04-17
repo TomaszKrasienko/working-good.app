@@ -58,6 +58,19 @@ public class ExtensionsTest
     public void AsDto_GivenActivity_ShouldReturnActivityDto()
     {
         //arrange
-        var activity = ActivityFactory.
+        var activity = ActivityFactory.Get(1).Single();
+        
+        //act
+        ActivityDto result = activity.AsDto();
+        
+        //assert
+        result.ShouldBeOfType<TicketDto>();
+        result.Id.ShouldBe(activity.Id.Value); 
+        result.TimeFrom.ShouldBe(activity.ActivityTime.TimeFrom); 
+        result.TimeTo.ShouldBe(activity.ActivityTime.TimeTo); 
+        result.Summary.ShouldBe(activity.ActivityTime.TimeTo - activity.ActivityTime.TimeFrom); 
+        result.Note.ShouldBe(activity.Note.Value);
+        result.IsPaid.ShouldBe(activity.IsPaid.Value);
+        result.UserId.ShouldBe(activity.UserId.Value);
     }
 }
