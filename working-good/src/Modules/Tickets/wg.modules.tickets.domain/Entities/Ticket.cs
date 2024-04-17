@@ -130,6 +130,11 @@ public sealed class Ticket : AggregateRoot
             throw new TicketHasNoStatusToAddActivityException(Id);
         }
 
+        if (HasCollisionDates(userId, timeFrom, timeTo))
+        {
+            throw new ActivityHasCollisionDateTimeException(Id);
+        }
+        
         var activity = Activity.Create(id, timeFrom, timeTo, note, isPaid,
             userId);
         _activities.Add(activity);
@@ -152,4 +157,16 @@ public sealed class Ticket : AggregateRoot
 
     private bool IsStatusForChanges()
         => State != State.Cancelled() && State != State.Done();
+
+    private bool HasCollisionDates(Guid userId, DateTime dateFrom, DateTime? timeTo)
+    {
+        var userActivities = _activities.Where(x => x.UserId.Equals(userId)).ToList();
+        if (!userActivities.Any())
+            return false;
+        if (userActivities.Any(x => x.ActivityTime.TimeFrom <= dateFrom && (x.ActivityTime.TimeTo >= dateFrom || x.ActivityTime.TimeTo is null)))
+            return true;
+        if (userActivities.Any(x => x.ActivityTime.TimeFrom <= timeTo && (x.ActivityTime.TimeTo >= timeTo || x.ActivityTime.TimeTo is null)))
+            return true;
+        return false;
+    }
 }

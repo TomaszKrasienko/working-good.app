@@ -25,6 +25,12 @@ internal static class ActivityFactory
     }
     
     private static Faker<Activity> GetFaker(bool isPaid = true, Guid? userId = null)
-        => new Faker<Activity>().CustomInstantiator(v => Activity.Create(Guid.NewGuid(), v.Date.Recent(),
-            v.Date.Soon(), v.Lorem.Sentence(), isPaid, userId ?? Guid.NewGuid()));
+    {
+        var dateFrom = DateTime.Now.AddMinutes(-1 * new Random().Next(90));
+        var dateTo = dateFrom.AddMinutes(new Random().Next(80)); 
+
+        var faker = new Faker<Activity>().CustomInstantiator(v => Activity.Create(Guid.NewGuid(), dateFrom,
+        dateTo, v.Lorem.Sentence(), isPaid, userId ?? Guid.NewGuid()));
+        return faker;
+    }
 }

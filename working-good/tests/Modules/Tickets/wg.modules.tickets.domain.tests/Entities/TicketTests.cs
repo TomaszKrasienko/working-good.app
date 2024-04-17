@@ -171,16 +171,66 @@ public sealed class TicketTests
     }
 
     [Fact]
-    public void AddActivity_GivenActivityWithCollisionDateAndTheSameUser_ShouldThrowActivityHasCollisionDateTimeException()
+    public void AddActivity_GivenActivityWithCollisionTimeFromAndNullTimeToAndTheSameUser_ShouldThrowActivityHasCollisionDateTimeException()
     {
         //arrange
         var ticket = TicketsFactory.GetAll(state: State.Open());
         var existingActivity = ActivityFactory.GetInTicket(ticket, 1).Single();
-        var activityId = Guid.NewGuid();
         
         //act
-        var exception = Record.Exception(() => ticket.AddActivity(activityId, DateTime.Now, existingActivity.ActivityTime.TimeFrom.AddMinutes(1),
-            "Test note",true, Guid.NewGuid()));
+        var exception = Record.Exception(() => ticket.AddActivity(Guid.NewGuid(), existingActivity.ActivityTime.TimeFrom.AddMinutes(1), null,
+            "Test note",true, existingActivity.UserId));
+        
+        //assert
+        exception.ShouldBeOfType<ActivityHasCollisionDateTimeException>();
+    }
+    
+    [Fact]
+    public void AddActivity_GivenActivityWithCollisionTimeToAndTheSameUser_ShouldThrowActivityHasCollisionDateTimeException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var existingActivity = ActivityFactory.GetInTicket(ticket, 1).Single();
+        
+        //act
+        var exception = Record.Exception(() => ticket.AddActivity(Guid.NewGuid(), existingActivity.ActivityTime.TimeFrom.AddMinutes(-10),
+            existingActivity.ActivityTime.TimeFrom.AddMinutes(10), "Test note",true, existingActivity.UserId));
+        
+        //assert
+        exception.ShouldBeOfType<ActivityHasCollisionDateTimeException>();
+    }
+    
+    [Fact]
+    public void AddActivity_GivenActivityWithNullTimeToWithExistingActivityWithNullTimeTo_ShouldThrowActivityHasCollisionDateTimeException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var now = DateTime.Now;
+        var userId = Guid.NewGuid();
+        ticket.AddActivity(Guid.NewGuid(), now.AddMinutes(10), null, 
+            "Note", true, userId);
+        
+        //act
+        var exception = Record.Exception(() => ticket.AddActivity(Guid.NewGuid(), now.AddMinutes(20),
+            null, "Test note",true, userId));
+        
+        //assert
+        exception.ShouldBeOfType<ActivityHasCollisionDateTimeException>();
+    }
+    
+    [Fact]
+    public void AddActivity_GivenActivityWithExistingActivityWithNullTimeTo_ShouldThrowActivityHasCollisionDateTimeException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var now = DateTime.Now;
+        var userId = Guid.NewGuid();
+        ticket.AddActivity(Guid.NewGuid(), now.AddMinutes(10), null, 
+            "Note", true, userId);
+        
+        //act
+        var exception = Record.Exception(() => ticket.AddActivity(Guid.NewGuid(), now,
+            now.AddMinutes(20), "Test note",true, userId));
         
         //assert
         exception.ShouldBeOfType<ActivityHasCollisionDateTimeException>();
