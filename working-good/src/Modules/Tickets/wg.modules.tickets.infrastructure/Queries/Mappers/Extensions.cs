@@ -33,4 +33,16 @@ internal static class Extensions
             ProjectId = entity.ProjectId,
             Messages = entity.Messages?.Select(x => x.AsDto()).ToList()
         };
+
+    internal static ActivityDto AsDto(this Activity entity)
+        => new ActivityDto()
+        {
+            Id = entity.Id,
+            TimeFrom = entity.ActivityTime.TimeFrom,
+            TimeTo = entity.ActivityTime.TimeTo,
+            Summary = entity.ActivityTime.Summary,
+            Note = entity.Note,
+            IsPaid = entity.IsPaid,
+            UserId = entity.UserId
+        };
 }

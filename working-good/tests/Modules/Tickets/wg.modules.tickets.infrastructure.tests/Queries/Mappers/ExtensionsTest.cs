@@ -61,10 +61,10 @@ public class ExtensionsTest
         var activity = ActivityFactory.Get(1).Single();
         
         //act
-        ActivityDto result = activity.AsDto();
+        var result = activity.AsDto();
         
         //assert
-        result.ShouldBeOfType<TicketDto>();
+        result.ShouldBeOfType<ActivityDto>();
         result.Id.ShouldBe(activity.Id.Value); 
         result.TimeFrom.ShouldBe(activity.ActivityTime.TimeFrom); 
         result.TimeTo.ShouldBe(activity.ActivityTime.TimeTo); 
