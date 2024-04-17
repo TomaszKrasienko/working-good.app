@@ -31,8 +31,8 @@ public class ExtensionsTest
     public void AsDto_GivenTicket_ShouldReturnTicketDto()
     {
         //arrange
-        var ticket = TicketsFactory.GetAll(State.Done());
-        
+        var ticket = TicketsFactory.GetAll(State.Open());
+        ActivityFactory.GetInTicket(ticket, 1);
         //act
         var result = ticket.AsDto();
         
@@ -52,6 +52,7 @@ public class ExtensionsTest
         result.AssignedUser.ShouldBe(ticket.AssignedUser.Value);
         result.ProjectId.ShouldBe(ticket.ProjectId.Value);
         result.Messages.ShouldBeEmpty();
+        result.Activities.ShouldNotBeEmpty();
     }
 
     [Fact]
