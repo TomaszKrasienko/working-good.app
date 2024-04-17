@@ -25,11 +25,13 @@ internal sealed class TicketRepository : ITicketRepository
     public Task<Ticket> GetByNumberAsync(int number)
         => _tickets
             .Include(x => x.Messages)
+            .Include(x => x.Activities)
             .FirstOrDefaultAsync(x => x.Number == number);
 
     public Task<Ticket> GetByIdAsync(Guid id)
         => _tickets
             .Include(x => x.Messages)
+            .Include(x => x.Activities)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
     public Task<Ticket> GetByActivityId(Guid id)
