@@ -53,4 +53,11 @@ public class ExtensionsTest
         result.ProjectId.ShouldBe(ticket.ProjectId.Value);
         result.Messages.ShouldBeEmpty();
     }
+
+    [Fact]
+    public void AsDto_GivenActivity_ShouldReturnActivityDto()
+    {
+        //arrange
+        var activity = ActivityFactory.
+    }
 }
