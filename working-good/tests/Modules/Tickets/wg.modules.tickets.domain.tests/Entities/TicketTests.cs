@@ -169,6 +169,22 @@ public sealed class TicketTests
         //assert
         ticket.Activities.Any(x => x.Id.Equals(activityId)).ShouldBeTrue();
     }
+
+    [Fact]
+    public void AddActivity_GivenActivityWithCollisionDateAndTheSameUser_ShouldThrowActivityHasCollisionDateTimeException()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var existingActivity = ActivityFactory.GetInTicket(ticket, 1).Single();
+        var activityId = Guid.NewGuid();
+        
+        //act
+        var exception = Record.Exception(() => ticket.AddActivity(activityId, DateTime.Now, existingActivity.ActivityTime.TimeFrom.AddMinutes(1),
+            "Test note",true, Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<ActivityHasCollisionDateTimeException>();
+    }
     
     [Fact]
     public void AddActivity_GivenStatusForChanges_ShouldThrowTicketHasNoStatusToAddActivityException()
