@@ -82,7 +82,7 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeState(string state, DateTime changeDate)
     {
-        if (State is null || !IsStateForChanges())
+        if (State is null || IsStateForChanges())
         {
             State = new State(state, changeDate);
         }

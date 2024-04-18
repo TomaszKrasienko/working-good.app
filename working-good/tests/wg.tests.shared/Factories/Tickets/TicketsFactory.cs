@@ -36,7 +36,7 @@ public static class TicketsFactory
                 f.Lorem.Sentence(),
                 DateTime.Now,
                 Guid.NewGuid(),
-                State.New(),
+                state,
                 DateTime.Now,
                 false,
                 f.Date.Future(),
@@ -45,7 +45,6 @@ public static class TicketsFactory
                 Guid.NewGuid()));
         
         var ticket = ticketFaker.Generate(1).Single();
-        ticket.ChangeState(state, DateTime.Now);
         return ticket;
     }
 }

@@ -320,6 +320,6 @@ public sealed class TicketTests
         
         //assert
         ticket.State.Value.ShouldBe(state);
-        ticket.State.ChangeDate.ShouldBe(now);  
+        ticket.State.ChangeDate.ShouldNotBe(now);  
     }
 }
