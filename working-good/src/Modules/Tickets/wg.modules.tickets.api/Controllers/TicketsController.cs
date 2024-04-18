@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -58,6 +59,17 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
+    [HttpPatch("{id:guid}/change-status")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStateCommand command, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
+        return Ok();
+    }
+    
     [HttpPatch("{id:guid}/assign/user/{userId:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
