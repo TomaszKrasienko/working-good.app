@@ -80,8 +80,13 @@ public sealed class Ticket : AggregateRoot
     private void ChangeContent(string content)
         => Content = content;
 
-    internal void ChangeState(string state, DateTime changeDate)
-        => State = new State(state, changeDate);
+    public void ChangeState(string state, DateTime changeDate)
+    {
+        if (State is null || !IsStateForChanges())
+        {
+            State = new State(state, changeDate);
+        }
+    }
 
     private void ChangePriority(bool priority, DateTime? expirationDate)
     {
@@ -96,7 +101,7 @@ public sealed class Ticket : AggregateRoot
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
     {
-        if (IsStatusForChanges())
+        if (IsStateForChanges())
         {
             AssignedEmployee = assignedEmployee;
         }
@@ -104,7 +109,7 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {
-        if (!IsStatusForChanges()) return;
+        if (!IsStateForChanges()) return;
         AssignedUser = assignedUser;
         if (State == State.New())
         {
@@ -125,7 +130,7 @@ public sealed class Ticket : AggregateRoot
     public void AddActivity(Guid id, DateTime timeFrom, DateTime? timeTo, string note,
         bool isPaid, EntityId userId)
     {
-        if (!IsStatusForChanges())
+        if (!IsStateForChanges())
         {
             throw new TicketHasNoStatusToAddActivityException(Id);
         }
@@ -142,7 +147,7 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeActivityType(Guid activityId)
     {
-        if (!IsStatusForChanges())
+        if (!IsStateForChanges())
         {
             throw new TicketHasNoStatusToChangeActivityException(Id);
         }
@@ -155,7 +160,7 @@ public sealed class Ticket : AggregateRoot
         activity.ChangeType();
     }
 
-    private bool IsStatusForChanges()
+    private bool IsStateForChanges()
         => State != State.Cancelled() && State != State.Done();
 
     private bool HasCollisionDates(Guid userId, DateTime dateFrom, DateTime? timeTo)

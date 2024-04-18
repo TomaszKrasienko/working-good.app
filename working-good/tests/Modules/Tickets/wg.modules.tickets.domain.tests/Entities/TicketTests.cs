@@ -290,4 +290,36 @@ public sealed class TicketTests
         //assert
         exception.ShouldBeOfType<TicketHasNoStatusToChangeActivityException>();
     }
+
+    [Fact]
+    public void ChangeState_GivenStateForChanges_ShouldChangeState()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.New());
+        var now = DateTime.Now;
+        var state = State.InProgress();
+        
+        //act
+        ticket.ChangeState(state, now);
+        
+        //assert
+        ticket.State.Value.ShouldBe(state);
+        ticket.State.ChangeDate.ShouldBe(now);    
+    }
+
+    [Fact]
+    public void ChangeState_GivenStateNotForChanges_ShouldNotChangeState()
+    {
+        //arrange
+        var state = State.Cancelled();
+        var ticket = TicketsFactory.GetAll(state: state);
+        var now = DateTime.Now;
+        
+        //act
+        ticket.ChangeState(State.Done(), now);
+        
+        //assert
+        ticket.State.Value.ShouldBe(state);
+        ticket.State.ChangeDate.ShouldBe(now);  
+    }
 }
