@@ -59,7 +59,7 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
-    [HttpPatch("{id:guid}/change-status")]
+    [HttpPatch("{id:guid}/change-state")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
