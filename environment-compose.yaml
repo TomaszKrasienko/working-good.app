@@ -17,3 +17,14 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 5011:80
+  vault:
+    image: vault:1.13.3
+    container_name: Vault
+    restart: unless-stopped
+    ports:
+      - 5012:8200
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:5012
+      - VAULT_DEV_ROOT_TOKEN_ID=secret
+    cap_add:
+      - IPC_LOCK
