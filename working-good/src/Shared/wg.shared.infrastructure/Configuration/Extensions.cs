@@ -87,4 +87,11 @@ public static class Extensions
         app.MapControllers();
         return app;
     }
+
+    public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
+    {
+        T t = new T();
+        configuration.Bind(sectionName, t);
+        return t;
+    }
 }
