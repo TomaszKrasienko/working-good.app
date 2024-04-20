@@ -14,6 +14,7 @@ internal static class Extensions
         var options = configuration.GetOptions<VaultOptions>(SectionName);
         var store = new VaultStore(options);
         var secret = store.GetAsync(options.Key).GetAwaiter().GetResult();
-        var parser = new JsonParser()
+        //var parser = new JsonParser()
+        return services;
     }
 }

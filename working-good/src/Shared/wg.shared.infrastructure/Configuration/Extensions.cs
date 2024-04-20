@@ -16,6 +16,7 @@ using wg.shared.infrastructure.Mailbox.Configuration;
 using wg.shared.infrastructure.Messaging.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
 using wg.shared.infrastructure.Time.Configuration;
+using wg.shared.infrastructure.Vault.Configuration;
 
 namespace wg.shared.infrastructure.Configuration;
 
@@ -35,7 +36,8 @@ public static class Extensions
             .AddIdentityContext()
             .AddMailbox(configuration)
             .AddLogging(assemblies)
-            .AddUiDocumentation();
+            .AddUiDocumentation()
+            .AddVault(configuration);
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
