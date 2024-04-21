@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.application.CQRS.Employees.Commands.DeactivateEmployee;
+using wg.modules.companies.application.CQRS.Employees.Queries;
+using wg.modules.companies.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 
@@ -13,10 +15,8 @@ internal sealed class EmployeesController(
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult> GetById(Guid id)
-    {
-        throw new NotImplementedException();
-    } 
+    public async Task<ActionResult<EmployeeDto>> GetById(Guid id, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
     
     [HttpPost("companies/{companyId}/add")]
     [Authorize(Roles = "Manager")]

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.application.CQRS.Employees.Commands.DeactivateEmployee;
+using wg.modules.companies.application.DTOs;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -16,6 +17,23 @@ namespace wg.modules.companies.integration.tests;
 [Collection("#1")]
 public sealed class EmployeesControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task GetById_GivenExistingId_ShouldReturnEmployeeDto()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+
+        //act
+        var result = await HttpClient.GetFromJsonAsync<EmployeeDto>($"companies-module/Employees/{employee.Id.Value}");
+
+        //assert
+        result.ShouldNotBeNull();
+        result.ShouldBeOfType<EmployeeDto>();
+    }
+
     [Fact]
     public async Task AddEmployee_GivenExistingCompanyIdAndAddEmployeeCommandAndAuthorizedManager_ShouldReturn201CreatedStatusCodeWithResourceIdHeaderAndLocationHeaderAndAddedEmployeeToDb()
     {

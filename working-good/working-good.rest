@@ -17,6 +17,9 @@ GET {{url}}/owner-module
 ###
 GET {{url}}/tickets-module
 
+###
+GET {{url}}/owner-module/owner
+Authorization: Bearer {{token}}
 
 ### 
 POST {{url}}/owner-module/owner/add
@@ -113,7 +116,7 @@ Content-Type: application/json
 
 ###
 @employeeId = {{add_employee.response.headers.x-resource-id}}
-
+# @employeeId = 
 
 ###
 # @name ticket_add
