@@ -25,13 +25,43 @@ public sealed class EmployeesControllerTests : BaseTestsController
         var employee = EmployeeFactory.GetInCompany(1, company).Single();
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
-
+        Authorize(Guid.NewGuid(), Role.User());
+        
         //act
         var result = await HttpClient.GetFromJsonAsync<EmployeeDto>($"companies-module/Employees/{employee.Id.Value}");
 
         //assert
         result.ShouldNotBeNull();
         result.ShouldBeOfType<EmployeeDto>();
+    }
+    
+    [Fact]
+    public async Task GetById_NotExistingId_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+
+        //act
+        var result = await HttpClient.GetAsync($"companies-module/Employees/{Guid.NewGuid()}");
+
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        //act
+        var result = await HttpClient.GetAsync($"companies-module/Employees/{employee.Id.Value}");
+
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]

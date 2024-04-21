@@ -14,6 +14,6 @@ internal sealed class GetEmployeeByIdQueryHandler(
         => (await dbContext
                 .Employees
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))
+                .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))?
             .AsDto();
 }

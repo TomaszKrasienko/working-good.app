@@ -15,6 +15,7 @@ internal sealed class EmployeesController(
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid id, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
     

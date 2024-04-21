@@ -1,0 +1,69 @@
+@url = http://localhost:5001
+
+@email = tom.krasienko@gmail.pl
+@password = StrongPass123!
+
+###
+# @name sign_in
+POST {{url}}/owner-module/users/sign-in
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "password":"{{password}}"
+}
+
+###
+@token = {{sign_in.response.body.$.token}}
+
+### Companies
+
+###
+# @name add_company
+POST {{url}}/companies-module/companies/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "name":"My test client",
+    "slaTime":"08:00:00",
+    "emailDomain":"test.com"
+}
+
+###
+@companyId = {{add_company.response.headers.x-resource-id}}
+
+###
+GET {{url}}/companies-module/companies/{{companyId}}
+Authorization: Bearer {{token}}
+
+### Employees
+
+###
+# @name add_employee
+POST {{url}}/companies-module/employees/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "email": "joe.doe@test.com",
+    "phoneNumber": "555000111"
+}
+
+###
+@employeeId = {{add_employee.response.headers.x-resource-id}}
+# @employeeId = 
+
+###
+# @name get_by_id
+GET {{url}}/companies-module/employees/{{employeeId}}
+
+###
+POST {{url}}/companies-module/projects/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "title":"First Project",
+    "description":"Description"
+}
