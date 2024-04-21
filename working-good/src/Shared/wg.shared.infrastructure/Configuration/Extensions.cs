@@ -36,8 +36,7 @@ public static class Extensions
             .AddIdentityContext()
             .AddMailbox(configuration)
             .AddLogging(assemblies)
-            .AddUiDocumentation()
-            .AddVault(configuration);
+            .AddUiDocumentation();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>

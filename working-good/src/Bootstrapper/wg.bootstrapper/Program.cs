@@ -1,6 +1,7 @@
 using wg.bootstrapper;
 using wg.shared.infrastructure.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
+using wg.shared.infrastructure.Vault.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
