@@ -6,6 +6,7 @@ using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Pagination.Mappers;
 
 namespace wg.modules.companies.api.Controllers;
 
@@ -13,6 +14,19 @@ internal sealed class CompaniesController(
     ICommandDispatcher commandDispatcher, 
     IQueryDispatcher queryDispatcher) : BaseController
 {
+    [Authorize]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<CompanyDto>>> GetAll([FromQuery] GetCompaniesQuery query, CancellationToken cancellationToken)
+    {
+        var result = await queryDispatcher.SendAsync(query, cancellationToken);
+        var metaData = result.AsMetaData();
+        AddPaginationMetaData(metaData);
+        return Ok();
+    }
+    
     [Authorize]
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

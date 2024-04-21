@@ -16,6 +16,9 @@ internal sealed class EmployeesController(
 {
     [HttpGet("{id:guid}")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid id, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
     
