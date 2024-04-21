@@ -1,12 +1,16 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Web;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
+using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
+using wg.modules.tickets.application.CQRS.Tickets.Queries;
+using wg.modules.tickets.application.DTOs;
 using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Integration;
@@ -17,6 +21,34 @@ namespace wg.modules.companies.integration.tests;
 [Collection("#1")]
 public sealed class CompaniesControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task GetAll_GivenPaginationFilters_ShouldReturnTicketsList()
+    {
+        //arrange
+        var companies = CompanyFactory.Get(10);
+        await CompaniesDbContext.Companies.AddRangeAsync(companies);
+        await CompaniesDbContext.SaveChangesAsync();
+        var query = new GetCompaniesQuery()
+        {
+            PageNumber = 1,
+            PageSize = 10
+        };
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add(nameof(GetCompaniesQuery.PageSize), query.PageSize.ToString());
+        queryString.Add(nameof(GetCompaniesQuery.PageNumber), query.PageNumber.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/companies?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var pagination = GetPaginationMetaDataFromHeader(response);
+        pagination.ShouldNotBeNull();
+        var result = await response.Content.ReadFromJsonAsync<List<CompanyDto>>();
+        result.Count.ShouldBe(10);
+    }
+    
     [Fact]
     public async Task GetById_GivenExistingIdAndAuthorized_ShouldReturnCompanyDto()
     {

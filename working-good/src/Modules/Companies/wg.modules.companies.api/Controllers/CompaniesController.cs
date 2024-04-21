@@ -24,7 +24,7 @@ internal sealed class CompaniesController(
         var result = await queryDispatcher.SendAsync(query, cancellationToken);
         var metaData = result.AsMetaData();
         AddPaginationMetaData(metaData);
-        return Ok();
+        return Ok(result);
     }
     
     [Authorize]
