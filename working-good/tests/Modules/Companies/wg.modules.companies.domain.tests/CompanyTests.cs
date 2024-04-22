@@ -3,6 +3,7 @@ using Shouldly;
 using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Exceptions;
+using wg.shared.abstractions.Kernel.Exceptions;
 using wg.tests.shared.Factories.Companies;
 using Xunit;
 
@@ -10,6 +11,60 @@ namespace wg.modules.companies.domain.tests;
 
 public sealed class CompanyTests
 {
+    [Fact]
+    public void ChangeName_GivenNotEmptyName_ShouldChangeName()
+    {
+        //arrange
+        var company = CompanyFactory.Get().Single();
+        var newName = "NewCompany name";
+        
+        //act
+        company.ChangeName(newName);
+        
+        //assert
+        company.Name.Value.ShouldBe(newName);
+    }
+    
+    [Fact]
+    public void ChangeName_GivenEmptyName_ShouldChangeName()
+    {
+        //arrange
+        var company = CompanyFactory.Get().Single();
+        
+        //act
+        var exception = Record.Exception(() => company.ChangeName(string.Empty));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyNameException>();
+    }
+    
+    [Fact]
+    public void ChangeSlaTime_GivenNotZeroTimeSpan_ShouldChangeTimeSpan()
+    {
+        //arrange
+        var company = CompanyFactory.Get().Single();
+        var newSlaTime = TimeSpan.FromHours(1);
+        
+        //act
+        company.ChangeSlaTime(newSlaTime);
+        
+        //assert
+        company.SlaTime.Value.ShouldBe(newSlaTime);
+    }
+    
+    [Fact]
+    public void ChangeSlaTime_GivenNotZeroTimeSpan_ShouldThrowZeroSlaTimeException()
+    {
+        //arrange
+        var company = CompanyFactory.Get().Single();
+        
+        //act
+        var exception = Record.Exception(() => company.ChangeSlaTime(TimeSpan.Zero));
+        
+        //assert
+        exception.ShouldBeOfType<ZeroSlaTimeException>();
+    }
+    
     [Fact]
     public void AddEmployee_GivenNotExistingEmailWithValidEmailDomain_ShouldAddToUsers()
     {
@@ -61,7 +116,7 @@ public sealed class CompanyTests
     public void AddEmployee_GivenNoActiveCompany_ShouldThrowCompanyNotActiveException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get().Single();
         company.Deactivate();
         
         //act

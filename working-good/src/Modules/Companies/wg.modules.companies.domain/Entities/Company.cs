@@ -31,10 +31,10 @@ public sealed class Company : AggregateRoot
         return company;
     }
 
-    private void ChangeName(string name)
+    public void ChangeName(string name)
         => Name = name;
 
-    private void ChangeSlaTime(TimeSpan slaTime)
+    public void ChangeSlaTime(TimeSpan slaTime)
         => SlaTime = slaTime;
 
     private void ChangeEmailDomain(string emailDomain)
