@@ -12,7 +12,4 @@
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.companies.application.tests"/>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="CQRS\Companies\Commands\" />
-    </ItemGroup>
 </Project>

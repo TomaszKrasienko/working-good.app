@@ -17,6 +17,17 @@ Content-Type: application/json
 @token = {{sign_in.response.body.$.token}}
 
 ### Companies
+###
+GET {{url}}/companies-module/companies?PageNumber=1&PageSize=10&Name=test
+Authorization: bearer {{token}}
+
+###
+# @companyId = {{add_company.response.headers.x-resource-id}}
+@companyId = 2c9c0c51-0c63-4daf-b4c3-d37c2e27bdfa
+
+###
+GET {{url}}/companies-module/companies/{{companyId}}
+Authorization: Bearer {{token}}
 
 ###
 # @name add_company
@@ -30,19 +41,11 @@ Content-Type: application/json
     "emailDomain":"test.com"
 }
 
-###
-GET {{url}}/companies-module/companies?PageNumber=1&PageSize=10&Name=test
-Authorization: bearer {{token}}
-
-###
-# @companyId = {{add_company.response.headers.x-resource-id}}
-@companyId = 2c9c0c51-0c63-4daf-b4c3-d37c2e27bdfa
-
-###
-GET {{url}}/companies-module/companies/{{companyId}}
-Authorization: Bearer {{token}}
-
 ### Employees
+###
+# @name get_by_id
+GET {{url}}/companies-module/employees/{{employeeId}}
+Authorization: bearer {{token}}
 
 ###
 # @name add_employee
@@ -51,7 +54,7 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "email": "joe.doe@test.com",
+    "email": "jakub.michalak@test.com",
     "phoneNumber": "555000111"
 }
 
@@ -59,9 +62,6 @@ Content-Type: application/json
 @employeeId = {{add_employee.response.headers.x-resource-id}}
 # @employeeId = 
 
-###
-# @name get_by_id
-GET {{url}}/companies-module/employees/{{employeeId}}
 
 ###
 POST {{url}}/companies-module/projects/companies/{{companyId}}/add

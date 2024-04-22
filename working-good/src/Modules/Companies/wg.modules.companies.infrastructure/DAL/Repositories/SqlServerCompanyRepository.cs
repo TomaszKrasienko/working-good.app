@@ -28,7 +28,10 @@ internal sealed class SqlServerCompanyRepository(
         => _companies.AnyAsync(x => x.EmailDomain == emailDomain);
 
     public Task<Company> GetByIdAsync(Guid id)
-        => _companies.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        => _companies
+            .Include(x => x.Projects)
+            .Include(x => x.Employees)
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
     public Task<Company> GetByProjectIdAsync(Guid projectId)
         => _companies

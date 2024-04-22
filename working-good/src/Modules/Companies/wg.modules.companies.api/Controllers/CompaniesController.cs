@@ -39,14 +39,25 @@ internal sealed class CompaniesController(
     [Authorize(Roles = "Manager")]
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> AddCompany(AddCompanyCommand command, CancellationToken cancellationToken)
     {
         var companyId = Guid.NewGuid();
         await commandDispatcher.SendAsync(command with { Id = companyId }, cancellationToken);
         AddResourceHeader(companyId);
         return CreatedAtAction(nameof(GetById), new { id = companyId }, null);
+    }
+
+    [Authorize(Roles = "Manager")]
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> UpdateCompany()
+    {
+        return Ok();
     }
 }
