@@ -20,6 +20,7 @@ public sealed class ChangeActivityTypeCommandHandlerTests
         //arrange
         var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         var activity = ActivityFactory.GetInTicket(ticket).Single();
+        var isPaid = activity.IsPaid.Value;
         var command = new ChangeActivityTypeCommand(activity.Id);
         _ticketRepository
             .GetByActivityId(command.Id)
@@ -30,7 +31,7 @@ public sealed class ChangeActivityTypeCommandHandlerTests
         
         //assert
         var updatedActivity = ticket.Activities.FirstOrDefault(x => x.Id.Equals(command.Id));
-        updatedActivity?.IsPaid.Value.ShouldBe(!activity.IsPaid);
+        updatedActivity?.IsPaid.Value.ShouldBe(!isPaid);
         
         await _ticketRepository
             .Received(1)

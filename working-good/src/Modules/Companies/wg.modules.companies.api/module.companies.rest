@@ -31,7 +31,12 @@ Content-Type: application/json
 }
 
 ###
-@companyId = {{add_company.response.headers.x-resource-id}}
+GET {{url}}/companies-module/companies?PageNumber=1&PageSize=10&Name=test
+Authorization: bearer {{token}}
+
+###
+# @companyId = {{add_company.response.headers.x-resource-id}}
+@companyId = 2c9c0c51-0c63-4daf-b4c3-d37c2e27bdfa
 
 ###
 GET {{url}}/companies-module/companies/{{companyId}}

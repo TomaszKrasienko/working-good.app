@@ -26,7 +26,7 @@ public sealed class AddMessageCommandHandlerTests
     public async Task HandleAsync_GivenExistingTicket_ShouldUpdateTicketWithNewMessageAndSendEvent()
     {
         //arrange
-        var ticket = TicketsFactory.GetAll(State.Done());
+        var ticket = TicketsFactory.GetAll(State.Open());
         var command = new AddMessageCommand(Guid.NewGuid(), Guid.NewGuid(), "Test message contet",
             ticket.Id);
 

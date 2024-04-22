@@ -18,7 +18,7 @@ internal sealed class GetCompaniesQueryHandler(
             .AsNoTracking()
             .AsEnumerable()
             .Where(x
-                => (string.IsNullOrWhiteSpace(query.Name) || x.Name.Value.Contains(query.Name)))
+                => (string.IsNullOrWhiteSpace(query.Name) || x.Name.Value.Contains(query.Name, StringComparison.InvariantCultureIgnoreCase)))
             .Select(x => x.AsDto());
         return Task.FromResult(PagedList<CompanyDto>.ToPagedList(results.AsQueryable(), query.PageNumber, query.PageSize));
     }
