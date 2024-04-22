@@ -15,6 +15,8 @@ internal sealed class UpdateCompanyCommandHandler(
             throw new CompanyNotFoundException(command.Id);
         }
         
-        
+        company.ChangeName(command.Name);
+        company.ChangeSlaTime(command.SlaTime);
+        await companyRepository.UpdateAsync(company);
     }
 }
