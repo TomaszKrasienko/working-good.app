@@ -20,12 +20,26 @@ public sealed class MessagesControllerTests : BaseTestsController
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();
 
-        var command = new CreateMessage(employee.Email.Value, "Subject", "Content", 1);
+        var command = new CreateMessage(employee.Email, "Subject", "Content", 1);
         
         //act
         var response = await HttpClient.PostAsJsonAsync("messages-module/messages", command);
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+    } 
+    
+    [Fact]
+    public async Task Create_GivenNotExistingActiveEmployee_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+
+        var command = new CreateMessage("test@test.pl", "Subject", "Content", 1);
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("messages-module/messages", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     } 
 }

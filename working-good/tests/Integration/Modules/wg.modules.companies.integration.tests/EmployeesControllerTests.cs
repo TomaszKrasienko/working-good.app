@@ -6,7 +6,6 @@ using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.application.CQRS.Employees.Commands.DeactivateEmployee;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.domain.Entities;
-using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Integration;
