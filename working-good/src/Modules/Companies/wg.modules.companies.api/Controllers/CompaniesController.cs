@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
+using wg.modules.companies.application.CQRS.Companies.Commands.UpdateCompany;
 using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
@@ -51,13 +52,14 @@ internal sealed class CompaniesController(
     }
 
     [Authorize(Roles = "Manager")]
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> UpdateCompany()
+    public async Task<ActionResult> UpdateCompany(Guid id, UpdateCompanyCommand command, CancellationToken cancellationToken)
     {
+        await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
         return Ok();
     }
 }

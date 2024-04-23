@@ -2,8 +2,10 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Web;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Cms;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
+using wg.modules.companies.application.CQRS.Companies.Commands.UpdateCompany;
 using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.domain.Entities;
@@ -150,6 +152,66 @@ public sealed class CompaniesControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task UpdateCompany_GivenValidArguments_ShouldReturn200OkStatusCodeAndChangedUserInDb()
+    {
+        //arrange
+        var company = await AddCompanyAsync(false, false, false, false);
+        var command = new UpdateCompanyCommand(Guid.Empty, "New name", TimeSpan.FromHours(10));
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/companies/{company.Id.Value}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedCompany = await GetCompanyByIdAsync(company.Id);
+        updatedCompany.Name.Value.ShouldBe(command.Name);
+        updatedCompany.SlaTime.Value.ShouldBe(command.SlaTime);
+    }
+    
+    [Fact]
+    public async Task UpdateCompany_GivenNotExistingCompanyId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var command = new UpdateCompanyCommand(Guid.Empty, "New name", TimeSpan.FromHours(10));
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/companies/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+    
+    [Fact]
+    public async Task UpdateCompany_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new UpdateCompanyCommand(Guid.Empty, "New name", TimeSpan.FromHours(10));
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/companies/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task UpdateCompany_AuthorizedAsUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        var command = new UpdateCompanyCommand(Guid.Empty, "New name", TimeSpan.FromHours(10));
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PutAsJsonAsync($"companies-module/companies/{Guid.NewGuid()}", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+    
     private async Task<Company> AddCompanyAsync(bool withEmployee, bool withProject, bool withPlannedStart, bool withPlannedFinish)
     {
         var company = CompanyFactory.Get().Single();;
