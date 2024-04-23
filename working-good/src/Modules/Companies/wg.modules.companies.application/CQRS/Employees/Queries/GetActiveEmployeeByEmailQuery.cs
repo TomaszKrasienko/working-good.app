@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.companies.application.CQRS.Employees.Queries;
 
-public sealed record GetEmployeeByEmailQuery(string Email) : IQuery<EmployeeDto>;
+public sealed record GetActiveEmployeeByEmailQuery(string Email) : IQuery<EmployeeDto>;

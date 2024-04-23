@@ -1,11 +1,14 @@
 using NSubstitute;
+using Shouldly;
 using wg.modules.messages.core.Clients.Companies;
 using wg.modules.messages.core.Clients.Companies.DTO;
 using wg.modules.messages.core.Events;
+using wg.modules.messages.core.Exceptions;
 using wg.modules.messages.core.Services;
 using wg.modules.messages.core.Services.Abstractions;
 using wg.modules.messages.core.Services.Commands;
 using wg.shared.abstractions.Messaging;
+using wg.tests.shared.Factories.DTOs.Messages;
 using wg.tests.shared.Mocks;
 using Xunit;
 
@@ -17,12 +20,12 @@ public sealed class MessageServiceTests
     public async Task CreateMessage_GivenExistingActiveEmployeeWithNullTicketNumber_ShouldSendMessageReceivedEvent()
     {
         //arrange
-        var command = new CreateMessage("test@test.pl", "My test ticket",
+        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var command = new CreateMessage(employeeDto.Email, "My test ticket",
             "My test content", null);
-        //var employeeDto = EmployeeDto
-        // _companiesApiClient
-        //     .GetEmployeeByEmailAsync(Arg.Is<EmployeeEmailDto>(arg => arg.Email == command.Email))
-        //     .Returns()
+        _companiesApiClient
+            .GetEmployeeByEmailAsync(Arg.Is<EmployeeEmailDto>(arg => arg.Email == command.Email))
+            .Returns(employeeDto);
         
         //act
         await _messageService.CreateMessage(command);
@@ -42,8 +45,12 @@ public sealed class MessageServiceTests
     public async Task CreateMessage_GivenExistingActiveEmployee_ShouldSendMessageReceivedEvent()
     {
         //arrange
-        var command = new CreateMessage("test@test.pl", "My test ticket",
+        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var command = new CreateMessage(employeeDto.Email, "My test ticket",
             "My test content", 1);
+        _companiesApiClient
+            .GetEmployeeByEmailAsync(Arg.Is<EmployeeEmailDto>(arg => arg.Email == command.Email))
+            .Returns(employeeDto);
         
         //act
         await _messageService.CreateMessage(command);
@@ -56,7 +63,40 @@ public sealed class MessageServiceTests
                    && arg.Sender == command.Email
                    && arg.Subject == command.Subject
                    && arg.Content == command.Content
-                   && arg.TicketNumber == 1));
+                   && arg.TicketNumber == command.TicketNumber));
+    }
+    
+    [Fact]
+    public async Task CreateMessage_GivenNotExistingEmployee_ShouldThrowEmployeeNotFoundException()
+    {
+        //arrange
+        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var command = new CreateMessage(employeeDto.Email, "My test ticket",
+            "My test content", 1);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async() => await _messageService.CreateMessage(command));
+        
+        //assert
+        exception.ShouldBeOfType<EmployeeNotFoundException>();
+    }
+    
+    [Fact]
+    public async Task CreateMessage_GivenNotActiveEmployee_ShouldThrowEmployeeNotFoundException()
+    {
+        //arrange
+        var employeeDto = EmployeeDtoFactory.Get(1, false).Single();
+        var command = new CreateMessage(employeeDto.Email, "My test ticket",
+            "My test content", null);
+        _companiesApiClient
+            .GetEmployeeByEmailAsync(Arg.Is<EmployeeEmailDto>(arg => arg.Email == command.Email))
+            .Returns(employeeDto);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async() => await _messageService.CreateMessage(command));
+        
+        //assert
+        exception.ShouldBeOfType<EmployeeNotFoundException>();
     }
 
     #region arrange

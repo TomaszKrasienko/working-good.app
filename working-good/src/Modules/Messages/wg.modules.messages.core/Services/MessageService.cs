@@ -1,5 +1,7 @@
 using wg.modules.messages.core.Clients.Companies;
+using wg.modules.messages.core.Clients.Companies.DTO;
 using wg.modules.messages.core.Events;
+using wg.modules.messages.core.Exceptions;
 using wg.modules.messages.core.Services.Abstractions;
 using wg.modules.messages.core.Services.Commands;
 using wg.shared.abstractions.Messaging;
@@ -14,6 +16,11 @@ internal sealed class MessageService(
 {
     public async Task CreateMessage(CreateMessage command)
     {
+        var employee = await companiesApiClient.GetEmployeeByEmailAsync(new EmployeeEmailDto(command.Email));
+        if (employee is null)
+        {
+            throw new EmployeeNotFoundException(command.Email);
+        }
         var @event = new MessageReceived(command.Email, command.Subject, command.Content,
             clock.Now(), Guid.Empty, command.TicketNumber);
         await messageBroker.PublishAsync(@event);

@@ -7,13 +7,13 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.companies.infrastructure.Queries.Handlers.Employees;
 
-internal sealed class GetEmployeeByEmailQueryHandler(
-    CompaniesDbContext dbContext) : IQueryHandler<GetEmployeeByEmailQuery, EmployeeDto>
+internal sealed class GetActiveEmployeeByEmailQueryHandler(
+    CompaniesDbContext dbContext) : IQueryHandler<GetActiveEmployeeByEmailQuery, EmployeeDto>
 {
-    public async Task<EmployeeDto> HandleAsync(GetEmployeeByEmailQuery query, CancellationToken cancellationToken)
+    public async Task<EmployeeDto> HandleAsync(GetActiveEmployeeByEmailQuery query, CancellationToken cancellationToken)
         => (await dbContext
                 .Employees
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == query.Email, cancellationToken))?
+                .FirstOrDefaultAsync(x => x.Email == query.Email && x.IsActive, cancellationToken))?
             .AsDto();
 }
