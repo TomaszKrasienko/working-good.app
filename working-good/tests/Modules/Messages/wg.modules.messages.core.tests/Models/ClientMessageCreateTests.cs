@@ -1,8 +1,8 @@
 using Shouldly;
-using wg.modules.messages.core.Entities;
+using wg.modules.messages.core.Models;
 using Xunit;
 
-namespace wg.modules.messages.core.tests.Entities;
+namespace wg.modules.messages.core.tests.Models;
 
 public sealed class ClientMessageCreateTests
 {

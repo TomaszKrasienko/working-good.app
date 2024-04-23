@@ -1,9 +1,8 @@
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using wg.shared.abstractions.Kernel.Types;
 using wg.shared.infrastructure.Notifications;
 
-namespace wg.modules.messages.core.Entities;
+namespace wg.modules.messages.core.Models;
 
 internal sealed class ClientMessage
 {

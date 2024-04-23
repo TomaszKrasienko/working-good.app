@@ -1,5 +1,5 @@
 using Bogus;
-using wg.modules.messages.core.Entities;
+using wg.modules.messages.core.Models;
 
 namespace wg.tests.shared.Factories.Messages;
 

@@ -1,4 +1,4 @@
-using wg.modules.messages.core.Entities;
+using wg.modules.messages.core.Models;
 
 namespace wg.modules.messages.core.Events.Mappers;
 

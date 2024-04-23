@@ -7,6 +7,7 @@ internal static class Extensions
 {
     internal static IServiceCollection AddServices(this IServiceCollection services)
         => services
-            .AddScoped<IMessageSearcher, MessageSearcher>()
-            .AddHostedService<BackgroundSearcher>();
+            .AddScoped<IMessageService, MessageService>();
+            // .AddScoped<IMessageSearcher, MessageSearcher>()
+            // .AddHostedService<BackgroundSearcher>();
 }
