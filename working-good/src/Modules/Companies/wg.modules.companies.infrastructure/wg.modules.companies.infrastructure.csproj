@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.messages.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.companies.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.companies.infrastructure.tests"/>

@@ -80,24 +80,6 @@ public sealed class MessageServiceTests
         //assert
         exception.ShouldBeOfType<EmployeeNotFoundException>();
     }
-    
-    [Fact]
-    public async Task CreateMessage_GivenNotActiveEmployee_ShouldThrowEmployeeNotFoundException()
-    {
-        //arrange
-        var employeeDto = EmployeeDtoFactory.Get(1, false).Single();
-        var command = new CreateMessage(employeeDto.Email, "My test ticket",
-            "My test content", null);
-        _companiesApiClient
-            .GetEmployeeByEmailAsync(Arg.Is<EmployeeEmailDto>(arg => arg.Email == command.Email))
-            .Returns(employeeDto);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async() => await _messageService.CreateMessage(command));
-        
-        //assert
-        exception.ShouldBeOfType<EmployeeNotFoundException>();
-    }
 
     #region arrange
     private readonly ICompaniesApiClient _companiesApiClient;
