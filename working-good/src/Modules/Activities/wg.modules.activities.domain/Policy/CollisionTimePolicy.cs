@@ -7,6 +7,7 @@ internal sealed class CollisionTimePolicy : ICollisionTimePolicy
 {
     public bool HasCollision(List<Activity> activities, DateTime timeFrom, DateTime timeTo)
     {
-        throw new NotImplementedException();
+        //arrange
+        return true;
     }
 }

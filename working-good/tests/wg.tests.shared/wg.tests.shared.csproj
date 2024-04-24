@@ -16,6 +16,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Activities\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
       <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
@@ -38,6 +39,7 @@
         <InternalsVisibleTo Include="wg.modules.tickets.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.domain.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.infrastructure.tests"/>
+        <InternalsVisibleTo Include="wwg.modules.activities.domain.tests"/>
         <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>       
     </ItemGroup>
 </Project>

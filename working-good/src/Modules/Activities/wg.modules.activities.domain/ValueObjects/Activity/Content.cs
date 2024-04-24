@@ -1,8 +1,8 @@
 using wg.modules.activities.domain.Exceptions;
 
-namespace wg.modules.activities.domain.ValueObjects;
+namespace wg.modules.activities.domain.ValueObjects.Activity;
 
-public record Content
+public sealed record Content
 {
     public string Value { get; init; }
 
