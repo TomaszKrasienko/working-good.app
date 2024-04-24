@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using wg.modules.tickets.domain.Exceptions;
+using wg.modules.tickets.domain.Policies;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Kernel.Types;
@@ -82,7 +83,8 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeState(string state, DateTime changeDate)
     {
-        if (State is null || IsStateForChanges())
+        var statePolicy = TicketStatePolicy.Create();
+        if (State is null || statePolicy.CanChangeState(State))
         {
             State = new State(state, changeDate);
         }
@@ -100,8 +102,9 @@ public sealed class Ticket : AggregateRoot
     }
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
-    {
-        if (IsStateForChanges())
+    {        
+        var statePolicy = TicketStatePolicy.Create();
+        if (statePolicy.CanChangeState(State))
         {
             AssignedEmployee = assignedEmployee;
         }
@@ -109,7 +112,8 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {
-        if (!IsStateForChanges()) return;
+        var statePolicy = TicketStatePolicy.Create();
+        if (!statePolicy.CanChangeState(State)) return;
         AssignedUser = assignedUser;
         if (State == State.New())
         {
@@ -130,7 +134,8 @@ public sealed class Ticket : AggregateRoot
     public void AddActivity(Guid id, DateTime timeFrom, DateTime? timeTo, string note,
         bool isPaid, EntityId userId)
     {
-        if (!IsStateForChanges())
+        var statePolicy = TicketStatePolicy.Create();
+        if (!statePolicy.CanChangeState(State))
         {
             throw new TicketHasNoStatusToAddActivityException(Id);
         }
@@ -147,7 +152,8 @@ public sealed class Ticket : AggregateRoot
 
     public void ChangeActivityType(Guid activityId)
     {
-        if (!IsStateForChanges())
+        var statePolicy = TicketStatePolicy.Create();
+        if (!statePolicy.CanChangeState(State))
         {
             throw new TicketHasNoStatusToChangeActivityException(Id);
         }
@@ -159,9 +165,6 @@ public sealed class Ticket : AggregateRoot
         }
         activity.ChangeType();
     }
-
-    private bool IsStateForChanges()
-        => State != State.Cancelled() && State != State.Done();
 
     private bool HasCollisionDates(Guid userId, DateTime dateFrom, DateTime? timeTo)
     {
