@@ -6,17 +6,22 @@ namespace wg.modules.activities.domain.Entities;
 public sealed class DailyEmployeeActivities : AggregateRoot
 {
     public Day Day { get; private set; }
-    public EntityId EmployeeId { get; private set; }
+    public EntityId UserId { get; private set; }
     private List<Activity> _activities = new List<Activity>();
     public IReadOnlyList<Activity> Activities => _activities;
 
-    private DailyEmployeeActivities(AggregateId id, Day day, EntityId employeeId)
+    private DailyEmployeeActivities(AggregateId id, Day day, EntityId userId)
     {
         Id = id;
         Day = day;
-        EmployeeId = employeeId;
+        UserId = userId;
     }
 
-    public static DailyEmployeeActivities Create(Guid id, DateTime day, Guid employeeId)
-        => new DailyEmployeeActivities(id, day, employeeId);
+    public static DailyEmployeeActivities Create(Guid id, DateTime day, Guid userId)
+        => new DailyEmployeeActivities(id, day, userId);
+
+    public void AddPaidActivity(Guid id, string content, Guid ticketId)
+    {
+        
+    }
 }

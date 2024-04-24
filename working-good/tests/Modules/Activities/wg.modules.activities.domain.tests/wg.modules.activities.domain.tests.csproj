@@ -22,4 +22,12 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Activities\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Policies\" />
+    </ItemGroup>
+
 </Project>
