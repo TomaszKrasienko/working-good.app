@@ -11,16 +11,22 @@ public abstract class Activity
     public EntityId TicketId { get; private set; }
     public ActivityTime ActivityTime { get; private set; }
 
-    protected Activity(EntityId id, Content content, EntityId ticketId, ActivityTime activityTime)
+    protected Activity(EntityId id, EntityId ticketId)
     {
         Id = id;
-        Content = content;
-        TicketId = ticketId;
-        ActivityTime = activityTime;
+        TicketId = id;
     }
 
-    protected void ChangeActivityTime(DateTime timeFrom, DateTime timeTo)
+    protected void ChangeContent(string content)
+        => Content = content;
+
+    protected virtual void ChangeActivityTime(DateTime timeFrom, DateTime? timeTo)
     {
-        
+        if (timeTo is null)
+        {
+            ActivityTime = new ActivityTime(timeFrom);
+            return;
+        }
+        ActivityTime = new ActivityTime(timeFrom, (DateTime)timeTo);
     }
 }

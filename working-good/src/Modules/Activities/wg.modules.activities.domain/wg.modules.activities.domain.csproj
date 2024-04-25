@@ -9,4 +9,7 @@
       <ProjectReference Include="..\..\..\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.activities.domain.tests"/>
+    </ItemGroup>
 </Project>

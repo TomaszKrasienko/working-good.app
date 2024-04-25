@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using wg.modules.activities.domain.ValueObjects;
 using wg.modules.activities.domain.ValueObjects.Activity;
 using wg.shared.abstractions.Kernel.Types;
@@ -6,13 +7,15 @@ namespace wg.modules.activities.domain.Entities;
 
 public sealed class PaidActivity : Activity
 {
-    private PaidActivity(EntityId id, Content content, EntityId ticketId, ActivityTime activityTime) 
-        : base(id, content, ticketId, activityTime)
+    private PaidActivity(EntityId id, EntityId ticketId) 
+        : base(id, ticketId)
     {
     }
 
     internal static PaidActivity Create(Guid id, string content, Guid ticketId, DateTime timeFrom, DateTime? timeTo)
     {
-        
+        var activity = new PaidActivity(id, ticketId);
+        activity.ChangeContent(content);
+        activity.ChangeActivityTime(timeFrom, timeTo);
     }
 }
