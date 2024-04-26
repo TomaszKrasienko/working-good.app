@@ -14,7 +14,7 @@ public abstract class Activity
     protected Activity(EntityId id, EntityId ticketId)
     {
         Id = id;
-        TicketId = id;
+        TicketId = ticketId;
     }
 
     protected void ChangeContent(string content)

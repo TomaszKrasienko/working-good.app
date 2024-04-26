@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using wg.modules.activities.domain.ValueObjects;
-using wg.modules.activities.domain.ValueObjects.Activity;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.activities.domain.Entities;
@@ -17,5 +14,6 @@ public sealed class PaidActivity : Activity
         var activity = new PaidActivity(id, ticketId);
         activity.ChangeContent(content);
         activity.ChangeActivityTime(timeFrom, timeTo);
+        return activity;
     }
 }
