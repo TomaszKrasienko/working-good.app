@@ -8,4 +8,12 @@ public sealed class InternalActivity : Activity
         : base(id, ticketId)
     {
     }
+    
+    internal static InternalActivity Create(Guid id, string content, Guid ticketId, DateTime timeFrom, DateTime? timeTo)
+    {
+        var activity = new InternalActivity(id, ticketId);
+        activity.ChangeContent(content);
+        activity.ChangeActivityTime(timeFrom, timeTo);
+        return activity;
+    }
 }

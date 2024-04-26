@@ -11,5 +11,6 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.activities.domain.tests"/>
+        <InternalsVisibleTo Include="wg.tests.shared"/>
     </ItemGroup>
 </Project>

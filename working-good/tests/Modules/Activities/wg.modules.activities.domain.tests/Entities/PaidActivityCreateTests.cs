@@ -1,5 +1,6 @@
 using Shouldly;
 using wg.modules.activities.domain.Entities;
+using wg.modules.activities.domain.Exceptions;
 using wg.tests.shared.Helpers;
 using Xunit;
 
@@ -26,5 +27,27 @@ public sealed class PaidActivityCreateTests
         result.TicketId.Value.ShouldBe(ticketId);
         result.ActivityTime.TimeFrom.ShouldBe(timeFrom);
         result.ActivityTime.TimeTo.ShouldBe(timeTo);
+    }
+
+    [Fact]
+    public void Create_GivenEmptyContent_ShouldThrowEmptyActivityContentException()
+    {
+        //act
+        var exception = Record.Exception(() => PaidActivity.Create(Guid.NewGuid(), string.Empty, Guid.NewGuid(),
+            DateTime.Now, null));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyActivityContentException>();
+    }
+    
+    [Fact]
+    public void Create_GivenDateTimeToEarlierThanTimeFrom_ShouldThrowTimeToCanNotBeEarlierThanTimeFromException()
+    {
+        //act
+        var exception = Record.Exception(() => PaidActivity.Create(Guid.NewGuid(), "Test", Guid.NewGuid(),
+            DateTime.Now.AddHours(1), DateTime.Now));
+        
+        //assert
+        exception.ShouldBeOfType<TimeToCanNotBeEarlierThanTimeFromException>();
     }
 }
