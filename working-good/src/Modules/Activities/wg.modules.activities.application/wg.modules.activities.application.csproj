@@ -9,4 +9,7 @@
       <ProjectReference Include="..\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.activities.application.tests"/>
+    </ItemGroup>
 </Project>

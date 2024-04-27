@@ -122,6 +122,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.activities.domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.activities.application", "src\Modules\Activities\wg.modules.activities.application\wg.modules.activities.application.csproj", "{48922421-54A6-4B08-A7B1-F2D0BA081F89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wg.modules.activities.application.tests", "tests\Modules\Activities\wg.modules.activities.application.tests\wg.modules.activities.application.tests.csproj", "{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,7 @@ Global
 		{04955627-2327-4E1B-9FD6-34890F6CA5A2} = {CD5991C7-55FC-4DEA-86E2-DBA760DE1D34}
 		{572893AB-E44F-49FB-B094-13B267C3B4DB} = {04955627-2327-4E1B-9FD6-34890F6CA5A2}
 		{48922421-54A6-4B08-A7B1-F2D0BA081F89} = {67628F21-8A90-40C9-8971-5887EEBB43C0}
+		{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56} = {04955627-2327-4E1B-9FD6-34890F6CA5A2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{85C133A8-F98C-4FE3-B06A-DCC6259CFCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -349,5 +352,9 @@ Global
 		{48922421-54A6-4B08-A7B1-F2D0BA081F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48922421-54A6-4B08-A7B1-F2D0BA081F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48922421-54A6-4B08-A7B1-F2D0BA081F89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{458F4F7E-460C-43B0-ADD6-D8A2BD4E9E56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
