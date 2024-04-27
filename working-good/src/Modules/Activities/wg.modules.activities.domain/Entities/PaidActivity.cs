@@ -16,4 +16,16 @@ public sealed class PaidActivity : Activity
         activity.ChangeActivityTime(timeFrom, timeTo);
         return activity;
     }
+    
+    internal static PaidActivity Create(InternalActivity internalActivity)
+    {
+        var activity = new PaidActivity(internalActivity.Id, internalActivity.TicketId);
+        activity.ChangeContent(internalActivity.Content);
+        activity.ChangeActivityTime(internalActivity.ActivityTime.TimeFrom, internalActivity.ActivityTime.TimeTo);
+        return activity;
+    }
+
+    internal override Activity ChangeType()
+        => InternalActivity.Create(this);
+        
 }

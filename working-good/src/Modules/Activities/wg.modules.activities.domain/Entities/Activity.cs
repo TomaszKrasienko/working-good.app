@@ -29,4 +29,6 @@ public abstract class Activity
         }
         ActivityTime = new ActivityTime(timeFrom, (DateTime)timeTo);
     }
+
+    internal abstract Activity ChangeType();
 }

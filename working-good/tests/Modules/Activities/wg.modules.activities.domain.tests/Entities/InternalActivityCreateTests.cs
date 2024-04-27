@@ -1,6 +1,7 @@
 using Shouldly;
 using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.Exceptions;
+using wg.tests.shared.Factories.Activities;
 using wg.tests.shared.Helpers;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace wg.modules.activities.domain.tests.Entities;
 public sealed class InternalActivityCreateTests
 {
     [Fact]
-    public void Create_GivenValidArguments_ShouldReturnPaidActivity()
+    public void Create_GivenValidArguments_ShouldReturnInternalActivity()
     {
         //arrange
         var id = Guid.NewGuid();
@@ -60,5 +61,21 @@ public sealed class InternalActivityCreateTests
         
         //assert
         exception.ShouldBeOfType<DatesCanNotBeFromOtherDaysException>();
+    }
+    
+    [Fact]
+    public void Create_GivenPaidActivity_ShouldReturnInternalActivity()
+    {
+        //arrange
+        var paidActivity = ActivityFactory.GetPaidActivity(DateTime.Now, DateTime.Now.AddHours(1));
+        
+        //act
+        var result = InternalActivity.Create(paidActivity);
+        
+        //assert
+        result.Id.ShouldBe(paidActivity.Id);
+        result.Content.ShouldBe(paidActivity.Content);
+        result.TicketId.ShouldBe(paidActivity.TicketId);
+        result.ActivityTime.ShouldBe(paidActivity.ActivityTime);
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

@@ -8,6 +8,9 @@ internal static class ActivityFactory
     internal static PaidActivity GetPaidActivity(DateTime timeFrom, DateTime? timeTo)
         => GetPaidActivityFaker(timeFrom, timeTo).Generate(1).Single();
     
+    internal static InternalActivity GetInternalActivity(DateTime timeFrom, DateTime? timeTo)
+        => GetInternalActivityFaker(timeFrom, timeTo).Generate(1).Single();
+    
     internal static Activity GetRandom(DateTime timeFrom, DateTime? timeTo)
     {
         var isPaid = new Random().Next(10) % 2 == 0;

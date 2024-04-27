@@ -1,6 +1,7 @@
 using Shouldly;
 using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.Exceptions;
+using wg.tests.shared.Factories.Activities;
 using wg.tests.shared.Helpers;
 using Xunit;
 
@@ -60,5 +61,21 @@ public sealed class PaidActivityCreateTests
         
         //assert
         exception.ShouldBeOfType<DatesCanNotBeFromOtherDaysException>();
+    }
+    
+    [Fact]
+    public void Create_GivenInternalActivity_ShouldReturnPaidActivity()
+    {
+        //arrange
+        var internalActivity = ActivityFactory.GetInternalActivity(DateTime.Now, DateTime.Now.AddHours(1));
+        
+        //act
+        var result = PaidActivity.Create(internalActivity);
+        
+        //assert
+        result.Id.ShouldBe(internalActivity.Id);
+        result.Content.ShouldBe(internalActivity.Content);
+        result.TicketId.ShouldBe(internalActivity.TicketId);
+        result.ActivityTime.ShouldBe(internalActivity.ActivityTime);
     }
 }
