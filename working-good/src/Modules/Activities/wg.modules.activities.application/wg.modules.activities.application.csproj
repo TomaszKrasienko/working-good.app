@@ -9,8 +9,4 @@
       <ProjectReference Include="..\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="CQRS\" />
-    </ItemGroup>
-
 </Project>
