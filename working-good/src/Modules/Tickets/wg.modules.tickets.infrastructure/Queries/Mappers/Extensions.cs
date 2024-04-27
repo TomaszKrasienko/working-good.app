@@ -31,19 +31,6 @@ internal static class Extensions
             AssignedEmployee = entity.AssignedEmployee,
             AssignedUser = entity.AssignedUser,
             ProjectId = entity.ProjectId,
-            Messages = entity.Messages?.Select(x => x.AsDto()).ToList(),
-            Activities = entity.Activities?.Select(x => x.AsDto()).ToList()
-        };
-
-    internal static ActivityDto AsDto(this Activity entity)
-        => new ActivityDto()
-        {
-            Id = entity.Id,
-            TimeFrom = entity.ActivityTime.TimeFrom,
-            TimeTo = entity.ActivityTime.TimeTo,
-            Summary = entity.ActivityTime.Summary,
-            Note = entity.Note,
-            IsPaid = entity.IsPaid,
-            UserId = entity.UserId
+            Messages = entity.Messages?.Select(x => x.AsDto()).ToList()
         };
 }

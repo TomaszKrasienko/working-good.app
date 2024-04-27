@@ -18,5 +18,4 @@ public class TicketDto
     public Guid? AssignedUser { get;  set; }
     public Guid? ProjectId  { get;  set; }
     public List<MessageDto> Messages { get; set; }
-    public List<ActivityDto> Activities { get; set; }
 }

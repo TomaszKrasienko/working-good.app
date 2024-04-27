@@ -24,9 +24,7 @@ public sealed class Ticket : AggregateRoot
     public EntityId ProjectId  { get; private set; }
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
-    private List<Activity> _activities = new List<Activity>();
-    public IReadOnlyList<Activity> Activities => _activities;
-
+    
     private Ticket(AggregateId id, Number number, CreatedAt createdAt, EntityId createdBy)
     {
         Id = id;
@@ -129,52 +127,5 @@ public sealed class Ticket : AggregateRoot
     {
         State = new State(State.Open(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
-    }
-
-    public void AddActivity(Guid id, DateTime timeFrom, DateTime? timeTo, string note,
-        bool isPaid, EntityId userId)
-    {
-        var statePolicy = TicketStatePolicy.Create();
-        if (!statePolicy.CanChangeState(State))
-        {
-            throw new TicketHasNoStatusToAddActivityException(Id);
-        }
-
-        if (HasCollisionDates(userId, timeFrom, timeTo))
-        {
-            throw new ActivityHasCollisionDateTimeException(Id);
-        }
-        
-        var activity = Activity.Create(id, timeFrom, timeTo, note, isPaid,
-            userId);
-        _activities.Add(activity);
-    }
-
-    public void ChangeActivityType(Guid activityId)
-    {
-        var statePolicy = TicketStatePolicy.Create();
-        if (!statePolicy.CanChangeState(State))
-        {
-            throw new TicketHasNoStatusToChangeActivityException(Id);
-        }
-        
-        var activity = _activities.FirstOrDefault(x => x.Id.Equals(activityId));
-        if (activity is null)
-        {
-            throw new ActivityNotFoundException(activityId);
-        }
-        activity.ChangeType();
-    }
-
-    private bool HasCollisionDates(Guid userId, DateTime dateFrom, DateTime? timeTo)
-    {
-        var userActivities = _activities.Where(x => x.UserId.Equals(userId)).ToList();
-        if (!userActivities.Any())
-            return false;
-        if (userActivities.Any(x => x.ActivityTime.TimeFrom <= dateFrom && (x.ActivityTime.TimeTo >= dateFrom || x.ActivityTime.TimeTo is null)))
-            return true;
-        if (userActivities.Any(x => x.ActivityTime.TimeFrom <= timeTo && (x.ActivityTime.TimeTo >= timeTo || x.ActivityTime.TimeTo is null)))
-            return true;
-        return false;
     }
 }

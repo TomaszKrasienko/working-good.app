@@ -14,7 +14,6 @@ internal sealed class GetTicketByIdQueryHandler(
         => (await dbContext
             .Tickets
             .Include(x => x.Messages)
-            .Include(x => x.Activities)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id.Equals(query.Id), cancellationToken))?
             .AsDto();

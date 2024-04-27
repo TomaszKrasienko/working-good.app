@@ -10,7 +10,6 @@ public interface ITicketRepository
     Task<List<Ticket>> GetAllForAssignedEmployee(Guid employeeId);
     Task<Ticket> GetByNumberAsync(int number);
     Task<Ticket> GetByIdAsync(Guid id);
-    Task<Ticket> GetByActivityId(Guid id);
     Task<int> GetMaxNumberAsync();
     Task AddAsync(Ticket ticket);
     Task UpdateAsync(Ticket ticket);
