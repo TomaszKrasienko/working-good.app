@@ -6,7 +6,7 @@ public sealed record Content
 {
     public string Value { get; init; }
 
-    internal Content(string value)
+    public Content(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

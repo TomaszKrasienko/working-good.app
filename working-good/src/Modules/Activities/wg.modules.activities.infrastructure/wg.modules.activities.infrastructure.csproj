@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\tests\Shared\wg.shared.infrastructure.tests\wg.shared.infrastructure.tests.csproj" />
+      <ProjectReference Include="..\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
+    </ItemGroup>
+
 </Project>
