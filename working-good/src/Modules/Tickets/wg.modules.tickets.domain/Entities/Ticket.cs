@@ -9,7 +9,7 @@ using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.tickets.domain.Entities;
 
-public sealed class Ticket : AggregateRoot
+public sealed class Ticket : AggregateRoot<AggregateId>
 {
     public Number Number { get; private set; }
     public Subject Subject { get; private set; }

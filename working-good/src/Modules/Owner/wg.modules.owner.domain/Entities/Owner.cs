@@ -5,7 +5,7 @@ using wg.shared.abstractions.Kernel.ValueObjects;
 
 namespace wg.modules.owner.domain.Entities;
 
-public sealed class Owner : AggregateRoot
+public sealed class Owner : AggregateRoot<AggregateId>
 {
     public Name Name { get; private set; }
     

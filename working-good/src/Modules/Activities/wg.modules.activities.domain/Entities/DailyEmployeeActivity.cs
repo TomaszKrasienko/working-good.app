@@ -14,7 +14,6 @@ public sealed class DailyEmployeeActivity : AggregateRoot
 
     private DailyEmployeeActivity(AggregateId id, Day day, EntityId userId)
     {
-        Id = id;
         Day = day;
         UserId = userId;
     }
