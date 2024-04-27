@@ -10,26 +10,16 @@ internal sealed class CollisionTimePolicy : ICollisionTimePolicy
     {
         if (timeTo is null)
         {
-            var alreadyWithNull = activities
-                .Any(x => x.ActivityTime.TimeTo is null);
-            
-            var isExistsAfter = activities
-                .Any(x => x.ActivityTime.TimeTo > timeFrom);
-
-            return isExistsAfter || alreadyWithNull;
+            return activities
+                .Any(x => (x.ActivityTime.TimeTo is null) || (x.ActivityTime.TimeTo > timeFrom));
         }
         else
         {
-            var alreadyWithNull = activities
-                .Any(x => x.ActivityTime.TimeTo is null && x.ActivityTime.TimeFrom < timeTo);
-
-            var earlierWithCollision = activities
-                .Any(x => x.ActivityTime.TimeTo > timeFrom && x.ActivityTime.TimeFrom < timeFrom);
-
-            var laterWithCollision = activities
-                .Any(x => x.ActivityTime.TimeFrom < timeTo && x.ActivityTime.TimeTo > timeTo);
-            
-            return alreadyWithNull || earlierWithCollision || laterWithCollision;
+            return activities
+                .Any(x 
+                    => (x.ActivityTime.TimeTo is null && x.ActivityTime.TimeFrom < timeTo)
+                    || (x.ActivityTime.TimeTo > timeFrom && x.ActivityTime.TimeFrom < timeFrom)
+                    || (x.ActivityTime.TimeFrom < timeTo && x.ActivityTime.TimeTo > timeTo));
         }
     }
 
