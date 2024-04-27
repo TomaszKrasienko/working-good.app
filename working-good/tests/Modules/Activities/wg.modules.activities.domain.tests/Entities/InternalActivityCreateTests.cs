@@ -50,4 +50,15 @@ public sealed class InternalActivityCreateTests
         //assert
         exception.ShouldBeOfType<TimeToCanNotBeEarlierThanTimeFromException>();
     }
+    
+    [Fact]
+    public void Create_GivenDatesFromOtherDays_ShouldThrowDatesCanNotBeFromOtherDaysException()
+    {
+        //act
+        var exception = Record.Exception(() => InternalActivity.Create(Guid.NewGuid(), "Test", Guid.NewGuid(),
+            DateTime.Now.AddDays(-1), DateTime.Now));
+        
+        //assert
+        exception.ShouldBeOfType<DatesCanNotBeFromOtherDaysException>();
+    }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

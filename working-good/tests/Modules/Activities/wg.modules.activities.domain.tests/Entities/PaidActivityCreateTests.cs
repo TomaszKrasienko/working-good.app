@@ -50,4 +50,15 @@ public sealed class PaidActivityCreateTests
         //assert
         exception.ShouldBeOfType<TimeToCanNotBeEarlierThanTimeFromException>();
     }
+    
+    [Fact]
+    public void Create_GivenDatesFromOtherDays_ShouldThrowDatesCanNotBeFromOtherDaysException()
+    {
+        //act
+        var exception = Record.Exception(() => PaidActivity.Create(Guid.NewGuid(), "Test", Guid.NewGuid(),
+            DateTime.Now.AddDays(-1), DateTime.Now));
+        
+        //assert
+        exception.ShouldBeOfType<DatesCanNotBeFromOtherDaysException>();
+    }
 }

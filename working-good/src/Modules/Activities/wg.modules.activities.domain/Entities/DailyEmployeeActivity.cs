@@ -1,5 +1,6 @@
+using wg.modules.activities.domain.Exceptions;
 using wg.modules.activities.domain.Policy;
-using wg.modules.activities.domain.ValueObjects;
+using wg.modules.activities.domain.ValueObjects.DailyEmployeeActivities;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.activities.domain.Entities;
@@ -23,15 +24,27 @@ public sealed class DailyEmployeeActivity : AggregateRoot
 
     public void AddPaidActivity(Guid id, string content, Guid ticketId, DateTime timeFrom, DateTime? timeTo)
     {
+        ValidateCollision(timeFrom, timeTo);
+        _activities.Add(PaidActivity.Create(id, content, ticketId, timeFrom, timeTo));
+    }
+    
+    public void AddInternalActivity(Guid id, string content, Guid ticketId, DateTime timeFrom, DateTime? timeTo)
+    {
+        ValidateCollision(timeFrom, timeTo);
+        _activities.Add(PaidActivity.Create(id, content, ticketId, timeFrom, timeTo));
+    }
+
+    public void ChangeActivityType(Guid id)
+    {
         
     }
 
-    // private bool HasCollision(DateTime timeFrom, DateTime? timeTo)
-    // {
-    //     var policy = CollisionTimePolicy.GetInstance();
-    //     if (policy.HasCollision(_activities, timeFrom, timeTo))
-    //     {
-    //         
-    //     }
-    // }
+    private void ValidateCollision(DateTime timeFrom, DateTime? timeTo)
+    {
+        var policy = CollisionTimePolicy.GetInstance();
+        if (policy.HasCollision(_activities, timeFrom, timeTo))
+        {
+            throw new ActivityCollisionTimeException();
+        }
+    }
 }

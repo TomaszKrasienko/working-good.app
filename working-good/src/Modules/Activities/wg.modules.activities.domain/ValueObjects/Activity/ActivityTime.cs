@@ -10,6 +10,11 @@ public sealed record ActivityTime
 
     public ActivityTime(DateTime timeFrom, DateTime timeTo)
     {
+        if (timeFrom.Date != timeTo.Date)
+        {
+            throw new DatesCanNotBeFromOtherDaysException(timeFrom, timeTo);
+        }
+        
         if (DateTime.Compare(timeFrom, timeTo) > 0)
         {
             throw new TimeToCanNotBeEarlierThanTimeFromException(timeFrom, timeTo);
