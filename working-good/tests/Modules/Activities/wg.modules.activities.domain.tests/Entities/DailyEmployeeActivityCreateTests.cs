@@ -4,7 +4,7 @@ using Xunit;
 
 namespace wg.modules.activities.domain.tests.Entities;
 
-public sealed class DailyEmployeeActivitiesCreateTests
+public sealed class DailyEmployeeActivityCreateTests
 {
     [Fact]
     public void Create_GivenValidArguments_ShouldReturnDailyEmployeeActivities()
@@ -15,7 +15,7 @@ public sealed class DailyEmployeeActivitiesCreateTests
         var userId = Guid.NewGuid();
         
         //act
-        var result = DailyEmployeeActivities.Create(id, day, userId);
+        var result = DailyEmployeeActivity.Create(id, day, userId);
         
         //assert
         result.Id.Value.ShouldBe(id);
