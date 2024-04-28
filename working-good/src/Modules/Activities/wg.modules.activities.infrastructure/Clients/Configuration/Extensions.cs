@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using wg.modules.activities.application.Clients;
+using wg.modules.activities.application.Clients.Tickets;
 using wg.modules.activities.infrastructure.Clients.Tickets;
 
 namespace wg.modules.activities.infrastructure.Clients.Configuration;

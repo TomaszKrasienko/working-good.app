@@ -1,4 +1,4 @@
-namespace wg.modules.activities.domain.ValueObjects.DailyEmployeeActivities;
+namespace wg.modules.activities.domain.ValueObjects.DailyUserActivity;
 
 public sealed record Day
 {

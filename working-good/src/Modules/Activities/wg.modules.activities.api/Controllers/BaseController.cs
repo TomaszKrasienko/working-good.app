@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using wg.shared.abstractions.Pagination;
-using wg.shared.infrastructure.Serialization;
 
 namespace wg.modules.activities.api.Controllers;
 

@@ -1,4 +1,4 @@
-namespace wg.modules.activities.application.Clients.DTOs;
+namespace wg.modules.activities.application.Clients.Tickets.DTOs;
 
 public class TicketExistsDto
 {

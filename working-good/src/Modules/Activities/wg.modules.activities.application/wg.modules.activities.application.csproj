@@ -12,4 +12,8 @@
     <ItemGroup>
         <InternalsVisibleTo Include="wg.modules.activities.application.tests"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Clients\Users\DTOs\" />
+    </ItemGroup>
 </Project>

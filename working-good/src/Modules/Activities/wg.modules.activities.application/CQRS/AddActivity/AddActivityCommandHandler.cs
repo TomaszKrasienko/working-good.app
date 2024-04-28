@@ -1,5 +1,6 @@
 using wg.modules.activities.application.Clients;
-using wg.modules.activities.application.Clients.DTOs;
+using wg.modules.activities.application.Clients.Tickets;
+using wg.modules.activities.application.Clients.Tickets.DTOs;
 using wg.modules.activities.application.Exceptions;
 using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.Repositories;

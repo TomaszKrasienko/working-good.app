@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace wg.modules.activities.api.Controllers;
 
-[Microsoft.AspNetCore.Components.Route(ActivitiesModule.RoutePath)]
+[Route(ActivitiesModule.RoutePath)]
 internal sealed class HomeController : BaseController
 {
     [HttpGet]

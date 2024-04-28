@@ -1,6 +1,6 @@
 using wg.modules.activities.domain.Exceptions;
 using wg.modules.activities.domain.Policy;
-using wg.modules.activities.domain.ValueObjects.DailyEmployeeActivities;
+using wg.modules.activities.domain.ValueObjects.DailyUserActivity;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.activities.domain.Entities;

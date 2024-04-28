@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using wg.modules.activities.domain.Entities;
-using wg.modules.activities.domain.ValueObjects.DailyEmployeeActivities;
+using wg.modules.activities.domain.ValueObjects.DailyUserActivity;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.activities.infrastructure.DAL.EntitiesConfiguration;
