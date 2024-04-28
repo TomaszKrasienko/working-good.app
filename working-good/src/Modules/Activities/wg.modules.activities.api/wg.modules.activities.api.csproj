@@ -11,10 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="module.activities.tests.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
