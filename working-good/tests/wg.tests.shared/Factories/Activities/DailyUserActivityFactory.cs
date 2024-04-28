@@ -13,5 +13,5 @@ internal static class DailyUserActivityFactory
     
     private static Faker<DailyUserActivity> GetFaker()
         => new Faker<DailyUserActivity>().CustomInstantiator(v
-            => DailyUserActivity.Create(Guid.NewGuid(), DateTime.Now, Guid.NewGuid()));
+            => DailyUserActivity.Create(DateTime.Now, Guid.NewGuid()));
 }

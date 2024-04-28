@@ -10,12 +10,11 @@ public sealed class DailyUserActivityCreateTests
     public void Create_GivenValidArguments_ShouldReturnDailyUserActivity()
     {
         //arrange
-        var id = Guid.NewGuid();
         var day = DateTime.Now;
         var userId = Guid.NewGuid();
         
         //act
-        var result = DailyUserActivity.Create(id, day, userId);
+        var result = DailyUserActivity.Create(day, userId);
         
         //assert
         result.Day.Value.Date.ShouldBe(day.Date);
