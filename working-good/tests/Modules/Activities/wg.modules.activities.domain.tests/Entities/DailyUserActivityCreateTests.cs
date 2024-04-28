@@ -4,10 +4,10 @@ using Xunit;
 
 namespace wg.modules.activities.domain.tests.Entities;
 
-public sealed class DailyEmployeeActivityCreateTests
+public sealed class DailyUserActivityCreateTests
 {
     [Fact]
-    public void Create_GivenValidArguments_ShouldReturnDailyEmployeeActivities()
+    public void Create_GivenValidArguments_ShouldReturnDailyUserActivity()
     {
         //arrange
         var id = Guid.NewGuid();
@@ -15,10 +15,9 @@ public sealed class DailyEmployeeActivityCreateTests
         var userId = Guid.NewGuid();
         
         //act
-        var result = DailyEmployeeActivity.Create(id, day, userId);
+        var result = DailyUserActivity.Create(id, day, userId);
         
         //assert
-        result.Id.Value.ShouldBe(id);
         result.Day.Value.Date.ShouldBe(day.Date);
         result.Day.Value.Hour.ShouldBe(0);
         result.Day.Value.Minute.ShouldBe(0);

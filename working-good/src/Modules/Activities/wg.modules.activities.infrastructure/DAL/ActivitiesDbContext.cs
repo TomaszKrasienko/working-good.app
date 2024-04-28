@@ -5,5 +5,5 @@ namespace wg.modules.activities.infrastructure.DAL;
 
 internal sealed class ActivitiesDbContext
 {
-    public DbSet<DailyEmployeeActivity> DailyEmployeeActivities { get; set; }
+    public DbSet<DailyUserActivity> DailyEmployeeActivities { get; set; }
 }

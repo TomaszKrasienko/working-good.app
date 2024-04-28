@@ -6,13 +6,13 @@ using Xunit;
 
 namespace wg.modules.activities.domain.tests.Entities;
 
-public sealed class DailyEmployeeActivityTests
+public sealed class DailyUserActivityTests
 {
     [Fact]
     public void AddPaidActivity_GivenNotCollisionActivity_ShouldReturnAddActivity()
     {
          //arrange
-         var dailyEmployeeActivity = DailyEmployeeActivityFactory.Get();
+         var dailyEmployeeActivity = DailyUserActivityFactory.Get();
          
          //act
          dailyEmployeeActivity.AddPaidActivity(Guid.NewGuid(), "My test content",
@@ -28,7 +28,7 @@ public sealed class DailyEmployeeActivityTests
     public void AddPaidActivity_GivenCollisionActivity_ShouldThrowActivityCollisionTimeException()
     {
         //arrange
-        var dailyEmployeeActivity = DailyEmployeeActivityFactory.Get();
+        var dailyEmployeeActivity = DailyUserActivityFactory.Get();
         var paidActivity = ActivityFactory.GetPaidActivity(
             new DateTime(2024, 4, 26, 14, 30, 0),
             new DateTime(2024, 4, 26, 17, 00, 0));
@@ -50,7 +50,7 @@ public sealed class DailyEmployeeActivityTests
     public void AddInternalActivity_GivenNotCollisionActivity_ShouldReturnAddActivity()
     {
         //arrange
-        var dailyEmployeeActivity = DailyEmployeeActivityFactory.Get();
+        var dailyEmployeeActivity = DailyUserActivityFactory.Get();
          
         //act
         dailyEmployeeActivity.AddInternalActivity(Guid.NewGuid(), "My test content",
@@ -66,7 +66,7 @@ public sealed class DailyEmployeeActivityTests
     public void AddInternalActivity_GivenCollisionActivity_ShouldThrowActivityCollisionTimeException()
     {
         //arrange
-        var dailyEmployeeActivity = DailyEmployeeActivityFactory.Get();
+        var dailyEmployeeActivity = DailyUserActivityFactory.Get();
         var paidActivity = ActivityFactory.GetPaidActivity(
             new DateTime(2024, 4, 26, 14, 30, 0),
             new DateTime(2024, 4, 26, 17, 00, 0));

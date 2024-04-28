@@ -6,9 +6,9 @@ using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.activities.infrastructure.DAL.EntitiesConfiguration;
 
-internal sealed class DailyEmployeeActivityTypeConfiguration : IEntityTypeConfiguration<DailyEmployeeActivity>
+internal sealed class DailyUserActivityTypeConfiguration : IEntityTypeConfiguration<DailyUserActivity>
 {
-    public void Configure(EntityTypeBuilder<DailyEmployeeActivity> builder)
+    public void Configure(EntityTypeBuilder<DailyUserActivity> builder)
     {
         builder.HasKey(x => new { x.Day, x.UserId});
 

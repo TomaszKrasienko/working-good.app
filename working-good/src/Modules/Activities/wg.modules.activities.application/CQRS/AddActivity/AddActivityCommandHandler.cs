@@ -8,7 +8,7 @@ using wg.shared.abstractions.CQRS.Commands;
 namespace wg.modules.activities.application.CQRS.AddActivity;
 
 internal sealed class AddActivityCommandHandler(
-    IDailyEmployeeActivityRepository dailyEmployeeActivityRepository,
+    IDailyUserActivityRepository dailyUserActivityRepository,
     ITicketsApiClient ticketsApiClient) : ICommandHandler<AddActivityCommand>
 {
     public async Task HandleAsync(AddActivityCommand command, CancellationToken cancellationToken)
@@ -21,38 +21,38 @@ internal sealed class AddActivityCommandHandler(
             throw new TicketWithStateForChangesNotFoundException(command.TicketId);
         }
 
-        var dailyEmployeeActivity = await dailyEmployeeActivityRepository
+        var dailyUserActivity = await dailyUserActivityRepository
             .GetByDateForUser(command.TimeFrom.Date, command.UserId);
 
-        if (dailyEmployeeActivity is null)
+        if (dailyUserActivity is null)
         {
-            dailyEmployeeActivity = DailyEmployeeActivity.Create(Guid.NewGuid(),
+            dailyUserActivity = DailyUserActivity.Create(Guid.NewGuid(),
                 command.TimeFrom.Date, command.UserId);
 
             if (command.IsPaid)
             {
-                dailyEmployeeActivity.AddPaidActivity(command.Id, command.Content,
+                dailyUserActivity.AddPaidActivity(command.Id, command.Content,
                     command.TicketId, command.TimeFrom, command.TimeTo);
             }
             else
             {
-                dailyEmployeeActivity.AddInternalActivity(command.Id, command.Content,
+                dailyUserActivity.AddInternalActivity(command.Id, command.Content,
                     command.TicketId, command.TimeFrom, command.TimeTo);
             }
 
-            await dailyEmployeeActivityRepository.AddAsync(dailyEmployeeActivity);
+            await dailyUserActivityRepository.AddAsync(dailyUserActivity);
         }
         if (command.IsPaid)
         {
-            dailyEmployeeActivity.AddPaidActivity(command.Id, command.Content,
+            dailyUserActivity.AddPaidActivity(command.Id, command.Content,
                 command.TicketId, command.TimeFrom, command.TimeTo);
         }
         else
         {
-            dailyEmployeeActivity.AddInternalActivity(command.Id, command.Content,
+            dailyUserActivity.AddInternalActivity(command.Id, command.Content,
                 command.TicketId, command.TimeFrom, command.TimeTo);
         }
 
-        await dailyEmployeeActivityRepository.UpdateAsync(dailyEmployeeActivity);
+        await dailyUserActivityRepository.UpdateAsync(dailyUserActivity);
     }
 }
