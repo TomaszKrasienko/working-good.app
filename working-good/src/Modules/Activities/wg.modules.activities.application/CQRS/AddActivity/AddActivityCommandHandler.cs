@@ -26,8 +26,7 @@ internal sealed class AddActivityCommandHandler(
 
         if (dailyUserActivity is null)
         {
-            dailyUserActivity = DailyUserActivity.Create(Guid.NewGuid(),
-                command.TimeFrom.Date, command.UserId);
+            dailyUserActivity = DailyUserActivity.Create(command.TimeFrom.Date, command.UserId);
 
             if (command.IsPaid)
             {

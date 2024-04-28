@@ -12,14 +12,14 @@ public sealed class DailyUserActivity : AggregateRoot
     private List<Activity> _activities = new List<Activity>();
     public IReadOnlyList<Activity> Activities => _activities;
 
-    private DailyUserActivity(AggregateId id, Day day, EntityId userId)
+    private DailyUserActivity(Day day, EntityId userId)
     {
         Day = day;
         UserId = userId;
     }
 
-    public static DailyUserActivity Create(Guid id, DateTime day, Guid userId)
-        => new DailyUserActivity(id, day, userId);
+    public static DailyUserActivity Create(DateTime day, Guid userId)
+        => new DailyUserActivity(day, userId);
 
     public void AddPaidActivity(Guid id, string content, Guid ticketId, DateTime timeFrom, DateTime? timeTo)
     {

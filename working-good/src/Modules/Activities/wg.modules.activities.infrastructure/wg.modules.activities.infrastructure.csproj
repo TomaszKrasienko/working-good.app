@@ -3,12 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\tests\Shared\wg.shared.infrastructure.tests\wg.shared.infrastructure.tests.csproj" />
-      <ProjectReference Include="..\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
+      <ProjectReference Include="..\..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
+      <ProjectReference Include="..\wg.modules.activities.application\wg.modules.activities.application.csproj" />
     </ItemGroup>
 
 </Project>

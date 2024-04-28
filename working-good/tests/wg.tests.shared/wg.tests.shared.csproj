@@ -2,7 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <ImplicitUsings>enable</ImplicitUsings>        
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
     </PropertyGroup>
     
     <ItemGroup>
@@ -18,7 +20,12 @@
       <ProjectReference Include="..\..\src\Bootstrapper\wg.bootstrapper\wg.bootstrapper.csproj" />
       <ProjectReference Include="..\..\src\Modules\Activities\wg.modules.activities.application\wg.modules.activities.application.csproj" />
       <ProjectReference Include="..\..\src\Modules\Activities\wg.modules.activities.domain\wg.modules.activities.domain.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Companies\wg.modules.companies.infrastructure\wg.modules.companies.infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Messages\wg.modules.messages.core\wg.modules.messages.core.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Notifications\wg.modules.notifications.core\wg.modules.notifications.core.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Owner\wg.modules.owner.infrastructure\wg.modules.owner.infrastructure.csproj" />
       <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.infrastructure\wg.modules.tickets.infrastructure.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>

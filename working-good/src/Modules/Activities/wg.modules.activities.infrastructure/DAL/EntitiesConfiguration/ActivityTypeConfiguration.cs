@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Org.BouncyCastle.Asn1.X509.SigI;
 using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.ValueObjects.Activity;
 using wg.shared.abstractions.Kernel.Types;
