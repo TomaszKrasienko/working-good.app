@@ -1,22 +1,28 @@
+using Microsoft.EntityFrameworkCore;
 using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.Repositories;
 
 namespace wg.modules.activities.infrastructure.DAL.Repositories;
 
-internal sealed class DailyUserActivityRepository : IDailyUserActivityRepository
+internal sealed class DailyUserActivityRepository(
+    ActivitiesDbContext dbContext) : IDailyUserActivityRepository
 {
     public Task<DailyUserActivity> GetByDateForUser(DateTime dateTime, Guid userId)
+        => dbContext
+            .DailyUserActivities
+            .Include(x => x.Activities)
+            .FirstOrDefaultAsync(x => x.Day.Value == dateTime.Date && x.UserId.Equals(userId));
+
+
+    public async Task AddAsync(DailyUserActivity dailyEmployeeActivity)
     {
-        throw new NotImplementedException();
+        await dbContext.DailyUserActivities.AddAsync(dailyEmployeeActivity);
+        await dbContext.SaveChangesAsync();
     }
 
-    public Task AddAsync(DailyUserActivity dailyEmployeeActivity)
+    public async Task UpdateAsync(DailyUserActivity dailyEmployeeActivity)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateAsync(DailyUserActivity dailyEmployeeActivity)
-    {
-        throw new NotImplementedException();
+        dbContext.DailyUserActivities.Update(dailyEmployeeActivity);
+        await dbContext.SaveChangesAsync();
     }
 }

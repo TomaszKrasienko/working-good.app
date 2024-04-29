@@ -10,4 +10,8 @@
       <ProjectReference Include="..\wg.modules.activities.application\wg.modules.activities.application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Helpers\" />
+    </ItemGroup>
+
 </Project>
