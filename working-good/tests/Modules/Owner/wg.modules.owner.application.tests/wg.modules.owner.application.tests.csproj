@@ -23,15 +23,15 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.application\wg.modules.owner.application.csproj" />
-      <ProjectReference Include="..\..\..\Shared\wg.sharedForTests\wg.sharedForTests.csproj" />
-      <ProjectReference Include="..\..\..\wg.tests.shared\wg.tests.shared.csproj" />
-    </ItemGroup>
-
     <ItemGroup>
       <Folder Include="CQRS\Groups\Commands\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.application\wg.modules.owner.application.csproj" />
+      <ProjectReference Include="..\..\..\wg.tests.shared\wg.tests.shared.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Owner\wg.modules.owner.application\wg.modules.owner.application.csproj" />
     </ItemGroup>
 
 </Project>

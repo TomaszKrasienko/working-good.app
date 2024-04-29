@@ -43,11 +43,13 @@
         <InternalsVisibleTo Include="wg.modules.owner.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.owner.domain.tests"/>
         <InternalsVisibleTo Include="wg.modules.owner.infrastructure.tests"/>
+        <InternalsVisibleTo Include="wg.modules.owner.integration.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.domain.tests"/>
         <InternalsVisibleTo Include="wg.modules.tickets.infrastructure.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.domain.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.application.tests"/>
+        <InternalsVisibleTo Include="wg.modules.activities.integration.tests"/>
         <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>       
     </ItemGroup>
 </Project>
