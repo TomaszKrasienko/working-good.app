@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.activities.application.CQRS.AddActivity;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -32,6 +33,15 @@ public sealed class ActivitiesControllerTests : BaseTestsController
         var resourceId = GetResourceIdFromHeader(response);
         resourceId.ShouldNotBeNull();
         resourceId.ShouldNotBe(Guid.Empty);
+
+        var dailyUserActivity = await ActivitiesDbContext
+            .DailyUserActivities
+            .Include(x => x.Activities)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+        
+        dailyUserActivity.ShouldNotBeNull();
+        dailyUserActivity.Activities.Count.ShouldBe(1);
     }
     
     

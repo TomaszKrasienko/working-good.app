@@ -14,4 +14,8 @@
       <Folder Include="Helpers\" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.tests.shared"/>
+        <InternalsVisibleTo Include="wg.modules.activities.integration.tests"/>
+    </ItemGroup>
 </Project>

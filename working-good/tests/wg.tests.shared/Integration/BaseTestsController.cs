@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using wg.modules.activities.infrastructure.DAL;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.notifications.core.Services.Abstractions;
 using wg.modules.owner.infrastructure.DAL;
@@ -21,6 +22,7 @@ public abstract class BaseTestsController : IDisposable
     internal readonly CompaniesDbContext CompaniesDbContext;
     internal readonly OwnerDbContext OwnerDbContext;
     internal readonly TicketsDbContext TicketsDbContext;
+    internal readonly ActivitiesDbContext ActivitiesDbContext;
 
     protected BaseTestsController()
     {
@@ -30,6 +32,7 @@ public abstract class BaseTestsController : IDisposable
         CompaniesDbContext = TestAppDb.CompaniesDbContext;
         OwnerDbContext = TestAppDb.OwnerDbContext;
         TicketsDbContext = TestAppDb.TicketsDbContext;
+        ActivitiesDbContext = TestAppDb.ActivitiesDbContext;
     }
 
     protected virtual void ConfigureServices(IServiceCollection services)
