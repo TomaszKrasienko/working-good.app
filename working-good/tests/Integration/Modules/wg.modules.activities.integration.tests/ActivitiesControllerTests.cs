@@ -43,7 +43,35 @@ public sealed class ActivitiesControllerTests : BaseTestsController
         dailyUserActivity.ShouldNotBeNull();
         dailyUserActivity.Activities.Count.ShouldBe(1);
     }
-    
+
+    [Fact]
+    public async Task Add_GivenInvalidArguments_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var command = new AddActivityCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Test Content",
+            DateTime.Now, DateTime.Now.AddHours(1), true);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("activities-module/activities/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Add_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new AddActivityCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Test Content",
+            DateTime.Now, DateTime.Now.AddHours(1), true);
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("activities-module/activities/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
     
     private async Task<Ticket> AddTicket()
     {
