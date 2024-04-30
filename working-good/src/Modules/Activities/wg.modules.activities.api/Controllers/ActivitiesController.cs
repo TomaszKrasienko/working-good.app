@@ -21,7 +21,7 @@ internal sealed class ActivitiesController(
         return Ok();
     }
     
-    [HttpPost]
+    [HttpPost("add")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

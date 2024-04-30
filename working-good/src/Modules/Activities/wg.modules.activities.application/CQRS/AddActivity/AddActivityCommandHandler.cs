@@ -41,6 +41,7 @@ internal sealed class AddActivityCommandHandler(
             }
 
             await dailyUserActivityRepository.AddAsync(dailyUserActivity);
+            return;
         }
         if (command.IsPaid)
         {

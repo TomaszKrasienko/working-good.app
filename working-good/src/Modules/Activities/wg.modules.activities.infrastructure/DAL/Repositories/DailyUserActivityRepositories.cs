@@ -7,11 +7,17 @@ namespace wg.modules.activities.infrastructure.DAL.Repositories;
 internal sealed class DailyUserActivityRepository(
     ActivitiesDbContext dbContext) : IDailyUserActivityRepository
 {
-    public Task<DailyUserActivity> GetByDateForUser(DateTime dateTime, Guid userId)
-        => dbContext
+    public async Task<DailyUserActivity> GetByDateForUser(DateTime dateTime, Guid userId)
+    {
+        //Todo: Temporary solution => To Change
+        var usersActivity = await dbContext
             .DailyUserActivities
             .Include(x => x.Activities)
-            .FirstOrDefaultAsync(x => x.Day.Value == dateTime.Date && x.UserId.Equals(userId));
+            .Where(x=> x.UserId.Equals(userId))
+            .ToListAsync();
+
+        return usersActivity.FirstOrDefault(x => x.Day == dateTime);
+    }
 
 
     public async Task AddAsync(DailyUserActivity dailyEmployeeActivity)

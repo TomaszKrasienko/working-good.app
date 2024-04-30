@@ -14,4 +14,11 @@ public sealed record Day
 
     public static implicit operator Day(DateTime value)
         => new Day(value);
+
+    public static bool operator ==(Day day, DateTime dateTime)
+            => day?.Value.Year == dateTime.Year
+           && day.Value.Month == dateTime.Month
+           && day.Value.Day == dateTime.Day;
+    public static bool operator !=(Day day, DateTime dateTime)
+        =>  !(day == dateTime);
 }
