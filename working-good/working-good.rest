@@ -18,8 +18,7 @@ GET {{url}}/owner-module
 GET {{url}}/tickets-module
 
 ###
-GET {{url}}/owner-module/owner
-Authorization: Bearer {{token}}
+GET {{url}}/activities-module
 
 ### 
 POST {{url}}/owner-module/owner/add
@@ -141,33 +140,23 @@ GET {{url}}/tickets-module/tickets/{{ticketId}}
 Authorization: bearer {{token}}
 
 ###
-POST {{url}}/tickets-module/messages/ticket/{{ticketId}}/add
+GET {{url}}/tickets-module/tickets?pageSize=3&pageNumber=1
+Authorization: bearer {{token}}
+
+###
+POST {{url}}/activities-module/activities/add
 Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "Content":"Przyjąłem"
+    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+    "userId": "{{userId}}",
+    "ticketId": "{{ticketId}}",
+    "content": "Test activity",
+    "timeFrom": "2019-08-24T14:15:22Z",
+    "timeTo": "2019-08-24T14:40:22Z",
+    "isPaid": true
 }
-
-###
-POST {{url}}/tickets-module/activities/ticket/{{ticketId}}/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-  "ticketId": "{{ticketId}}",
-  "timeFrom": "2024-04-17T16:11:00",
-  "timeTo": "2024-04-17T16:30:00",
-  "note": "Restarted database",
-  "isPaid": true,
-  "userId": "{{userId}}"
-}
-
-
-###
-GET {{url}}/tickets-module/tickets?pageSize=3&pageNumber=1&subject=ticket
-Authorization: bearer {{token}}
-
 
 
 ###Another path
