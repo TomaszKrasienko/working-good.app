@@ -1,0 +1,101 @@
+@url = http://localhost:5001
+@email = tom.krasienko@gmail.pl
+@password = StrongPass123!
+
+### 
+POST {{url}}/owner-module/owner/add
+Content-Type: application/json
+
+{
+    "name":"MyCompany"
+}
+
+###
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "firstName":"Joe",
+    "lastName":"Doe",
+    "password":"{{password}}",
+    "role":"Manager"
+}
+
+###
+POST {{url}}/owner-module/users/verify
+Content-Type: application/json
+
+{
+    "token":"00000000-0000-0000-0000-000000000000"
+}
+
+###
+# @name sign_in
+POST {{url}}/owner-module/users/sign-in
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "password":"{{password}}"
+}
+
+###
+@token = {{sign_in.response.body.$.token}}
+
+###
+# @name me
+GET {{url}}/owner-module/users/me
+Authorization: Bearer {{token}}
+
+###
+@userId = {{me.response.body.$.id}}
+
+###
+GET {{url}}/owner-module/users/{{userId}}/active
+Authorization: bearer {{token}}
+
+
+###
+# @name add_company1
+POST {{url}}/companies-module/companies/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "name":"PrintWorld sp. z o.o.",
+    "slaTime":"05:00:00",
+    "emailDomain":"print-world.com"
+}
+
+###
+@companyId = {{add_company1.response.headers.x-resource-id}}
+
+###
+# @name add_employee1_1
+POST {{url}}/companies-module/employees/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "email": "janusz.ksiazek@print-world.com",
+    "phoneNumber": "555000111"
+}
+
+###
+@employeeId = {{add_employee1_1.response.headers.x-resource-id}}
+
+
+###
+# @name add_employee1_1
+POST {{url}}/companies-module/employees/companies/{{companyId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "email": "sebatian.piezowy@print-world.com",
+    "phoneNumber": "555000111"
+}
+
+###
+@employeeId = {{add_employee1_1.response.headers.x-resource-id}}
