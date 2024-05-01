@@ -38,6 +38,7 @@ public sealed class MessageServiceTests
                    && arg.Sender == command.Email
                    && arg.Subject == command.Subject
                    && arg.Content == command.Content
+                   && arg.AssignedEmployee == employeeDto.Id
                    && arg.TicketNumber == null));
     }
     
@@ -63,6 +64,7 @@ public sealed class MessageServiceTests
                    && arg.Sender == command.Email
                    && arg.Subject == command.Subject
                    && arg.Content == command.Content
+                   && arg.AssignedEmployee == employeeDto.Id
                    && arg.TicketNumber == command.TicketNumber));
     }
     

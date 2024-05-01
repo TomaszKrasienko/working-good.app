@@ -1,0 +1,60 @@
+@url = http://localhost:5001
+
+@email = tom.krasienko@gmail.pl
+@password = StrongPass123!
+
+###
+# @name sign_in
+POST {{url}}/owner-module/users/sign-in
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "password":"{{password}}"
+}
+
+###
+@token = {{sign_in.response.body.$.token}}
+
+###
+@ticket_id = 6a2b5732-cc2b-4a00-8c53-04759cb4c87f
+
+###
+GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
+Authorization: bearer {{token}}
+
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token}}
+
+###
+POST {{url}}/tickets-module/tickets/
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "subject": "string",
+    "content": "string",
+    "createdBy": "25a02396-1048-48f9-bf93-102d2fb7895e",
+    "state": "string",
+    "isPriority": true,
+    "assignedEmployee": "7bcd4ff1-6605-4dc4-8584-19f81f16c1d8",
+    "assignedUser": "0d662ceb-02cf-4652-ae9a-903789c03add",
+    "projectId": "5a8591dd-4039-49df-9202-96385ba3eff8"
+}
+
+###
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/change-state
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "state":"Open"
+}
+
+###
+@user_id = 63f6b491-22cf-4a17-a792-13f61fdf7a9c
+
+###
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/assign/user/{{user_id}}
+Authorization: bearer {{token}}

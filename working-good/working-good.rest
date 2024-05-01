@@ -140,7 +140,7 @@ GET {{url}}/tickets-module/tickets/{{ticketId}}
 Authorization: bearer {{token}}
 
 ###
-GET {{url}}/tickets-module/tickets?pageSize=3&pageNumber=1
+GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
 Authorization: bearer {{token}}
 
 ###

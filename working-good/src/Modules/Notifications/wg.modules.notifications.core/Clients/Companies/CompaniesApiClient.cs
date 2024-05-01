@@ -7,5 +7,5 @@ internal sealed class CompaniesApiClient(
     IModuleClient moduleClient) : ICompaniesApiClient
 {
     public Task<EmployeeDto> GetEmployeeByIdAsync(EmployeeIdDto dto)
-        => moduleClient.SendAsync<EmployeeDto>("companies/employee/get/by-id/", dto);
+        => moduleClient.SendAsync<EmployeeDto>("companies/employee/get/by-id", dto);
 }

@@ -1,3 +1,4 @@
+using wg.modules.tickets.application.Events.Mappers;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Repositories;
@@ -32,8 +33,6 @@ internal sealed class MessageReceivedHandler(
             false, null, @event.AssignedEmployee, null, null,
             @event.Sender);
         await ticketRepository.AddAsync(newTicket);
-        var ticketCreated = new TicketCreated(newTicket.Id, newTicket.Number, newTicket.Subject,
-            newTicket.Content, newTicket.AssignedUser, newTicket.AssignedEmployee);
-        await messageBroker.PublishAsync(ticketCreated);
+        await messageBroker.PublishAsync(newTicket.AsEvent());
     }
 }

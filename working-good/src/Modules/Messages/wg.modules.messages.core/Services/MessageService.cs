@@ -22,7 +22,7 @@ internal sealed class MessageService(
             throw new EmployeeNotFoundException(command.Email);
         }
         var @event = new MessageReceived(command.Email, command.Subject, command.Content,
-            clock.Now(), Guid.Empty, command.TicketNumber);
+            clock.Now(), employee.Id, command.TicketNumber);
         await messageBroker.PublishAsync(@event);
     }
 }
