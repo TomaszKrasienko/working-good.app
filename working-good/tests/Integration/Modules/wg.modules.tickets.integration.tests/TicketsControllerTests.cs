@@ -166,7 +166,12 @@ public sealed class TicketsControllerTests : BaseTestsController
     {
         //arrange
         var ticket = await AddTicket();
-        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
+        var owner = OwnerFactory.Get();         
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+        
+        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", user.Id,
             State.New(), false, null, null, null);
         var userId = Guid.NewGuid();
         Authorize(userId, Role.User());
@@ -184,7 +189,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         
         var addedTicket = await GetTicketByIdAsync((Guid)resourceId);
         addedTicket.ShouldNotBeNull();
-        addedTicket.CreatedBy.Value.ShouldBe(userId);
+        addedTicket.CreatedBy.Value.ShouldBe(user.Email.Value);
         addedTicket.Number.Value.ShouldBe(ticket.Number + 1);
     }
 
@@ -205,7 +210,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         await _ownerDbContext.SaveChangesAsync();
         await _companiesDbContext.Companies.AddAsync(company);
         await _companiesDbContext.SaveChangesAsync();
-        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
+        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", user.Id,
             State.New(), true, employee.Id, user.Id, project.Id);
         Authorize(user.Id, user.Role);
         
@@ -222,7 +227,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         
         var addedTicket = await GetTicketByIdAsync((Guid)resourceId);
         addedTicket.ShouldNotBeNull();
-        addedTicket.CreatedBy.ShouldBe(user.Id);
+        addedTicket.CreatedBy.Value.ShouldBe(user.Email.Value);
         addedTicket.Number.Value.ShouldBe(existingTicket.Number + 1);
     }
 

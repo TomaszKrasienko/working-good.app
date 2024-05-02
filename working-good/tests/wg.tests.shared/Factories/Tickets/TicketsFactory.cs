@@ -16,7 +16,7 @@ public static class TicketsFactory
                 f.Lorem.Sentence(),
                 f.Lorem.Sentence(),
                 DateTime.Now,
-                Guid.NewGuid(),
+                f.Internet.Email(),
                 state ?? f.PickRandom(states),
                 DateTime.Now,
                 false));
@@ -35,7 +35,7 @@ public static class TicketsFactory
                 f.Lorem.Sentence(),
                 f.Lorem.Sentence(),
                 DateTime.Now,
-                Guid.NewGuid(),
+                f.Internet.Email(),
                 state,
                 DateTime.Now,
                 false,

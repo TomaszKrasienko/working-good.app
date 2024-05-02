@@ -17,7 +17,7 @@ public sealed class TicketCreateTests
         var subject = "Test ticket";
         var content = "Test content";
         var createdAt = DateTime.Now;
-        var createdBy = Guid.NewGuid();
+        var createdBy = "joe.doe@email.pl";
         var state = State.New();
         var stateDate = DateTime.Now;
         var isPriority = true;
@@ -55,7 +55,7 @@ public sealed class TicketCreateTests
         var subject = "Test ticket";
         var content = "Test content";
         var createdAt = DateTime.Now;
-        var createdBy = Guid.NewGuid();
+        var createdBy = "joe.doe@email.pl";
         var state = State.New();
         var stateDate = DateTime.Now;
         var isPriority = false;
@@ -89,7 +89,7 @@ public sealed class TicketCreateTests
         var subject = "Test ticket";
         var content = "Test content";
         var createdAt = DateTime.Now;
-        var createdBy = Guid.NewGuid();
+        var createdBy = "joe.doe@email.pl";
         var state = State.New();
         var isPriority = true;
         
@@ -106,7 +106,7 @@ public sealed class TicketCreateTests
     {
         //act
         var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 0, "My subject", 
-            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            "Test content", DateTime.Now, "joe.doe@email.pl", State.New(),
             DateTime.Now, false));
         
         //assert
@@ -118,7 +118,7 @@ public sealed class TicketCreateTests
     {        
         //act
         var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, string.Empty, 
-            "Test content", DateTime.Now, Guid.NewGuid(), State.New(),
+            "Test content", DateTime.Now, "joe.doe@email.pl", State.New(),
             DateTime.Now, false));
         
         //assert
@@ -130,7 +130,7 @@ public sealed class TicketCreateTests
     {        
         //act
         var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
-            string.Empty, DateTime.Now, Guid.NewGuid(), State.New(),
+            string.Empty, DateTime.Now, "joe.doe@email.pl", State.New(),
             DateTime.Now, false));
         
         //assert
@@ -142,7 +142,7 @@ public sealed class TicketCreateTests
     {        
         //act
         var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
-            "Test content", DateTime.Now, Guid.NewGuid(), string.Empty,
+            "Test content", DateTime.Now, "joe.doe@email.pl", string.Empty,
             DateTime.Now, false));
         
         //assert
@@ -154,10 +154,12 @@ public sealed class TicketCreateTests
     {        
         //act
         var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
-            "Test content", DateTime.Now, Guid.NewGuid(), "Invalid state",
+            "Test content", DateTime.Now, "joe.doe@email.pl", "Invalid state",
             DateTime.Now, false));
         
         //assert
         exception.ShouldBeOfType<UnavailableStateException>();
     }
+    
+    //todo: empty created by tests
 }

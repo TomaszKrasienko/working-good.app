@@ -55,7 +55,7 @@ public sealed class AddTicketCommandHandlerTests
             .Returns(ownerDto);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, employeeDto.Id, userDto.Id, 
+            userDto.Id, State.New(), false, employeeDto.Id, userDto.Id, 
             projectDto.Id);
         
         //act
@@ -68,7 +68,7 @@ public sealed class AddTicketCommandHandlerTests
                 => arg.Id.Value == command.Id
                && arg.Subject.Value == command.Subject
                && arg.Content.Value == command.Content
-               && arg.CreatedBy.Value == command.CreatedBy
+               && arg.CreatedBy.Value == userDto.Email
                && arg.State.Value == State.Open()
                && arg.IsPriority.Value == command.IsPriority
                && arg.AssignedEmployee.Value == command.AssignedEmployee
@@ -124,7 +124,7 @@ public sealed class AddTicketCommandHandlerTests
                 => arg.Id.Value == command.Id
                && arg.Subject.Value == command.Subject
                && arg.Content.Value == command.Content
-               && arg.CreatedBy.Value == command.CreatedBy
+               && arg.CreatedBy.Value == userDto.Email
                && arg.State.Value == State.Open()
                && arg.IsPriority.Value == command.IsPriority
                && arg.AssignedEmployee.Value == command.AssignedEmployee
@@ -185,7 +185,7 @@ public sealed class AddTicketCommandHandlerTests
                => arg.Id.Value == command.Id
               && arg.Subject.Value == command.Subject
               && arg.Content.Value == command.Content
-              && arg.CreatedBy.Value == command.CreatedBy
+              && arg.CreatedBy.Value == userDto.Email
               && arg.State.Value == State.Open()
               && arg.IsPriority.Value == command.IsPriority
               && arg.AssignedEmployee.Value == command.AssignedEmployee
@@ -233,7 +233,7 @@ public sealed class AddTicketCommandHandlerTests
                => arg.Id.Value == command.Id
                   && arg.Subject.Value == command.Subject
                   && arg.Content.Value == command.Content
-                  && arg.CreatedBy.Value == command.CreatedBy
+                  && arg.CreatedBy.Value == string.Empty
                   && arg.State.Value == command.State
                   && arg.IsPriority.Value == command.IsPriority
                   && arg.AssignedEmployee == null
