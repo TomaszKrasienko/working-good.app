@@ -40,7 +40,7 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
 
         builder
             .Property(x => x.CreatedBy)
-            .HasConversion(x => x.Value, y => new EntityId(y))
+            .HasConversion(x => x.Value, y => new CreatedBy(y))
             .IsRequired();
 
         builder

@@ -42,9 +42,18 @@ internal sealed class AddTicketCommandHandler(
             }
         }
 
+        var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
+        var createdBy = owner.Users.FirstOrDefault(x => x.Id.Equals(command.CreatedBy));
+
+        if (createdBy is null)
+        {
+            //todo: tests
+            throw new AuthorUserNotFoundException(command.CreatedBy);
+        }
+        
         if (command.AssignedUser is not null)
         {
-            var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
+            
             if (!IsUserExists(owner, command.AssignedUser))
             {
                 throw new UserDoesNotExistException((Guid)command.AssignedUser);
@@ -58,7 +67,7 @@ internal sealed class AddTicketCommandHandler(
         
         var maxNumber = await ticketRepository.GetMaxNumberAsync();
         var ticket = Ticket.Create(command.Id, maxNumber + 1, command.Subject, command.Content,
-            now, command.CreatedBy, command.State, now, command.IsPriority,
+            now, createdBy.Email, command.State, now, command.IsPriority,
             expirationDate, command.AssignedEmployee, command.AssignedUser, command.ProjectId);
 
         await ticketRepository.AddAsync(ticket);

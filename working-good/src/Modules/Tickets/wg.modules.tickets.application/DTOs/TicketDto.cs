@@ -9,7 +9,7 @@ public class TicketDto
     public string Subject { get;  set; }
     public string Content { get;  set; }
     public DateTime CreatedAt { get;  set; }
-    public Guid CreatedBy { get;  set; }
+    public string CreatedBy { get;  set; }
     public bool IsPriority { get;  set; }
     public string State { get;  set; }
     public DateTime StateChangeDate { get; set; }

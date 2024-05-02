@@ -29,7 +29,7 @@ internal sealed class MessageReceivedHandler(
 
         var number = await ticketRepository.GetMaxNumberAsync();
         var newTicket = Ticket.Create(Guid.NewGuid(), number + 1, @event.Subject,
-            @event.Content, @event.CreatedAt, Guid.Empty, State.New(), @event.CreatedAt,
+            @event.Content, @event.CreatedAt, @event.CreatedBy, State.New(), @event.CreatedAt,
             false, null, @event.AssignedEmployee, null, null,
             @event.Sender);
         await ticketRepository.AddAsync(newTicket);
