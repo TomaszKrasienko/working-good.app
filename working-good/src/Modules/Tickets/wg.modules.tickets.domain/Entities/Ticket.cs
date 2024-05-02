@@ -15,7 +15,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public Subject Subject { get; private set; }
     public Content Content { get; private set; }
     public CreatedAt CreatedAt { get; private set; }
-    public EntityId CreatedBy { get; private set; }
+    public CreatedBy CreatedBy { get; private set; }
     public IsPriority IsPriority { get; private set; }
     public State State { get; private set; }
     public ExpirationDate ExpirationDate { get; private set; }
@@ -25,7 +25,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     private List<Message> _messages = new List<Message>();
     public IReadOnlyList<Message> Messages => _messages;
     
-    private Ticket(AggregateId id, Number number, CreatedAt createdAt, EntityId createdBy)
+    private Ticket(AggregateId id, Number number, CreatedAt createdAt, CreatedBy createdBy)
     {
         Id = id;
         Number = number;
@@ -34,7 +34,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     }
     
     private Ticket(AggregateId id, Number number, Subject subject, Content content, CreatedAt createdAt, 
-        EntityId createdBy, IsPriority isPriority, State state, ExpirationDate expirationDate, 
+        CreatedBy createdBy, IsPriority isPriority, State state, ExpirationDate expirationDate, 
         EntityId assignedEmployee, EntityId assignedUser, EntityId projectId) : this(id, number, createdAt, createdBy)
     {
         Subject = subject;
@@ -48,7 +48,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     }
 
     public static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
-        Guid? createdBy, string state, DateTime stateChangeDate, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
+        string createdBy, string state, DateTime stateChangeDate, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
         Guid? assignedUser = null, Guid? projectId = null, string employeeEmail = null)
     {
         var ticket = new Ticket(id, number, createdAt, createdBy);
