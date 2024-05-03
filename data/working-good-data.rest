@@ -87,7 +87,7 @@ Content-Type: application/json
 
 
 ###
-# @name add_employee1_1
+# @name add_employee1_2
 POST {{url}}/companies-module/employees/companies/{{companyId}}/add
 Authorization: bearer {{token}}
 Content-Type: application/json
@@ -98,7 +98,7 @@ Content-Type: application/json
 }
 
 ###
-@employeeId = {{add_employee1_1.response.headers.x-resource-id}}
+@employeeId = {{add_employee1_2.response.headers.x-resource-id}}
 
 
 ###

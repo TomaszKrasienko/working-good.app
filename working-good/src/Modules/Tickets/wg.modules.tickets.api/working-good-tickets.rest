@@ -17,7 +17,7 @@ Content-Type: application/json
 @token = {{sign_in.response.body.$.token}}
 
 ###
-@ticket_id = 6a2b5732-cc2b-4a00-8c53-04759cb4c87f
+@ticket_id = c0f4235f-5364-451b-99e7-31f5fa2d975d
 
 ###
 GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
@@ -53,7 +53,7 @@ Content-Type: application/json
 }
 
 ###
-@user_id = 63f6b491-22cf-4a17-a792-13f61fdf7a9c
+@user_id = b5776ee4-c38a-4d69-86a0-d5e1d1c44ef4
 
 ###
 PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/assign/user/{{user_id}}

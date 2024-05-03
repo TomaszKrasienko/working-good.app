@@ -62,7 +62,7 @@ public sealed class MessageReceivedHandlerTests
                    && arg.Subject == @event.Subject
                    && arg.Content == @event.Content
                    && arg.CreatedAt.Equals(@event.CreatedAt)
-                   && arg.CreatedBy.Equals(Guid.Empty)
+                   && arg.CreatedBy == @event.Sender
                    && arg.AssignedEmployee.Equals(@event.AssignedEmployee)));
 
         await _messageBroker
