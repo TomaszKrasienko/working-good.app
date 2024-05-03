@@ -7,7 +7,7 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.infrastructure.Queries.Handlers.Tickets;
 
-//TODO: Add collection with states
+//TODO: Checking
 
 internal sealed class IsTicketAvailableForChangesExistsQueryHandler(
     TicketsDbContext dbContext) : IQueryHandler<IsTicketAvailableForChangesExistsQuery, TicketExistsDto>
@@ -19,7 +19,7 @@ internal sealed class IsTicketAvailableForChangesExistsQueryHandler(
             Value = await dbContext
                 .Tickets
                 .AsNoTracking()
-                .AnyAsync(x => x.State.Value != State.Cancelled() || x.State.Value != State.Done(),
+                .AnyAsync(x => State.AvailableChangesStates.Contains(x.State.Value),
                     cancellationToken)
         };
 }

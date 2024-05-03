@@ -8,7 +8,7 @@ public static class TicketsFactory
 {
     public static List<Ticket> GetOnlyRequired(int count = 1, string state = null)
     {
-        var states = State.AvailableStates;
+        var states = State.AvailableStates.Keys;
         var ticketFaker = new Faker<Ticket>()
             .CustomInstantiator(f => Ticket.Create(
                 Guid.NewGuid(),

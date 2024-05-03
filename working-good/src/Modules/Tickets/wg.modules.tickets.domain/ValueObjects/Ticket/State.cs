@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using wg.modules.tickets.domain.Exceptions;
 
@@ -7,11 +9,18 @@ namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
 public record State
 {
-    public static IEnumerable<string> AvailableStates = new[]
-    {
-        "New", "Open", "InProgress", "WaitingForResponse", "Cancelled", "Done"
-    };
+    public static readonly IReadOnlyDictionary<string, bool> AvailableStates
+        = new Dictionary<string, bool>()
+        {
+            {"New", true}, {"Open", true}, {"InProgress", true}, {"WaitingForResponse", true}, 
+            {"Cancelled", false} , {"Done", false}
+        };
 
+    public static IEnumerable<string> AvailableChangesStates => AvailableStates
+        .Where(x => x.Value is true)
+        .Select(x => x.Key)
+        .ToImmutableList();
+    
     public string Value { get; private set; }
     public DateTime ChangeDate { get; private set; }
 
@@ -22,7 +31,7 @@ public record State
             throw new EmptyStateException();
         }
 
-        if (!AvailableStates.Contains(value))
+        if (!AvailableStates.Keys.Contains(value))
         {
             throw new UnavailableStateException(value);
         }
