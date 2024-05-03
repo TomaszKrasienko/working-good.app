@@ -43,11 +43,10 @@ internal sealed class AddTicketCommandHandler(
         }
 
         var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
-        var createdBy = owner.Users.FirstOrDefault(x => x.Id.Equals(command.CreatedBy));
+        var createdBy = owner.Users?.FirstOrDefault(x => x.Id.Equals(command.CreatedBy));
 
         if (createdBy is null)
         {
-            //todo: tests
             throw new AuthorUserNotFoundException(command.CreatedBy);
         }
         

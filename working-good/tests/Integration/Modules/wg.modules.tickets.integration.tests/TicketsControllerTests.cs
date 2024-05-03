@@ -168,13 +168,13 @@ public sealed class TicketsControllerTests : BaseTestsController
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();         
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
         await _ownerDbContext.Owner.AddAsync(owner);
         await _ownerDbContext.SaveChangesAsync();
         
-        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", user.Id,
+        var command = new AddTicketCommand(Guid.Empty, "My test ticket", "My test content", Guid.Empty,
             State.New(), false, null, null, null);
-        var userId = Guid.NewGuid();
-        Authorize(userId, Role.User());
+        Authorize(user.Id, Role.User());
         
         //act
         var response = await HttpClient.PostAsJsonAsync("tickets-module/tickets/add", command);

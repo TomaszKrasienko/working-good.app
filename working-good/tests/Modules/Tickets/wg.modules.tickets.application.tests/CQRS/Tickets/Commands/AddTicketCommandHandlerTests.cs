@@ -15,6 +15,7 @@ using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets.Company;
 using wg.tests.shared.Factories.DTOs.Tickets.Owner;
+using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Mocks;
 using Xunit;
 
@@ -111,7 +112,7 @@ public sealed class AddTicketCommandHandlerTests
             .Returns(maxNumber);
         
         var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-            Guid.NewGuid(), State.New(), false, employeeDto.Id, userDto.Id, 
+            userDto.Id, State.New(), false, employeeDto.Id, userDto.Id, 
             null);
         
         //act
@@ -172,7 +173,7 @@ public sealed class AddTicketCommandHandlerTests
            .Returns(maxNumber);
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-           Guid.NewGuid(), State.New(), true, employeeDto.Id, userDto.Id, 
+           userDto.Id, State.New(), true, employeeDto.Id, userDto.Id, 
            projectDto.Id);
        
        //act
@@ -212,8 +213,13 @@ public sealed class AddTicketCommandHandlerTests
            .GetMaxNumberAsync()
            .Returns(maxNumber);
        
+       var ownerDto = OwnerDtoFactory.GetWithUsers(1); 
+       _ownerApiClient
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>())
+           .Returns(ownerDto);
+       
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-           Guid.NewGuid(), State.New(), false, null, null, null);
+           ownerDto.Users.Single().Id, State.New(), false, null, null, null);
        
        //act
        await Act(command);
@@ -223,17 +229,13 @@ public sealed class AddTicketCommandHandlerTests
            .Received(0)
            .GetCompanyByEmployeeIdAsync(Arg.Any<EmployeeIdDto>());
        
-       await _ownerApiClient
-           .Received(0)
-           .GetOwnerAsync(Arg.Any<GetOwnerDto>());
-       
        await _ticketRepository
            .Received(1)
            .AddAsync(Arg.Is<Ticket>(arg
                => arg.Id.Value == command.Id
                   && arg.Subject.Value == command.Subject
                   && arg.Content.Value == command.Content
-                  && arg.CreatedBy.Value == string.Empty
+                  && arg.CreatedBy.Value == ownerDto.Users.Single().Email
                   && arg.State.Value == command.State
                   && arg.IsPriority.Value == command.IsPriority
                   && arg.AssignedEmployee == null
@@ -319,14 +321,14 @@ public sealed class AddTicketCommandHandlerTests
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
        
-       var ownerDto = OwnerDtoFactory.Get();
+       var ownerDto = OwnerDtoFactory.GetWithUsers(1);
 
        _ownerApiClient
            .GetOwnerAsync(Arg.Any<GetOwnerDto>())
            .Returns(ownerDto);
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-           Guid.NewGuid(), State.New(), false, employeeDto.Id, Guid.NewGuid(), 
+           ownerDto.Users.Single().Id, State.New(), false, employeeDto.Id, Guid.NewGuid(), 
            projectDto.Id);
        
        //act
@@ -366,7 +368,7 @@ public sealed class AddTicketCommandHandlerTests
            .Returns(ownerDto);
        
        var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
-           Guid.NewGuid(), State.New(), false, employeeDto.Id, userDto.Id, 
+           userDto.Id, State.New(), false, employeeDto.Id, userDto.Id, 
            projectDto.Id);
        
        //act
@@ -374,6 +376,41 @@ public sealed class AddTicketCommandHandlerTests
        
        //assert
        exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
+   }
+
+   [Fact]
+   public async Task HandleAsync_GivenNotExistingAuthor_ShouldThrowAuthorUserNotFoundException()
+   {
+       //arrange
+       var maxNumber = 1;       
+       _ticketRepository
+           .GetMaxNumberAsync()
+           .Returns(maxNumber);
+       
+       var companyDto = CompanyDtoFactory.Get().Single();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       companyDto.Employees = [employeeDto];
+       companyDto.Projects = [projectDto];
+
+       _companiesApiClient
+           .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
+           .Returns(companyDto);
+       
+       var ownerDto = OwnerDtoFactory.Get();
+       _ownerApiClient
+           .GetOwnerAsync(Arg.Any<GetOwnerDto>())
+           .Returns(ownerDto);
+       
+       var command = new AddTicketCommand(Guid.NewGuid(), "Test subject", "Test content",
+           Guid.NewGuid(), State.New(), false, employeeDto.Id, Guid.NewGuid(), 
+           projectDto.Id);
+       
+       //act
+       var exception = await Record.ExceptionAsync(async () => await Act(command));
+       
+       //assert
+       exception.ShouldBeOfType<AuthorUserNotFoundException>();
    }
    
     #region arrange
