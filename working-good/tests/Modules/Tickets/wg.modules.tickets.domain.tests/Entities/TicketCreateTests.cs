@@ -138,6 +138,18 @@ public sealed class TicketCreateTests
     }
     
     [Fact]
+    public void Create_GivenEmptyCreatedBy_ShouldThrowEmptyCreatedByException()
+    {        
+        //act
+        var exception = Record.Exception(() => Ticket.Create(Guid.NewGuid(), 1, "Test subject", 
+            "Test content", DateTime.Now, string.Empty, State.New(),
+            DateTime.Now, false));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyCreatedByException>();
+    }
+    
+    [Fact]
     public void Create_GivenEmptyState_ShouldThrowEmptyStateException()
     {        
         //act
@@ -160,6 +172,4 @@ public sealed class TicketCreateTests
         //assert
         exception.ShouldBeOfType<UnavailableStateException>();
     }
-    
-    //todo: empty created by tests
 }
