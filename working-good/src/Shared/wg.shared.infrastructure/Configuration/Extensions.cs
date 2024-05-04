@@ -16,6 +16,7 @@ using wg.shared.infrastructure.Exceptions.Configuration;
 using wg.shared.infrastructure.Logging.Configuration;
 using wg.shared.infrastructure.Mailbox.Configuration;
 using wg.shared.infrastructure.Messaging.Configuration;
+using wg.shared.infrastructure.Metrics.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
 using wg.shared.infrastructure.Time.Configuration;
 using wg.shared.infrastructure.Vault.Configuration;
@@ -38,6 +39,7 @@ public static class Extensions
             .AddIdentityContext()
             .AddMailbox(configuration)
             .AddLogging(assemblies)
+            .AddAppMetrics()
             .AddUiDocumentation()
             .AddBanner();
 
@@ -69,6 +71,7 @@ public static class Extensions
         => app
             .UseControllers()
             .UseUiDocumentation()
+            .UseAppMetrics()
             .UseExceptionMiddleware()
             .UseAuth();
 
