@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wg.modules.owner.infrastructure.DAL;
 
@@ -11,9 +12,11 @@ using wg.modules.owner.infrastructure.DAL;
 namespace wg.modules.owner.infrastructure.DAL.Migrations
 {
     [DbContext(typeof(OwnerDbContext))]
-    partial class OwnerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240503103802_ChangedGroups")]
+    partial class ChangedGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

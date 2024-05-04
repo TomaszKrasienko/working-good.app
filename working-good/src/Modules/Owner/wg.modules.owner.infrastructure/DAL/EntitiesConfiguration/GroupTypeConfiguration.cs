@@ -21,7 +21,7 @@ internal sealed class GroupTypeConfiguration : IEntityTypeConfiguration<Group>
             .IsRequired();
         builder
             .HasMany<User>(x => x.Users)
-            .WithMany(x => x.Groups)
+            .WithMany()
             .UsingEntity("GroupMembership");
     }
 }
