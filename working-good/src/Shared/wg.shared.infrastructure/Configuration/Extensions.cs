@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Runtime.Serialization;
+using Figgle;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +38,8 @@ public static class Extensions
             .AddIdentityContext()
             .AddMailbox(configuration)
             .AddLogging(assemblies)
-            .AddUiDocumentation();
+            .AddUiDocumentation()
+            .AddBanner();
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
@@ -48,6 +51,12 @@ public static class Extensions
                 Version = "v1"
             });
         });
+
+    private static IServiceCollection AddBanner(this IServiceCollection services)
+    {
+        Console.WriteLine(FiggleFonts.Doom.Render("working-good"));
+        return services;
+    }
 
     internal static T GetOptions<T>(this IServiceCollection services) where T : class
     {
