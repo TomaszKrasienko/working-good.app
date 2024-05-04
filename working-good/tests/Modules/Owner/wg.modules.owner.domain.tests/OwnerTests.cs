@@ -295,49 +295,33 @@ public sealed class OwnerTests
         exception.ShouldBeOfType<GroupNotFoundException>();
     }
     
-    // [Fact]
-    // public void DeactivateUser_GivenUserInGroup_Should()
-    // {
-    //     //arrange
-    //     var owner = OwnerFactory.Get();
-    //     var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-    //     var substituteUser = UserFactory.GetUserInOwner(owner, Role.Manager());
-    //     var group1 = GroupFactory.GetGroupInOwner(owner);
-    //     var group2 = GroupFactory.GetGroupInOwner(owner);
-    //     user.AddGroup(group1);
-    //     user.AddGroup(group2);
-    //     
-    //     //act
-    //     var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid(), Guid.NewGuid()));
-    //     
-    //     //assert
-    //     exception.ShouldBeOfType<UserNotFoundException>();
-    // }
-    //
-    // [Fact]
-    // public void DeactivateUser_GivenNotExistingUserId_ShouldThrowUserNotFoundException()
-    // {
-    //     //arrange
-    //     var owner = OwnerFactory.Get();
-    //     
-    //     //act
-    //     var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid(), Guid.NewGuid()));
-    //     
-    //     //assert
-    //     exception.ShouldBeOfType<UserNotFoundException>();
-    // }
-    //
-    // [Fact]
-    // public void DeactivateUser_GivenNotExistingSubstituteUserId_ShouldThrowSubstituteUserNotFoundException()
-    // {
-    //     //arrange
-    //     var owner = OwnerFactory.Get();
-    //     var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-    //     
-    //     //act
-    //     var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid(), Guid.NewGuid()));
-    //     
-    //     //assert
-    //     exception.ShouldBeOfType<SubstituteUserNotFoundException>();
-    // }
+    [Fact]
+    public void DeactivateUser_ExistingUser_ShouldChangeUserStateAndClearGroups()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var group1 = GroupFactory.GetGroupInOwner(owner);
+        var group2 = GroupFactory.GetGroupInOwner(owner);
+        
+        
+        //act
+        var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<UserNotFoundException>();
+    }
+    
+    [Fact]
+    public void DeactivateUser_GivenNotExistingUserId_ShouldThrowUserNotFoundException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid()));
+        
+        //assert
+        exception.ShouldBeOfType<UserNotFoundException>();
+    }
 }

@@ -35,16 +35,20 @@ internal sealed class UsersController(
         return result.Any() ? Ok(result) : NoContent();
     }
 
+    [HttpGet("group/{id:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserDto>> GetForGroup(Guid groupId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetUserByIdQuery(groupId), cancellationToken));
+
     [HttpGet("{id:guid}/active")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<UserDto>> GetActiveUserById(Guid id, CancellationToken cancellationToken)
-    {
-        var result = await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken);
-        return Ok(result);
-    }
+        => Ok(await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken));
     
     [HttpGet("me")]
     [Authorize]
@@ -53,7 +57,8 @@ internal sealed class UsersController(
     public async Task<ActionResult<UserDto>> Me(CancellationToken cancellationToken)
     {
         var userId = identityContext.UserId;
-        return await queryDispatcher.SendAsync(new GetUserByIdQuery(userId), cancellationToken);
+        var result = await queryDispatcher.SendAsync(new GetUserByIdQuery(userId), cancellationToken);
+        return Ok(result);
     }
     
     [HttpPost("sign-up")]

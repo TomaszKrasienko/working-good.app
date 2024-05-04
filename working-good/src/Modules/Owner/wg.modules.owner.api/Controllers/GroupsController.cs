@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
+using wg.modules.owner.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 
 namespace wg.modules.owner.api.Controllers;
@@ -20,6 +21,4 @@ internal sealed class GroupsController(
         await commandDispatcher.SendAsync(command with { GroupId = groupId }, cancellationToken);
         return NoContent();
     }
-
-        
 }

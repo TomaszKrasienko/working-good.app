@@ -1,19 +1,8 @@
 namespace wg.modules.owner.domain.ValueObjects.User;
 
-public sealed record State
+public sealed record State(string Value)
 {
-    private static IEnumerable<string> _availableStates = new[]
-    {
-        "Registered", "Active", "Deactivated"
-    };
-
-    public string Value { get; private set; }
-
-    public State(string value)
-    {
-        //todo: Add conditions and tests
-        Value = value;
-    }
+    public string Value { get; private set; } = Value;
 
     public static State Registered()
         => new State("Registered");

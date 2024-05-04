@@ -7,8 +7,6 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.infrastructure.Queries.Handlers.Tickets;
 
-//TODO: Checking
-
 internal sealed class IsTicketAvailableForChangesExistsQueryHandler(
     TicketsDbContext dbContext) : IQueryHandler<IsTicketAvailableForChangesExistsQuery, TicketExistsDto>
 {

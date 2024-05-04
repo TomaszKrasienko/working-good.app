@@ -14,8 +14,6 @@ public sealed class User
     public VerificationToken VerificationToken { get; }
     public ResetPasswordToken ResetPasswordToken { get; }
     public State State { get; private set; }
-    private HashSet<Group> _groups = new HashSet<Group>();
-    public IEnumerable<Group> Groups => _groups;
 
     private User(EntityId id, Email email, FullName fullName, Password password, Role role, 
         VerificationToken verificationToken, ResetPasswordToken resetPasswordToken, State state)
@@ -66,12 +64,6 @@ public sealed class User
     }
 
     internal void Deactivate()
-    {
-        _groups.Clear();
-        State = State.Deactivate();
-    }
-
-    //TODO: Tests
-    internal void AddGroup(Group group)
-        => _groups.Add(group);
+        => State = State.Deactivate();
+    
 }

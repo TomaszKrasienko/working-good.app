@@ -10,9 +10,32 @@ namespace wg.modules.owner.domain.tests;
 
 public sealed class UserCreateTests
 {
-    private static User Act(Guid id, string email, string firstName, string lastName, string password, string role)
-        => User.Create(id, (email ?? "test@test.pl"), (firstName ?? "Joe"), (lastName ?? "Doe"),
-            (password ?? "Pass123!"), (role ?? Role.Manager()));
+    [Fact]
+    public void Create_GivenValidArguments_ShouldReturnUserWithFilledPropertiesAndRegisteredState()
+    {
+        //arrange
+        var id = Guid.NewGuid();
+        var email = "test@test.pl";
+        var firstName = "Joe";
+        var lastName = "Doe";
+        var password = "Pass123!";
+        var role = Role.User();
+        
+        //act
+        var user = User.Create(id, email, firstName, lastName, password, role);
+        
+        //assert
+        user.ShouldNotBeNull();
+        user.Id.Value.ShouldBe(id);
+        user.Email.Value.ShouldBe(email);
+        user.FullName.FirstName.ShouldBe(firstName);
+        user.FullName.LastName.ShouldBe(lastName);
+        user.Password.Value.ShouldBe(password);
+        user.Role.Value.ShouldBe(role);
+        user.VerificationToken?.Token.ShouldNotBeNullOrWhiteSpace();
+        user.VerificationToken?.VerificationDate.ShouldBeNull();
+        user.State.ShouldBe(State.Registered());
+    }
     
     [Fact]
     public void Create_GivenEmptyEmail_ShouldThrowEmptyEmailException()
@@ -75,39 +98,12 @@ public sealed class UserCreateTests
     }
     
     [Fact]
-    public void Create_GivenUnavailable_ShouldThrowUnavailableUserRoleException()
+    public void Create_GivenUnavailableRole_ShouldThrowUnavailableUserRoleException()
     {
         //act
         var exception = Record.Exception( () => User.Create(Guid.NewGuid(), "test@test.pl", "Joe", "Doe", "Pass123!",
             "invalid_role"));
         //assert
         exception.ShouldBeOfType<UnavailableUserRoleException>();
-    }
-
-    [Fact]
-    public void Create_GivenValidArguments_ShouldReturnUserWithFilledPropertiesAndRegisteredState()
-    {
-        //arrange
-        var id = Guid.NewGuid();
-        var email = "test@test.pl";
-        var firstName = "Joe";
-        var lastName = "Doe";
-        var password = "Pass123!";
-        var role = Role.User();
-        
-        //act
-        var user = User.Create(id, email, firstName, lastName, password, role);
-        
-        //assert
-        user.ShouldNotBeNull();
-        user.Id.Value.ShouldBe(id);
-        user.Email.Value.ShouldBe(email);
-        user.FullName.FirstName.ShouldBe(firstName);
-        user.FullName.LastName.ShouldBe(lastName);
-        user.Password.Value.ShouldBe(password);
-        user.Role.Value.ShouldBe(role);
-        user.VerificationToken?.Token.ShouldNotBeNullOrWhiteSpace();
-        user.VerificationToken?.VerificationDate.ShouldBeNull();
-        user.State.Value.ShouldBe("Registered");
     }
 }

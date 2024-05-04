@@ -1,0 +1,58 @@
+@url = http://localhost:5001
+
+@email = tom.krasienko@gmail.pl
+@password = StrongPass123!
+
+### 
+POST {{url}}/owner-module/owner/add
+Content-Type: application/json
+
+{
+    "name":"MyCompany"
+}
+
+###
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "firstName":"Joe",
+    "lastName":"Doe",
+    "password":"{{password}}",
+    "role":"Manager"
+}
+
+###
+POST {{url}}/owner-module/users/verify
+Content-Type: application/json
+
+{
+    "token":"00000000-0000-0000-0000-000000000000"
+}
+
+###
+# @name sign_in
+POST {{url}}/owner-module/users/sign-in
+Content-Type: application/json
+
+{
+    "email":"{{email}}",
+    "password":"{{password}}"
+}
+
+###
+@token = {{sign_in.response.body.$.token}}
+
+###
+GET {{url}}/owner-module/owner
+Authorization: bearer {{token}}
+
+###
+# @name me
+GET {{url}}/owner-module/users/me
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/owner-module/users/{{userId}}/active
+Authorization: bearer {{token}}
