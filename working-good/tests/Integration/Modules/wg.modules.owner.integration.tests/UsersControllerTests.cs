@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -92,6 +93,38 @@ public sealed class UsersControllerTests : BaseTestsController
         
         //act
         var response = await HttpClient.GetAsync($"owner-module/users?{queryString.ToString()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task GetForGroup_GivenExistingGroupId_ShouldReturnUsersInGroup()
+    {
+        //arrange
+        var owner = await AddOwner(false, false);
+        var group = await AddGroup(owner);
+        var userInGroup = await AddUser(owner);
+        var userNotInGroup = await AddUser(owner);
+        owner.AddUserToGroup(group.Id, userInGroup.Id);
+        OwnerDbContext.Owner.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //arrange
+        var response = await HttpClient.GetFromJsonAsync<List<UserDto>>($"owner-module/users/group/{group.Id.Value}");
+        
+        //assert
+        response.ShouldBeOfType<List<UserDto>>();
+        response?.Any(x => x.Id.Equals(userInGroup.Id)).ShouldBeTrue();
+        response?.Any(x => x.Id.Equals(userNotInGroup.Id)).ShouldBeFalse();
+    }
+    
+    [Fact]
+    public async Task GetForGroup_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var response = await HttpClient.GetAsync($"owner-module/users/group/{Guid.NewGuid()}");
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
@@ -280,6 +313,23 @@ public sealed class UsersControllerTests : BaseTestsController
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();
         return owner;
+    }
+
+    private async Task<User> AddUser(Owner owner)
+    {
+        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
+        OwnerDbContext.Owner.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        return user;
+    }
+
+    private async Task<Group> AddGroup(Owner owner)
+    {
+        var group = GroupFactory.GetGroupInOwner(owner);
+        OwnerDbContext.Owner.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        return group;
     }
     
     private Task<User> GetUser()

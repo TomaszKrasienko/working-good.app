@@ -39,8 +39,8 @@ internal sealed class UsersController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<UserDto>> GetForGroup(Guid groupId, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetUserByIdQuery(groupId), cancellationToken));
+    public async Task<ActionResult<UserDto>> GetForGroup([FromRoute] Guid id, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetUsersByGroupQuery(id), cancellationToken));
 
     [HttpGet("{id:guid}/active")]
     [Authorize]

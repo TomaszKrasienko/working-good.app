@@ -12,11 +12,14 @@ internal sealed class GetUsersByGroupQueryHandler(
     OwnerDbContext dbContext) : IQueryHandler<GetUsersByGroupQuery, IEnumerable<UserDto>>
 {
     public async Task<IEnumerable<UserDto>> HandleAsync(GetUsersByGroupQuery query, CancellationToken cancellationToken)
-        => await dbContext
+    {
+        var result = await dbContext
             .Groups
             .Include(x => x.Users)
             .AsNoTracking()
             .Where(x => x.Id.Equals(query.GroupId))
-            .SelectMany(x => x.Users.Select(u => u.AsDto()))
+            .SelectMany(x => x.Users)
             .ToListAsync(cancellationToken);
+        return result.Select(x => x.AsDto()).ToList();
+    }
 }
