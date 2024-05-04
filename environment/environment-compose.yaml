@@ -28,3 +28,9 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=secret
     cap_add:
       - IPC_LOCK
+  prometheus:
+    build: ./prometheus
+    container_name: Prometheus
+    restart: unless-stopped
+    ports:
+      - '5013:9090'
