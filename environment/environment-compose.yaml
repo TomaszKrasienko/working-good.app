@@ -9,6 +9,9 @@ services:
       - SA_PASSWORD=SafePassword123!
     ports:
       - 5010:1433
+    networks:
+      - working_good
+
   seq:
     image: datalust/seq
     container_name: Seq
@@ -17,6 +20,9 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 5011:80
+    networks:
+      - working_good
+
   vault:
     image: vault:1.13.3
     container_name: Vault
@@ -28,9 +34,26 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=secret
     cap_add:
       - IPC_LOCK
+    networks:
+      - working_good
   prometheus:
     build: ./prometheus
     container_name: Prometheus
     restart: unless-stopped
     ports:
-      - '5013:9090'
+      - 5013:9090
+    networks:
+      - working_good
+
+  grafana:
+    image: grafana/grafana
+    container_name: Grafana
+    restart: unless-stopped
+    ports: 
+      - 5014:3000
+    networks:
+      - working_good
+
+networks:
+  working_good:
+    name: working_good
