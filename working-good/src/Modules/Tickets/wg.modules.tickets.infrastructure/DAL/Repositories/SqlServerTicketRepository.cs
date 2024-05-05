@@ -22,6 +22,12 @@ internal sealed class TicketRepository : ITicketRepository
             .Where(x => x.AssignedEmployee.Equals(employeeId))
             .ToListAsync();
 
+    public Task<List<Ticket>> GetAllForAssignedUser(Guid userId)
+        => _tickets
+            .Include(x => x.Messages)
+            .Where(x => x.AssignedUser.Equals(userId))
+            .ToListAsync();
+
     public Task<Ticket> GetByNumberAsync(int number)
         => _tickets
             .Include(x => x.Messages) 

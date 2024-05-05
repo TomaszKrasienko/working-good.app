@@ -119,6 +119,13 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
+    public void RemoveAssignedUser()
+    {
+        var statePolicy = TicketStatePolicy.Create();
+        if (!statePolicy.CanChangeState(State)) return;
+        AssignedUser = null;
+    }
+
     public void ChangeProject(Guid projectId)
         => ProjectId = projectId;
 

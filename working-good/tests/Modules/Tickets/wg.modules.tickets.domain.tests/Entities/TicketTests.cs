@@ -115,6 +115,34 @@ public sealed class TicketTests
         //assert
         ticket.AssignedEmployee.ShouldBe(originalEmployee);
     }
+
+    [Fact]
+    public void RemoveAssignedUser_ForOpenState_ShouldRemoveAssignedUser()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        
+        //act
+        ticket.RemoveAssignedUser();
+        
+        //assert
+        ticket.AssignedUser.ShouldBeNull();
+    }
+    
+    [Fact]
+    public void RemoveAssignedUser_ForCancelledState_ShouldNotRemoveAssignedUser()
+    {
+        //arrange
+        var ticket = TicketsFactory.GetAll(state: State.Open());
+        var userId = ticket.AssignedUser;
+        ticket.ChangeState(State.Cancelled(), DateTime.Now);
+        
+        //act
+        ticket.RemoveAssignedUser();
+        
+        //assert
+        ticket.AssignedUser.Value.ShouldBe(userId.Value);
+    }
     
     [Fact]
     public void ChangeProject_GivenProjectId_ChangeProjectId()

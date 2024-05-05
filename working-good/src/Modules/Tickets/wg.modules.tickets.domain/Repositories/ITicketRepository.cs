@@ -8,6 +8,7 @@ namespace wg.modules.tickets.domain.Repositories;
 public interface ITicketRepository
 {
     Task<List<Ticket>> GetAllForAssignedEmployee(Guid employeeId);
+    Task<List<Ticket>> GetAllForAssignedUser(Guid userId);
     Task<Ticket> GetByNumberAsync(int number);
     Task<Ticket> GetByIdAsync(Guid id);
     Task<int> GetMaxNumberAsync();
