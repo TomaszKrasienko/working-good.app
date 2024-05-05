@@ -7,12 +7,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using wg.shared.abstractions.CQRS.Commands;
+using wg.shared.infrastructure.Metrics.Decorators;
 
 namespace wg.shared.infrastructure.Metrics.Configuration;
 
 internal static class Extensions
 {
     internal static IServiceCollection AddAppMetrics(this IServiceCollection services)
+        => services
+            .AddMetricsConfiguration()
+            .AddDecorators();
+
+    private static IServiceCollection AddMetricsConfiguration(this IServiceCollection services)
     {
         services.Configure<KestrelServerOptions>(o => o.AllowSynchronousIO = true);
         services.Configure<IISServerOptions>(o => o.AllowSynchronousIO = true);
@@ -43,12 +50,17 @@ internal static class Extensions
         return services;
     }
 
+    private static IServiceCollection AddDecorators(this IServiceCollection services)
+    {
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(CommandMetricsDecorator<>));
+        return services;
+    }
+
     internal static WebApplication UseAppMetrics(this WebApplication app)
     {
         app
             .UseMetricsAllEndpoints()
             .UseMetricsAllMiddleware();
-
         return app;
     }
 }

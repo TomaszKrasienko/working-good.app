@@ -38,8 +38,8 @@ public static class Extensions
             .AddEvents(assemblies)
             .AddIdentityContext()
             .AddMailbox(configuration)
-            .AddLogging(assemblies)
             .AddAppMetrics()
+            .AddLogging(assemblies)
             .AddUiDocumentation()
             .AddBanner();
 
