@@ -84,9 +84,9 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "name":"SecondClient",
+    "name":"SecondClient1",
     "slaTime":"08:00:00",
-    "emailDomain":"outlook.com"
+    "emailDomain":"outlook1.com"
 }
 
 ###
@@ -109,7 +109,7 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "email": "tom.krasienko@outlook.com",
+    "email": "tom.krasienko@outlook1.com",
     "phoneNumber": "555000111"
 }
 
