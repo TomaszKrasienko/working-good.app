@@ -46,6 +46,7 @@ public static class Extensions
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
         {
+            swagger.EnableAnnotations();
             swagger.CustomSchemaIds(x => x.FullName);
             swagger.SwaggerDoc("v1", new OpenApiInfo()
             {

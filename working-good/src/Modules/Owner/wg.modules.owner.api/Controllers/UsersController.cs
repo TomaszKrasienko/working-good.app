@@ -28,8 +28,8 @@ internal sealed class UsersController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [SwaggerOperation(Summary = "Gets all users by filters and pagination")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets all users by filters and pagination")]
     public async Task<ActionResult<List<UserDto>>> GetAll([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {
         var result = await queryDispatcher.SendAsync(query, cancellationToken);
