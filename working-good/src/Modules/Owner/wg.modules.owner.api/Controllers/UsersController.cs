@@ -41,7 +41,7 @@ internal sealed class UsersController(
     [HttpGet("group/{id:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets all users by group membership")]
     public async Task<ActionResult<UserDto>> GetForGroup([FromRoute] Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetUsersByGroupQuery(id), cancellationToken));
@@ -50,15 +50,15 @@ internal sealed class UsersController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [SwaggerOperation(Summary = "Gets user by id only if user state is active")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation(Summary = "Gets user by \"ID\" only if user state is active")]
     public async Task<ActionResult<UserDto>> GetActiveUserById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken));
     
     [HttpGet("me")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets user by token in header")]
     public async Task<ActionResult<UserDto>> Me(CancellationToken cancellationToken)
     {
@@ -68,8 +68,8 @@ internal sealed class UsersController(
     }
     
     [HttpPost("sign-up")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDto))]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Registers user")]
     public async Task<ActionResult> SignUp(SignUpCommand command, CancellationToken cancellationToken)
     {
@@ -78,8 +78,8 @@ internal sealed class UsersController(
     }
 
     [HttpPost("verify")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Verifies user after register")]
     public async Task<ActionResult> Verify(VerifyUserCommand command, CancellationToken cancellationToken)
     {
@@ -89,7 +89,7 @@ internal sealed class UsersController(
 
     [HttpPost("sign-in")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Logs in user")]
     public async Task<ActionResult<JwtDto>> SignIn(SignInCommand command, CancellationToken cancellationToken)
     {
