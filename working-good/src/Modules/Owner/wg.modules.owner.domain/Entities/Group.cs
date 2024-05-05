@@ -41,4 +41,8 @@ public sealed class Group
         _users.Add(user);
     }
 
+    internal void RemoveUser(User user)
+        => _users.Remove(user);
+    
+
 }

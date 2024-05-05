@@ -296,20 +296,22 @@ public sealed class OwnerTests
     }
     
     [Fact]
-    public void DeactivateUser_ExistingUser_ShouldChangeUserStateAndClearGroups()
+    public void DeactivateUser_ExistingUser_ShouldChangeUserStateAndRemoveUserFromGroups()
     {
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
         var group1 = GroupFactory.GetGroupInOwner(owner);
         var group2 = GroupFactory.GetGroupInOwner(owner);
-        
+        owner.AddUserToGroup(group1.Id, user.Id);
+        owner.AddUserToGroup(group2.Id, user.Id);
         
         //act
-        var exception = Record.Exception(() => owner.DeactivateUser(Guid.NewGuid()));
-        
+        owner.DeactivateUser(user.Id);
+
         //assert
-        exception.ShouldBeOfType<UserNotFoundException>();
+        group1.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
+        group2.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
     }
     
     [Fact]

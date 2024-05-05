@@ -9,8 +9,8 @@ public sealed record VerificationToken
 
     private VerificationToken()
     {
-        //Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)).Replace("/", "").Replace("==", "");
-        Token = Guid.Empty.ToString();
+        Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)).Replace("/", "").Replace("==", "");
+        //Token = Guid.Empty.ToString();
     }
 
     internal static VerificationToken Create()

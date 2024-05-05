@@ -27,8 +27,33 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"00000000-0000-0000-0000-000000000000"
+    "token":"l1wAlYNjSbe6T2AUAKOjVyGnwc17dp8T4MrAbz8adWTU6dQ8amN7lIIRsvrzoTqdd+ZwvPxyhXGFF6zrqoaA"
 }
+
+###
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"tomasz.chada@my-company.pl",
+    "firstName":"Tomasz",
+    "lastName":"Chada",
+    "password":"{{password}}",
+    "role":"User"
+}
+
+###
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"wojtek.sokol@my-company.pl",
+    "firstName":"Wojtek",
+    "lastName":"Sokol",
+    "password":"{{password}}",
+    "role":"User"
+}
+
 
 ###
 # @name sign_in
@@ -52,93 +77,14 @@ Authorization: Bearer {{token}}
 @userId = {{me.response.body.$.id}}
 
 ###
-GET {{url}}/owner-module/users/{{userId}}/active
-Authorization: bearer {{token}}
-
-
-###
-# @name add_company1
-POST {{url}}/companies-module/companies/add
+POST {{url}}/owner-module/groups/1a145c40-510d-442e-90fa-05af2a935757/add-user
 Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "name":"PrintWorld sp. z o.o.",
-    "slaTime":"05:00:00",
-    "emailDomain":"print-world.com"
+    "userId":"8db4b3c7-05a1-45b1-b040-53d0e3b6036d"
 }
 
 ###
-@companyId = {{add_company1.response.headers.x-resource-id}}
-
-###
-# @name add_employee1_1
-POST {{url}}/companies-module/employees/companies/{{companyId}}/add
+GET {{url}}/owner-module/owner
 Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "email": "janusz.ksiazek@print-world.com",
-    "phoneNumber": "555000111"
-}
-
-###
-@employeeId = {{add_employee1_1.response.headers.x-resource-id}}
-
-
-###
-# @name add_employee1_2
-POST {{url}}/companies-module/employees/companies/{{companyId}}/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "email": "sebatian.piezowy@print-world.com",
-    "phoneNumber": "555000111"
-}
-
-###
-@employeeId = {{add_employee1_2.response.headers.x-resource-id}}
-
-
-###
-# @name add_company2
-POST {{url}}/companies-module/companies/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "name":"TP s.a.",
-    "slaTime":"08:00:00",
-    "emailDomain":"tp.pl"
-}
-
-###
-@companyId2 = {{add_company2.response.headers.x-resource-id}}
-
-
-###
-# @name add_employee2_1
-POST {{url}}/companies-module/employees/companies/{{companyId2}}/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "email": "chuck.norris@tp.pl",
-    "phoneNumber": "555000111"
-}
-
-###
-@employeeId = {{add_employee2_1.response.headers.x-resource-id}}
-
-
-###
-# @name add_employee2_2
-POST {{url}}/companies-module/employees/companies/{{companyId2}}/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "email": "marian.ozdoba@tp.pl",
-    "phoneNumber": "555000111"
-}

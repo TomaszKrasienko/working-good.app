@@ -14,6 +14,6 @@ public static class GroupFactory
 
         var group = groupFaker.Generate(1).Single();
         owner.AddGroup(group.Id, group.Title);
-        return owner.Groups.Single();
+        return owner.Groups.First(x => x.Id == group.Id);
     }
 }

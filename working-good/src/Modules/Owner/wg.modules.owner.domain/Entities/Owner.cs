@@ -124,6 +124,9 @@ public sealed class Owner : AggregateRoot<AggregateId>
         {
             throw new UserNotFoundException(userId);
         }
+
+        var groupsWithUser = _groups.Where(x => x.Users.Contains(user)).ToList();
+        groupsWithUser.ForEach(x => x.RemoveUser(user));
          
         user.Deactivate();
     }
