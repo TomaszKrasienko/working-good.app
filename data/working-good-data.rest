@@ -88,3 +88,24 @@ Content-Type: application/json
 ###
 GET {{url}}/owner-module/owner
 Authorization: bearer {{token}}
+
+
+
+###
+POST {{url}}/tickets-module/tickets/
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "subject": "My test subject",
+    "content": "My test ticket for deactivate",
+    "createdBy": "25a02396-1048-48f9-bf93-102d2fb7895e",
+    "isPriority": false,
+    "assignedEmployee": "",
+    "assignedUser": "8db4b3c7-05a1-45b1-b040-53d0e3b6036d",
+    "projectId": "1a145c40-510d-442e-90fa-05af2a935757"
+}
+
+###
+PATCH {{url}}/owner-module/users/deactivate/8db4b3c7-05a1-45b1-b040-53d0e3b6036d
+Authorization: bearer {{token}}

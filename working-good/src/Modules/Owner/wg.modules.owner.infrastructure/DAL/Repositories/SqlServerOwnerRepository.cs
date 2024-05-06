@@ -34,5 +34,6 @@ internal sealed class SqlServerOwnerRepository : IOwnerRepository
         => _owner
             .Include(x => x.Users)
             .Include(x => x.Groups)
+            .ThenInclude(x => x.Users)
             .FirstOrDefaultAsync();
 }

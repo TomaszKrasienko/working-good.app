@@ -133,7 +133,9 @@ Content-Type: application/json
 }
 
 ###
-@ticketId = {{ticket_add.response.headers.x-resource-id}}
+# @ticketId = {{ticket_add.response.headers.x-resource-id}}
+
+@ticketId = 733c7d39-b9f8-4961-b507-f7aee073032c
 
 ###
 GET {{url}}/tickets-module/tickets/{{ticketId}}
@@ -159,12 +161,4 @@ Content-Type: application/json
 }
 
 
-###Another path
-###
-PATCH {{url}}/companies-module/employees/deactivate/4d83ebed-5980-4363-a64f-acca5449539b
-Authorization: bearer {{token}}
-Content-Type: application/json
 
-{
-    "substitutionEmployeeId":"b602fd3b-9d9f-4f92-8465-b1ff85338e78"
-}
