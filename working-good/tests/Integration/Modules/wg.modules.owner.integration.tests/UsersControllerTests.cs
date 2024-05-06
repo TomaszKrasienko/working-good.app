@@ -299,6 +299,64 @@ public sealed class UsersControllerTests : BaseTestsController
         response!.Message.ShouldBe("Wrong credentials");
     }
 
+    [Fact]
+    public async Task Deactivate_GivenExistingUserId_ShouldReturn200OkStatusCodeAndUpdateUserState()
+    {
+        //arrange
+        var owner = await AddOwner(true, true);
+        var user = owner.Users.First();
+        var group = await AddGroup(owner);
+        owner.AddUserToGroup(group.Id, user.Id);
+        OwnerDbContext.Update(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"owner-module/users/deactivate/{user.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedUser = await GetUser();
+        updatedUser.State.Value.ShouldBe(State.Deactivate());
+    }
+
+    [Fact]
+    public async Task Deactivate_GivenNotExistingUserId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"owner-module/users/deactivate/{Guid.NewGuid()}", null);
+         
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Deactivate_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.PatchAsync($"owner-module/users/deactivate/{Guid.NewGuid()}", null);
+         
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task Deactivate_GivenAuthorizedAsUser_ShouldReturn403ForbiddenStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"owner-module/users/deactivate/{Guid.NewGuid()}", null);
+         
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+    }
+
     private async Task<Owner> AddOwner(bool withUser, bool withVerifiedUser)
     {
         var owner = OwnerFactory.Get();
