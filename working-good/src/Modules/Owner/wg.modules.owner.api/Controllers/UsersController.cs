@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using VaultSharp.V1.SecretsEngines.Database;
 using wg.modules.owner.application.Auth;
+using wg.modules.owner.application.CQRS.Users.Commands.DeactivateUser;
 using wg.modules.owner.application.CQRS.Users.Commands.SignIn;
 using wg.modules.owner.application.CQRS.Users.Commands.SignUp;
 using wg.modules.owner.application.CQRS.Users.Commands.VerifyUser;
@@ -98,6 +100,16 @@ internal sealed class UsersController(
         return Ok(jwtToken);
     }
 
-
-    
+    [HttpPatch("deactivate/{id:guid}")]
+    [Authorize(Roles = "Manager")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [SwaggerOperation("Deactivates user")]
+    public async Task<ActionResult> Deactivate(Guid id, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(new DeactivateUserCommand(id), cancellationToken);
+        return Ok();
+    }
 }
