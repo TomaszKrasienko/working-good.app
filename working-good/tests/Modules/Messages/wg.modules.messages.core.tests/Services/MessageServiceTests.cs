@@ -20,7 +20,7 @@ public sealed class MessageServiceTests
     public async Task CreateMessage_GivenExistingActiveEmployeeWithNullTicketNumber_ShouldSendMessageReceivedEvent()
     {
         //arrange
-        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var employeeDto = EmployeeDtoFactory.Get();
         var command = new CreateMessage(employeeDto.Email, "My test ticket",
             "My test content", null);
         _companiesApiClient
@@ -46,7 +46,7 @@ public sealed class MessageServiceTests
     public async Task CreateMessage_GivenExistingActiveEmployee_ShouldSendMessageReceivedEvent()
     {
         //arrange
-        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var employeeDto = EmployeeDtoFactory.Get();
         var command = new CreateMessage(employeeDto.Email, "My test ticket",
             "My test content", 1);
         _companiesApiClient
@@ -72,7 +72,7 @@ public sealed class MessageServiceTests
     public async Task CreateMessage_GivenNotExistingEmployee_ShouldThrowEmployeeNotFoundException()
     {
         //arrange
-        var employeeDto = EmployeeDtoFactory.Get(1).Single();
+        var employeeDto = EmployeeDtoFactory.Get();
         var command = new CreateMessage(employeeDto.Email, "My test ticket",
             "My test content", 1);
         
