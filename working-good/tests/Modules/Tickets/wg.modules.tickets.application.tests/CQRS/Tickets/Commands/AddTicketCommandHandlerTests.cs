@@ -35,9 +35,9 @@ public sealed class AddTicketCommandHandlerTests
             .GetMaxNumberAsync()
             .Returns(maxNumber);
 
-        var companyDto = CompanyDtoFactory.Get().Single();
-        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
-        var projectDto = ProjectDtoFactory.Get(true, true).Single();
+        var companyDto = CompanyDtoFactory.Get();
+        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
+        var projectDto = ProjectDtoFactory.Get();
         companyDto.Employees = [employeeDto];
         companyDto.Projects = [projectDto];
         
@@ -90,8 +90,8 @@ public sealed class AddTicketCommandHandlerTests
     public async Task HandleAsync_GivenNotPriorityTicketWithoutProject_ShouldAddTicketByRepositoryAndSendEvent()
     {
         //arrange
-        var companyDto = CompanyDtoFactory.Get().Single();
-        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+        var companyDto = CompanyDtoFactory.Get();
+        var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
         companyDto.Employees = [employeeDto];
         
         _companiesApiClient
@@ -146,9 +146,9 @@ public sealed class AddTicketCommandHandlerTests
    public async Task HandleAsync_GivenPriorityTicketExistingAssignedIds_ShouldAddTicketByRepositoryAndSendEvent()
    {
        //arrange
-       var companyDto = CompanyDtoFactory.Get().Single();
-       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
-       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       var companyDto = CompanyDtoFactory.Get();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
+       var projectDto = ProjectDtoFactory.Get(true, true);
        companyDto.Employees = [employeeDto];
        companyDto.Projects = [projectDto];
 
@@ -277,8 +277,8 @@ public sealed class AddTicketCommandHandlerTests
    public async Task HandleAsync_GivenNotExistingProject_ShouldThrowProjectDoesNotExistsException()
    {
        //arrange
-       var companyDto = CompanyDtoFactory.Get().Single();
-       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
+       var companyDto = CompanyDtoFactory.Get();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
        companyDto.Employees = [employeeDto];
 
        _companiesApiClient
@@ -311,9 +311,9 @@ public sealed class AddTicketCommandHandlerTests
            .GetMaxNumberAsync()
            .Returns(maxNumber);
        
-       var companyDto = CompanyDtoFactory.Get().Single();
-       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
-       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       var companyDto = CompanyDtoFactory.Get();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
+       var projectDto = ProjectDtoFactory.Get(true, true);
        companyDto.Employees = [employeeDto];
        companyDto.Projects = [projectDto];
 
@@ -347,9 +347,9 @@ public sealed class AddTicketCommandHandlerTests
            .GetMaxNumberAsync()
            .Returns(maxNumber);
        
-       var companyDto = CompanyDtoFactory.Get().Single();
-       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
-       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       var companyDto = CompanyDtoFactory.Get();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
+       var projectDto = ProjectDtoFactory.Get(true, true);
        companyDto.Employees = [employeeDto];
        companyDto.Projects = [projectDto];
 
@@ -387,9 +387,9 @@ public sealed class AddTicketCommandHandlerTests
            .GetMaxNumberAsync()
            .Returns(maxNumber);
        
-       var companyDto = CompanyDtoFactory.Get().Single();
-       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain).Single();
-       var projectDto = ProjectDtoFactory.Get(true, true).Single();
+       var companyDto = CompanyDtoFactory.Get();
+       var employeeDto = EmployeeDtoFactory.Get(companyDto.EmailDomain);
+       var projectDto = ProjectDtoFactory.Get(true, true);
        companyDto.Employees = [employeeDto];
        companyDto.Projects = [projectDto];
 

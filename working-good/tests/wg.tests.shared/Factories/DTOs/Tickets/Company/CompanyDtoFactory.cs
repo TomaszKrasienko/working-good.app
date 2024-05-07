@@ -5,7 +5,11 @@ namespace wg.tests.shared.Factories.DTOs.Tickets.Company;
 
 internal static class CompanyDtoFactory
 {
-    internal static List<CompanyDto> Get(int count = 1, string emailDomain = null, 
+    internal static CompanyDto Get(string emailDomain = null, int? employeesCount = null,
+        int? projectsCount = null)
+        => Get(1, emailDomain, employeesCount, projectsCount).Single();
+    
+    private static List<CompanyDto> Get(int count, string emailDomain = null, 
         int? employeesCount = null, int? projectsCount = null)
     {
         var companies = GetFaker(emailDomain).Generate(count);
@@ -14,7 +18,7 @@ internal static class CompanyDtoFactory
         {
             foreach (var companyDto in companies)
             {
-                var employees = EmployeeDtoFactory.Get(companyDto.EmailDomain, (int)employeesCount);
+                var employees = EmployeeDtoFactory.Get((int)employeesCount, companyDto.EmailDomain);
                 companyDto.Employees.AddRange(employees);
             }
         }
@@ -23,7 +27,7 @@ internal static class CompanyDtoFactory
         {
             foreach (var company in companies)
             {
-                var projects = ProjectDtoFactory.Get(false, false, (int)projectsCount);
+                var projects = ProjectDtoFactory.Get((int)projectsCount, false, false);
                 company.Projects.AddRange(projects);
             }
         }
@@ -31,7 +35,7 @@ internal static class CompanyDtoFactory
         return companies;
     }
     
-    internal static Faker<CompanyDto> GetFaker(string emailDomain = null)
+    private static Faker<CompanyDto> GetFaker(string emailDomain = null)
         => new Faker<CompanyDto>()
             .RuleFor(f => f.Id, v => Guid.NewGuid())
             .RuleFor(f => f.Name, v => v.Lorem.Word())

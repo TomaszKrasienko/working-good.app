@@ -6,7 +6,10 @@ namespace wg.tests.shared.Factories.DTOs.Tickets.Company;
 
 internal static class ProjectDtoFactory
 {
-    internal static List<ProjectDto> Get(bool plannedStart = true, bool plannedFinish = true, int count = 1)
+    internal static ProjectDto Get(bool plannedStart = true, bool plannedFinish = true)
+        => Get(1, plannedStart, plannedFinish).Single();
+    
+    internal static List<ProjectDto> Get(int count, bool plannedStart = true, bool plannedFinish = true)
         => GetFaker(plannedStart, plannedFinish).Generate(count);
     
     internal static Faker<ProjectDto> GetFaker(bool plannedStart = true, bool plannedFinish = true)
