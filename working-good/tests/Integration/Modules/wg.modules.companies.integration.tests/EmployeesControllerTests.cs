@@ -202,7 +202,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
 
     private async Task<Company> AddCompanyAsync()
     {
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();
         return company;

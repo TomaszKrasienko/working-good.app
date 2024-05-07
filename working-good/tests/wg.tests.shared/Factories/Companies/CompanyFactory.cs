@@ -3,9 +3,12 @@ using wg.modules.companies.domain.Entities;
 
 namespace wg.tests.shared.Factories.Companies;
 
-public static class CompanyFactory
+internal static class CompanyFactory
 {
-    public static List<Company> Get(int count = 1, string emailDomain = "test.pl")
+    internal static Company Get(string emailDomain = null)
+        => Get(1, emailDomain).Single();
+    
+    internal static List<Company> Get(int count, string emailDomain = "test.pl")
         => GetFaker(emailDomain).Generate(count);
     
      private static Faker<Company> GetFaker(string emailDomain)

@@ -19,7 +19,7 @@ public sealed class DeactivateEmployeeCommandHandlerTests
     public async Task HandleAsync_GivenExistingIdAndSubstitutionEmployeeId_ShouldUpdateEmployeeAndSendEvent()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var employees = EmployeeFactory.GetInCompany(2, company).ToList();
         var employee = employees[0];
         var substituteEmployee = employees[1];
@@ -65,7 +65,7 @@ public sealed class DeactivateEmployeeCommandHandlerTests
     public async Task HandleAsync_GivenExistingIdAndNotExistingSubstitutionEmployeeId_ShouldThrowSubstituteEmployeeIdNotFoundException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var employee = EmployeeFactory.GetInCompany(1, company).Single();
 
         _companyRepository
@@ -84,7 +84,7 @@ public sealed class DeactivateEmployeeCommandHandlerTests
     public async Task HandleAsync_GivenNotActiveSubstituteEmployeeId_ShouldThrowSubstituteEmployeeNotActiveException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var employees = EmployeeFactory.GetInCompany(2, company).ToList();
         var employee = employees[0];
         var substituteEmployee = employees[1];

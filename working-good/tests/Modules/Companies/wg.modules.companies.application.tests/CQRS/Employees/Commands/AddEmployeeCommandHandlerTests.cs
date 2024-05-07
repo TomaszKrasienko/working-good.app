@@ -17,7 +17,7 @@ public sealed class AddEmployeeCommandHandlerTests
     public async Task HandleAsync_GivenExistingCompanyIdAndAddEmployeeCommand_ShouldUpdateCompanyByRepository()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var command = new AddEmployeeCommand(company.Id, Guid.NewGuid(),
             $"test@{company.EmailDomain.Value}", "500 500 500");
         _companyRepository

@@ -19,7 +19,7 @@ public sealed class AddProjectCommandHandlerTests
     public async Task HandleAsync_GivenExistingCompanyIdAndValidArguments_ShouldUpdateCompanyWithProjectAndSendEvent()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var command = new AddProjectCommand(company.Id, Guid.NewGuid(), "My project title",
             "Description of my project", DateTime.Now, DateTime.Now.AddMonths(4));
         _companyRepository

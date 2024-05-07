@@ -17,7 +17,7 @@ public sealed class UpdateCompanyCommandHandlerTests
     public async Task HandleAsync_GivenExistingCompanyId_ShouldUpdateCompanyByRepository()
     {
         //arrange
-        var company = CompanyFactory.Get(1).Single();
+        var company = CompanyFactory.Get();
         var command = new UpdateCompanyCommand(company.Id, "New name", company.SlaTime.Value.Add(TimeSpan.FromHours(1)));
         
         _companyRepository

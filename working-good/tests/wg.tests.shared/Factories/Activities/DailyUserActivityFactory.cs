@@ -8,7 +8,7 @@ internal static class DailyUserActivityFactory
     internal static DailyUserActivity Get()
         => Get(1).Single();
     
-    internal static List<DailyUserActivity> Get(int count)
+    private static List<DailyUserActivity> Get(int count)
         => GetFaker().Generate(count);
     
     private static Faker<DailyUserActivity> GetFaker()

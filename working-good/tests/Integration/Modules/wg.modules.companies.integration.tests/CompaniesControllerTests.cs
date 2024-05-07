@@ -214,7 +214,7 @@ public sealed class CompaniesControllerTests : BaseTestsController
     
     private async Task<Company> AddCompanyAsync(bool withEmployee, bool withProject, bool withPlannedStart, bool withPlannedFinish)
     {
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         if (withEmployee)
         {
             EmployeeFactory.GetInCompany(1, company);

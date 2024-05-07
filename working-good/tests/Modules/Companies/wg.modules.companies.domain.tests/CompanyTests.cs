@@ -15,7 +15,7 @@ public sealed class CompanyTests
     public void ChangeName_GivenNotEmptyName_ShouldChangeName()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         var newName = "NewCompany name";
         
         //act
@@ -29,7 +29,7 @@ public sealed class CompanyTests
     public void ChangeName_GivenEmptyName_ShouldChangeName()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         
         //act
         var exception = Record.Exception(() => company.ChangeName(string.Empty));
@@ -42,7 +42,7 @@ public sealed class CompanyTests
     public void ChangeSlaTime_GivenNotZeroTimeSpan_ShouldChangeTimeSpan()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         var newSlaTime = TimeSpan.FromHours(1);
         
         //act
@@ -56,7 +56,7 @@ public sealed class CompanyTests
     public void ChangeSlaTime_GivenNotZeroTimeSpan_ShouldThrowZeroSlaTimeException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         
         //act
         var exception = Record.Exception(() => company.ChangeSlaTime(TimeSpan.Zero));
@@ -69,7 +69,7 @@ public sealed class CompanyTests
     public void AddEmployee_GivenNotExistingEmailWithValidEmailDomain_ShouldAddToUsers()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         var employeeId = Guid.NewGuid();
         var employeeEmail = $"joe.doe@{company.EmailDomain.Value}";
         var phoneNumber = "500 500 500";
@@ -88,7 +88,7 @@ public sealed class CompanyTests
     public void AddEmployee_GivenExistingEmail_ShouldThrowEmailAlreadyInUseException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var employee = EmployeeFactory.GetInCompany(1, company).Single();
         
         //act
@@ -103,7 +103,7 @@ public sealed class CompanyTests
     public void AddEmployee_GivenNotMatchingEmailToEmailDomain_ShouldThrowEmailNotMatchToEmailDomainException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         
         //act
         var exception = Record.Exception(() => company.AddEmployee(Guid.NewGuid(), "invalid@invalid.pl"));
@@ -116,7 +116,7 @@ public sealed class CompanyTests
     public void AddEmployee_GivenNoActiveCompany_ShouldThrowCompanyNotActiveException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         company.Deactivate();
         
         //act
@@ -130,7 +130,7 @@ public sealed class CompanyTests
     public void DeactivateEmployee_GivenExistingId_ShouldChangeIsActiveForFalse()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var employee = EmployeeFactory.GetInCompany(1, company).Single();
         
         //act
@@ -144,7 +144,7 @@ public sealed class CompanyTests
     public void DeactivateEmployee_GivenNotExistingId_ShouldThrowEmployeeNotFoundException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         
         //act
         var exception = Record.Exception(() => company.DeactivateEmployee(Guid.NewGuid()));
@@ -157,7 +157,7 @@ public sealed class CompanyTests
     public void AddProject_GivenNotExistingTitle_ShouldAddProject()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var projectId = Guid.NewGuid();
         
         //act
@@ -172,7 +172,7 @@ public sealed class CompanyTests
     public void AddProject_GivenExistingTitle_ShouldThrowProjectAlreadyRegisteredException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();
+        var company = CompanyFactory.Get();
         var projectTitle = "My project title";
         company.AddProject(Guid.NewGuid(), projectTitle, "My project description", DateTime.Now, DateTime.Now.AddMonths(3));
         
@@ -188,7 +188,7 @@ public sealed class CompanyTests
     public void AddProject_GivenNoActiveCompany_ShouldThrowCompanyNotActiveException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         company.Deactivate();
         
         //act
@@ -203,7 +203,7 @@ public sealed class CompanyTests
     public void EditProject_GivenExistingProject_ShouldEditProject()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         var project = ProjectFactory.GetInCompany(company, false, false);
         var newTitle = "ProjectNewTitle";
         var newDescription = "ProjectNewDescription";
@@ -225,7 +225,7 @@ public sealed class CompanyTests
     public void EditProject_GivenNotExistingProject_ShouldThrowProjectNotFoundException()
     {
         //arrange
-        var company = CompanyFactory.Get().Single();;
+        var company = CompanyFactory.Get();
         
         //act
         var exception = Record.Exception(() => company.EditProject(Guid.NewGuid(), "test", "test", null, null));
