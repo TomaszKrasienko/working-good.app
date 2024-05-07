@@ -5,15 +5,18 @@ namespace wg.tests.shared.Factories.Companies;
 
 internal static class EmployeeFactory
 {
-    internal static IEnumerable<Employee> GetInCompany(int count = 1, Company company = null)
+    internal static Employee GetInCompany(Company company)
+        => GetInCompany(company, 1).Single();
+    
+    internal static IEnumerable<Employee> GetInCompany(Company company, int count)
     {
-        var faker = GetFaker(company?.EmailDomain.Value);
-        var employees = faker.Generate(count);
+        var employees = GetFaker(company.EmailDomain.Value).Generate(count);
         foreach (var employee in employees)
         {
-            company?.AddEmployee(employee.Id, employee.Email, employee.PhoneNumber);
+            company.AddEmployee(employee.Id, employee.Email, employee.PhoneNumber);
         }
-        return company?.Employees;
+        
+        return company.Employees;
     }
 
     internal static List<Employee> Get(int count = 1, string emailDomain = "test.pl")

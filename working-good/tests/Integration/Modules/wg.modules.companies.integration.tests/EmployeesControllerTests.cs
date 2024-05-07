@@ -21,7 +21,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.User());
@@ -52,7 +52,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
         
@@ -133,7 +133,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employees = EmployeeFactory.GetInCompany(2, company).ToList();
+        var employees = EmployeeFactory.GetInCompany(company, 2).ToList();
         var employee = employees[0];
         var substituteEmployee = employees[1];
         
@@ -157,7 +157,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
         var command = new DeactivateEmployeeCommand(Guid.Empty, Guid.NewGuid());

@@ -14,8 +14,8 @@ public sealed class ExtensionsTests
         //Todo: Add unit tests withoud employee and project
         //arrange
         var company = CompanyFactory.Get();
-        var employee = EmployeeFactory.GetInCompany(1, company);
-        var project = ProjectFactory.GetInCompany(company, true, true);
+        EmployeeFactory.GetInCompany(company);
+        ProjectFactory.GetInCompany(company, true, true);
         
         //act
         var result = company.AsDto();

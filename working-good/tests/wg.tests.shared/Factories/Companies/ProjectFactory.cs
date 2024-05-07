@@ -4,20 +4,32 @@ using wg.modules.companies.domain.Entities;
 
 namespace wg.tests.shared.Factories.Companies;
 
-public static class ProjectFactory
+internal static class ProjectFactory
 {
-    public static Project GetInCompany(Company company, bool withPlannedStart, bool withPlannedFinish)
+    internal static Project GetInCompany(Company company, bool withPlannedStart, bool withPlannedFinish)
+        => GetInCompany(company, withPlannedStart, withPlannedFinish, 1).Single();
+    
+    private static IEnumerable<Project> GetInCompany(Company company, bool withPlannedStart, bool withPlannedFinish, int count)
     {
-        var projectFaker = new Faker<Project>()
+        var projects = Get(count, withPlannedStart, withPlannedFinish);
+        foreach (var project in projects)
+        {
+            company.AddProject(project.Id, project.Title, project.Description,
+                project.PlannedStart, project.PlannedFinish);
+        }
+
+        return company.Projects;
+    }
+
+    private static List<Project> Get(int count, bool withPlannedStart, bool withPlannedFinish)
+        => GetFaker(withPlannedStart, withPlannedFinish).Generate(count);
+    
+    private static Faker<Project> GetFaker(bool withPlannedStart, bool withPlannedFinish)
+        => new Faker<Project>()
             .CustomInstantiator(f => Project.Create(
                 Guid.NewGuid(),
                 f.Lorem.Word(),
                 f.Lorem.Sentence(),
                 withPlannedStart ? f.Date.Future(0) : null,
                 withPlannedFinish ? f.Date.Future(1) : null));
-        var project = projectFaker.Generate(1).Single();
-        company.AddProject(project.Id, project.Title, project.Description,
-            project.PlannedStart, project.PlannedFinish);
-        return company.Projects.Single(x => x.Id == project.Id);
-    }
 }

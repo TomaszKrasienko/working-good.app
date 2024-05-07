@@ -89,7 +89,7 @@ public sealed class CompanyTests
     {
         //arrange
         var company = CompanyFactory.Get();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         
         //act
         var exception = Record.Exception(() => company.AddEmployee(Guid.NewGuid(),
@@ -131,7 +131,7 @@ public sealed class CompanyTests
     {
         //arrange
         var company = CompanyFactory.Get();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         
         //act
         company.DeactivateEmployee(employee.Id);

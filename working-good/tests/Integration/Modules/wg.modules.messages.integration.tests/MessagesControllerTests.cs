@@ -16,7 +16,7 @@ public sealed class MessagesControllerTests : BaseTestsController
     {
         //arrange
         var company = CompanyFactory.Get(1).Single();
-        var employee = EmployeeFactory.GetInCompany(1, company).Single();
+        var employee = EmployeeFactory.GetInCompany(company);
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();
 

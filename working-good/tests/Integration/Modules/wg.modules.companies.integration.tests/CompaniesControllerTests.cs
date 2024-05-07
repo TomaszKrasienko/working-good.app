@@ -217,7 +217,7 @@ public sealed class CompaniesControllerTests : BaseTestsController
         var company = CompanyFactory.Get();
         if (withEmployee)
         {
-            EmployeeFactory.GetInCompany(1, company);
+            EmployeeFactory.GetInCompany(company);
         }
 
         if (withProject)
