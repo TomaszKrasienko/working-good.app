@@ -14,7 +14,10 @@ internal sealed class IdentityContext : IIdentityContext
     {
         var user = httpContext.User;
         IsAuthenticated = user.Identity?.IsAuthenticated ?? false;
-        Guid.TryParse(user.Identity?.Name, out var userId);
+        if (!Guid.TryParse(user.Identity?.Name, out var userId))
+        {
+            throw new ArgumentException("Bad user id");
+        }
         UserId = userId;
         Role = user.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
     }
