@@ -5,14 +5,16 @@ using wg.tests.shared.Models;
 
 namespace wg.tests.shared.Factories.Events;
 
-public static class TestEventsFactory
+internal static class TestEventsFactory
 {
-    public static IMessage[] Get()
+    internal static TestEvent[] Get()
     {
-        var eventFaker = new Faker<TestEvent>()
-            .CustomInstantiator(f => new TestEvent(Guid.NewGuid()));
         Random random = new Random();
         int count = random.Next(1, 5);
-        return eventFaker.Generate(count).ToArray();
+        return GetFaker().Generate(count).ToArray();
     }
+    
+    private static Faker<TestEvent> GetFaker()
+        => new Faker<TestEvent>()
+            .CustomInstantiator(f => new TestEvent(Guid.NewGuid()));
 }
