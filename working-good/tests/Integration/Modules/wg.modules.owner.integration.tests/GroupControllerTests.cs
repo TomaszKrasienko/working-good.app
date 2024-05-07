@@ -5,9 +5,6 @@ using Shouldly;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.infrastructure.DAL;
-using wg.modules.owner.integration.tests._Helpers;
-using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Owners;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -84,7 +81,7 @@ public sealed class GroupControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    private Task<Group?> GetGroupByIdAsync(Guid id)
+    private Task<Group> GetGroupByIdAsync(Guid id)
         =>  OwnerDbContext
             .Groups
             .AsNoTracking()

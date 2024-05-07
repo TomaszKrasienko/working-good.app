@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Web;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -13,10 +12,10 @@ using wg.modules.owner.application.CQRS.Users.Queries;
 using wg.modules.owner.application.DTOs;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.owner.integration.tests._Helpers;
 using wg.shared.abstractions.Auth.DTOs;
 using wg.shared.infrastructure.Exceptions.DTOs;
 using wg.tests.shared.Factories.Owners;
+using wg.tests.shared.Helpers;
 using wg.tests.shared.Integration;
 using Xunit;
 

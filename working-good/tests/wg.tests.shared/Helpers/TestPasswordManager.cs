@@ -1,6 +1,6 @@
 using wg.modules.owner.application.Auth;
 
-namespace wg.modules.owner.integration.tests._Helpers;
+namespace wg.tests.shared.Helpers;
 
 internal sealed class TestPasswordManager : IPasswordManager
 {
