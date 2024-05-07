@@ -13,7 +13,7 @@ public sealed class HttpContextTokenStorageTests
     public void Set_GivenToken_ShouldSetTokenToHttpContext()
     {
         //arrange
-        var jwtToken = JwtDtoFactory.Get().Single();
+        var jwtToken = JwtDtoFactory.Get();
         _httpContextAccessor.HttpContext = new DefaultHttpContext();
         
         //act
@@ -28,7 +28,7 @@ public sealed class HttpContextTokenStorageTests
     public void Get_ForExistingJwtToken_ShouldReturnJwtToken()
     {
         //arrange
-        var jwtToken = JwtDtoFactory.Get().Single();
+        var jwtToken = JwtDtoFactory.Get();
         _httpContextAccessor.HttpContext!.Items.TryAdd("user_jwt_token", jwtToken);
         
         //act

@@ -27,7 +27,7 @@ public sealed class SignInCommandHandlerTests
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
         owner.VerifyUser(user.VerificationToken.Token, _clock.Now());
         var command = new SignInCommand(user.Email, user.Password);
-        var jwtDto = JwtDtoFactory.Get().Single();
+        var jwtDto = JwtDtoFactory.Get();
         _ownerRepository
             .GetAsync()
             .Returns(owner);
