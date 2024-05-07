@@ -5,7 +5,10 @@ namespace wg.tests.shared.Factories.DTOs.Tickets.Owner;
 
 internal static class GroupDtoFactory
 {
-    internal static List<GroupDto> Get(int count = 1, Guid? id = null)
+    internal static GroupDto Get(Guid? id = null)
+        => Get(1, id).Single();
+    
+    private static List<GroupDto> Get(int count, Guid? id = null)
         => GetFaker(id).Generate(count);
     
     private static Faker<GroupDto> GetFaker(Guid? id = null)

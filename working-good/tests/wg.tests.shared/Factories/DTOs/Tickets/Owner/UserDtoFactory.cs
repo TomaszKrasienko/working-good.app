@@ -6,7 +6,10 @@ namespace wg.tests.shared.Factories.DTOs.Tickets.Owner;
 
 internal static class UserDtoFactory
 {
-    internal static List<UserDto> Get(int count = 1)
+    internal static UserDto Get()
+        => Get(1).Single();
+    
+    internal static List<UserDto> Get(int count)
         => GetFaker().Generate(count);
     
     private static Faker<UserDto> GetFaker()

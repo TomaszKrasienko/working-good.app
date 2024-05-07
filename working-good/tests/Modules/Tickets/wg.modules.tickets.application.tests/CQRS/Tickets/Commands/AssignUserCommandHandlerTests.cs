@@ -23,8 +23,8 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenExistingTicketAndUserInProject_ShouldUpdateTicketByRepository()
      {
          //arrange
-         var userDto = UserDtoFactory.Get().Single();
-         var groupDto = GroupDtoFactory.Get().Single();
+         var userDto = UserDtoFactory.Get();
+         var groupDto = GroupDtoFactory.Get();
          var ownerDto = OwnerDtoFactory.Get();
          groupDto.Users = [userDto.Id];
          ownerDto.Users = [userDto];
@@ -60,7 +60,7 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenExistingTicketAndWithoutProjectId_ShouldUpdateTicketByRepositoryAndNotCheckUserInGroup()
      {
          //arrange
-         var userDto = UserDtoFactory.Get().Single();
+         var userDto = UserDtoFactory.Get();
 
          _ownerApiClient
              .GetActiveUserByIdAsync(Arg.Is<UserIdDto>(arg => arg.Id == userDto.Id))
@@ -122,8 +122,8 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenProjectIdAndNoExistingUserInProject_ShouldUserDoesNotBelongToGroupException()
      {
          //arrange
-         var userDto = UserDtoFactory.Get().Single();
-         var groupDto = GroupDtoFactory.Get().Single();
+         var userDto = UserDtoFactory.Get();
+         var groupDto = GroupDtoFactory.Get();
          var ownerDto = OwnerDtoFactory.Get();
          ownerDto.Users = [userDto];
          ownerDto.Groups = [groupDto];

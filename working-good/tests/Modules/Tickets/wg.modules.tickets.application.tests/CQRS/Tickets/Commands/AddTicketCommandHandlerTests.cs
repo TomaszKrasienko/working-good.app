@@ -45,8 +45,8 @@ public sealed class AddTicketCommandHandlerTests
             .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
             .Returns(companyDto);
 
-        var userDto = UserDtoFactory.Get().Single();
-        var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+        var userDto = UserDtoFactory.Get();
+        var groupDto = GroupDtoFactory.Get(id: projectDto.Id);
         var ownerDto = OwnerDtoFactory.Get();
         groupDto.Users = [userDto.Id];
         ownerDto.Users = [userDto];
@@ -98,7 +98,7 @@ public sealed class AddTicketCommandHandlerTests
             .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
             .Returns(companyDto);
         
-        var userDto = UserDtoFactory.Get().Single();
+        var userDto = UserDtoFactory.Get();
         var ownerDto = OwnerDtoFactory.Get();
         ownerDto.Users = [userDto];
         
@@ -156,8 +156,8 @@ public sealed class AddTicketCommandHandlerTests
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
        
-       var userDto = UserDtoFactory.Get().Single();
-       var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+       var userDto = UserDtoFactory.Get();
+       var groupDto = GroupDtoFactory.Get(id: projectDto.Id);
        var ownerDto = OwnerDtoFactory.Get();
        groupDto.Users = [userDto.Id];
        ownerDto.Users = [userDto];
@@ -357,8 +357,8 @@ public sealed class AddTicketCommandHandlerTests
            .GetCompanyByEmployeeIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.EmployeeId == employeeDto.Id))
            .Returns(companyDto);
        
-       var userDto = UserDtoFactory.Get().Single();
-       var groupDto = GroupDtoFactory.Get(id: projectDto.Id).Single();
+       var userDto = UserDtoFactory.Get();
+       var groupDto = GroupDtoFactory.Get(id: projectDto.Id);
        var ownerDto = OwnerDtoFactory.Get();
        ownerDto.Users = [userDto];
        ownerDto.Groups = [groupDto];
