@@ -20,7 +20,7 @@ public sealed class GroupControllerTests : BaseTestsController
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.Manager());
@@ -41,7 +41,7 @@ public sealed class GroupControllerTests : BaseTestsController
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.Manager());

@@ -212,7 +212,7 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         
         //act
         owner.AddUserToGroup( group.Id, user.Id);
@@ -227,7 +227,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         
         //act
         var exception = Record.Exception(() => owner.AddUserToGroup(group.Id, Guid.NewGuid()));
@@ -256,7 +256,7 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         owner.AddUserToGroup( group.Id, user.Id);
         
         //act
@@ -271,7 +271,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         var newTitle = "TestNewTitle";
         
         //act
@@ -301,8 +301,8 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetUserInOwner(owner, Role.Manager());
-        var group1 = GroupFactory.GetGroupInOwner(owner);
-        var group2 = GroupFactory.GetGroupInOwner(owner);
+        var group1 = GroupFactory.GetInOwner(owner);
+        var group2 = GroupFactory.GetInOwner(owner);
         owner.AddUserToGroup(group1.Id, user.Id);
         owner.AddUserToGroup(group2.Id, user.Id);
         

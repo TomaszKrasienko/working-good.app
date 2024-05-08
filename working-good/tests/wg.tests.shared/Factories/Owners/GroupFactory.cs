@@ -5,15 +5,22 @@ namespace wg.tests.shared.Factories.Owners;
 
 public static class GroupFactory
 {
-    public static Group GetGroupInOwner(Owner owner)
+    public static Group GetInOwner(Owner owner)
+        => GetInOwner(owner, 1).Single();
+
+    private static IEnumerable<Group> GetInOwner(Owner owner, int count)
     {
-        var groupFaker = new Faker<Group>()
+        var groups = GetFaker().Generate(count);
+        foreach (var group in groups)
+        {
+            owner.AddGroup(group.Id, group.Title);   
+        }
+        return owner.Groups; 
+    }
+    
+    private static Faker<Group> GetFaker()
+        => new Faker<Group>()
             .CustomInstantiator(f => Group.Create(
                 Guid.NewGuid(),
                 f.Lorem.Word()));
-
-        var group = groupFaker.Generate(1).Single();
-        owner.AddGroup(group.Id, group.Title);
-        return owner.Groups.First(x => x.Id == group.Id);
-    }
 }

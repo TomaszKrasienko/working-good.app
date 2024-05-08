@@ -383,7 +383,7 @@ public sealed class UsersControllerTests : BaseTestsController
 
     private async Task<Group> AddGroup(Owner owner)
     {
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         OwnerDbContext.Owner.Update(owner);
         await OwnerDbContext.SaveChangesAsync();
         return group;

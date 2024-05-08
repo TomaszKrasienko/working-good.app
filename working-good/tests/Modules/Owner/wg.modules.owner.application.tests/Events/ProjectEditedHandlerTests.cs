@@ -18,7 +18,7 @@ public sealed class ProjectEditedHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var group = GroupFactory.GetGroupInOwner(owner);
+        var group = GroupFactory.GetInOwner(owner);
         var @event = new ProjectEdited(group.Id, "NewProjectTitle");
         _ownerRepository
             .GetAsync()
