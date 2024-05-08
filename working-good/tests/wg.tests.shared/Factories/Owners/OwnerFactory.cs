@@ -1,7 +1,9 @@
+using wg.modules.owner.domain.Entities;
+
 namespace wg.tests.shared.Factories.Owners;
 
 public static class OwnerFactory
 {
-    public static modules.owner.domain.Entities.Owner Get()
-        => modules.owner.domain.Entities.Owner.Create(Guid.NewGuid(), "MyOwnerComp");
+    public static Owner Get()
+        => Owner.Create(Guid.NewGuid(), "MyOwnerComp");
 }
