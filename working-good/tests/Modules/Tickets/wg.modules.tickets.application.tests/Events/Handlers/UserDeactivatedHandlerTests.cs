@@ -19,7 +19,7 @@ public sealed class UserDeactivatedHandlerTests
     {
         //arrange
         var @event = new UserDeactivated(Guid.NewGuid());
-        var tickets = TicketsFactory.GetOnlyRequired(2, State.Open());
+        var tickets = TicketsFactory.Get(2 ,false, State.Open());
         tickets[0].ChangeAssignedUser(@event.UserId, DateTime.Now);
         tickets[1].ChangeAssignedUser(@event.UserId, DateTime.Now);
 
@@ -48,7 +48,7 @@ public sealed class UserDeactivatedHandlerTests
     {
         //arrange
         var @event = new UserDeactivated(Guid.NewGuid());
-        var ticket = TicketsFactory.GetOnlyRequired(1, State.Open()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(State.Open());
         ticket.ChangeAssignedUser(@event.UserId, DateTime.Now);
         ticket.ChangeState(State.Cancelled(), DateTime.Now);
 

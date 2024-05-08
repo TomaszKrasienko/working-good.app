@@ -75,7 +75,7 @@ public sealed class ActivitiesControllerTests : BaseTestsController
     
     private async Task<Ticket> AddTicket()
     {
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open());
         await TicketsDbContext.Tickets.AddAsync(ticket);
         await TicketsDbContext.SaveChangesAsync();
         return ticket;

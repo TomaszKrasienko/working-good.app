@@ -20,7 +20,7 @@ public sealed class EmployeeDeactivatedHandlerTests
     {
         //arrange
         var @event = new EmployeeDeactivated(Guid.NewGuid(), Guid.NewGuid());
-        var tickets = TicketsFactory.GetOnlyRequired(4);
+        var tickets = TicketsFactory.Get(4, false);
         foreach (var ticket in tickets)
         {
             ticket.ChangeAssignedEmployee(@event.EmployeeId);

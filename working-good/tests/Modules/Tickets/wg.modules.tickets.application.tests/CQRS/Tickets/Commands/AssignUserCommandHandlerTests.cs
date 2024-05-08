@@ -34,7 +34,7 @@ public sealed class AssignUserCommandHandlerTests
              .GetOwnerAsync(Arg.Any<GetOwnerDto>())
              .Returns(ownerDto);
          
-         var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
+         var ticket = TicketsFactory.GetOnlyRequired(state:State.Open());
          ticket.ChangeProject(groupDto.Id);
 
          _ticketRepository
@@ -66,7 +66,7 @@ public sealed class AssignUserCommandHandlerTests
              .GetActiveUserByIdAsync(Arg.Is<UserIdDto>(arg => arg.Id == userDto.Id))
              .Returns(userDto);
          
-         var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
+         var ticket = TicketsFactory.GetOnlyRequired(State.Open());
 
          _ticketRepository
              .GetByIdAsync(ticket.Id)
@@ -104,7 +104,7 @@ public sealed class AssignUserCommandHandlerTests
      public async Task HandleAsync_GivenNotExistingUser_ShouldThrowUserNotFoundException()
      {
          //arrange
-         var ticket = TicketsFactory.GetOnlyRequired().Single();
+         var ticket = TicketsFactory.GetOnlyRequired();
          var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
 
          _ticketRepository
@@ -132,7 +132,7 @@ public sealed class AssignUserCommandHandlerTests
              .GetOwnerAsync(Arg.Any<GetOwnerDto>())
              .Returns(ownerDto);
          
-         var ticket = TicketsFactory.GetOnlyRequired(state:State.Open()).Single();
+         var ticket = TicketsFactory.GetOnlyRequired(state:State.Open());
          ticket.ChangeProject(groupDto.Id);
 
          _ticketRepository

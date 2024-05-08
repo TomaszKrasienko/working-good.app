@@ -40,7 +40,7 @@ public sealed class TicketTests
     public void ChangeAssignedUser_GivenUserIdAndDateForStateNew_ShouldChangeAssignedUserAndStateToOpenAndStateDate()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.New()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.New());
         var userId = Guid.NewGuid();
         var date = DateTime.Now;
         
@@ -57,7 +57,7 @@ public sealed class TicketTests
     public void ChangeAssignedUser_GivenUserIdAndDateForStateInProgress_ShouldChangeAssignedUserAndNotChangeState()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress());
         var currentStateDate = ticket.State.ChangeDate;
         var userId = Guid.NewGuid();
         var date = DateTime.Now;
@@ -75,7 +75,7 @@ public sealed class TicketTests
     public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeState()
     {        
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
         var originalState = ticket.State;
         var userId = Guid.NewGuid();
         var date = DateTime.Now;
@@ -91,7 +91,7 @@ public sealed class TicketTests
     public void ChangeAssignedEmployee_GivenEmployeeIddForStateInProgress_ShouldChangeAssignedEmployee()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress());
         var employeeId = Guid.NewGuid();
         
         //act
@@ -105,7 +105,7 @@ public sealed class TicketTests
     public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeAssigning()
     {        
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
         var originalEmployee = ticket.AssignedEmployee;
         var employeeId = Guid.NewGuid();
         
@@ -148,7 +148,7 @@ public sealed class TicketTests
     public void ChangeProject_GivenProjectId_ChangeProjectId()
     {        
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
         var projectId = Guid.NewGuid();
         
         //act
@@ -162,7 +162,7 @@ public sealed class TicketTests
     public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.New()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.New());
         var id = Guid.NewGuid();
         var sender = "joe@doe.pl";
         var subject = "Test subject";

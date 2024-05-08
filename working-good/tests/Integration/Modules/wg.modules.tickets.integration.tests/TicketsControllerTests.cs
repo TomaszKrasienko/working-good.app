@@ -363,7 +363,7 @@ public sealed class TicketsControllerTests : BaseTestsController
 
     private async Task<Ticket> AddTicket(bool withMessage = false)
     {
-        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
+        var ticket = TicketsFactory.GetOnlyRequired(state: State.Open());
         if (withMessage)
         {
             var message = MessagesFactory.Get();
@@ -378,7 +378,7 @@ public sealed class TicketsControllerTests : BaseTestsController
 
     private async Task<IEnumerable<Ticket>> AddMultipleTickets(int count)
     {
-        var tickets = TicketsFactory.GetOnlyRequired(count:count);
+        var tickets = TicketsFactory.Get(count, false);
         await _ticketsDbContext.Tickets.AddRangeAsync(tickets);
         await _ticketsDbContext.SaveChangesAsync();
         return tickets;
