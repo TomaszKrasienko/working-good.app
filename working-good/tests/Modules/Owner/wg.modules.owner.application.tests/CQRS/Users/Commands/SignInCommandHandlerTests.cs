@@ -24,7 +24,7 @@ public sealed class SignInCommandHandlerTests
         //TODO: Refactor
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         owner.VerifyUser(user.VerificationToken.Token, _clock.Now());
         var command = new SignInCommand(user.Email, user.Password);
         var jwtDto = JwtDtoFactory.Get();
@@ -52,7 +52,7 @@ public sealed class SignInCommandHandlerTests
     {
         //arrangee
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         owner.VerifyUser(user.VerificationToken.Token, _clock.Now());
         var command = new SignInCommand(user.Email, user.Password);
         var jwtDto = JwtDtoFactory.Get();
@@ -75,7 +75,7 @@ public sealed class SignInCommandHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var command = new SignInCommand(user.Email, user.Password);
         var jwtDto = JwtDtoFactory.Get();
         _ownerRepository

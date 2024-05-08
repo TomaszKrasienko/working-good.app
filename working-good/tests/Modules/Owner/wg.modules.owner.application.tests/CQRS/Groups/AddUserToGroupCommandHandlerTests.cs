@@ -18,7 +18,7 @@ public sealed class AddUserToGroupCommandHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group = GroupFactory.GetInOwner(owner);
         _ownerRepository
             .GetAsync()

@@ -29,7 +29,7 @@ public sealed class ExtensionsTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group = GroupFactory.GetInOwner(owner);
         owner.AddUserToGroup(group.Id, user.Id);
         
@@ -50,7 +50,7 @@ public sealed class ExtensionsTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         
         //act
         var result = user.AsDto();
@@ -86,7 +86,7 @@ public sealed class ExtensionsTests
         //arrange
         var owner = OwnerFactory.Get();
         var group = GroupFactory.GetInOwner(owner);
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         owner.AddUserToGroup(group.Id, user.Id);
         
         //act

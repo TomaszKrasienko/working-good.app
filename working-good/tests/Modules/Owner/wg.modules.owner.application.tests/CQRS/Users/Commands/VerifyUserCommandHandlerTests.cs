@@ -20,7 +20,7 @@ public sealed class VerifyUserCommandHandlerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        UserFactory.GetUserInOwner(owner, Role.Manager());
+        UserFactory.GetInOwner(owner, Role.Manager());
         var user = owner.Users.Single();
         var command = new VerifyUserCommand(user.VerificationToken.Token);
         

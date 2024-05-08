@@ -25,7 +25,7 @@ public sealed class SignUpCommandHandlerTests
         var securedPassword = Guid.NewGuid().ToString("N");
         
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         _ownerRepository
             .GetAsync()
             .Returns(owner);

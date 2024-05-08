@@ -19,7 +19,7 @@ public sealed class GroupControllerTests : BaseTestsController
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group = GroupFactory.GetInOwner(owner);
         await OwnerDbContext.Owner.AddAsync(owner);
         await OwnerDbContext.SaveChangesAsync();

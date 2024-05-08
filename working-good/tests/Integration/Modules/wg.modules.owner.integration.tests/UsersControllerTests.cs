@@ -361,7 +361,7 @@ public sealed class UsersControllerTests : BaseTestsController
         var owner = OwnerFactory.Get();
         if (withUser)
         {
-            var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+            var user = UserFactory.GetInOwner(owner, Role.Manager());
             if (withVerifiedUser)
             {
                 user.Verify(DateTime.Now);
@@ -374,7 +374,7 @@ public sealed class UsersControllerTests : BaseTestsController
 
     private async Task<User> AddUser(Owner owner)
     {
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         user.Verify(DateTime.Now);
         OwnerDbContext.Owner.Update(owner);
         await OwnerDbContext.SaveChangesAsync();

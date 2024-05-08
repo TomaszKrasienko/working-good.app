@@ -139,7 +139,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         owner.VerifyUser(user.VerificationToken.Token, DateTime.Now);
         
         //act
@@ -167,7 +167,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         
         //act
         var result = owner.IsUserActive(user.Email);
@@ -211,7 +211,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group = GroupFactory.GetInOwner(owner);
         
         //act
@@ -241,7 +241,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         
         //act
         var exception = Record.Exception(() => owner.AddUserToGroup( Guid.NewGuid(), user.Id));
@@ -255,7 +255,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group = GroupFactory.GetInOwner(owner);
         owner.AddUserToGroup( group.Id, user.Id);
         
@@ -300,7 +300,7 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         var group1 = GroupFactory.GetInOwner(owner);
         var group2 = GroupFactory.GetInOwner(owner);
         owner.AddUserToGroup(group1.Id, user.Id);

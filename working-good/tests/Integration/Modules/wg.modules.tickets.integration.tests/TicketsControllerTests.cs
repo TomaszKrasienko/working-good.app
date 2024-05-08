@@ -167,7 +167,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         //arrange
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();         
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         user.Verify(DateTime.Now);
         await _ownerDbContext.Owner.AddAsync(owner);
         await _ownerDbContext.SaveChangesAsync();
@@ -202,7 +202,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var employee = EmployeeFactory.GetInCompany(company); 
         var project = ProjectFactory.GetInCompany(company, true, true);  
         var owner = OwnerFactory.Get();         
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         user.Verify(DateTime.Now);
         owner.AddGroup(project.Id, project.Title);
         owner.AddUserToGroup(owner.Groups.Single().Id, user.Id);
@@ -266,7 +266,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         //arrange
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         user.Verify(DateTime.Now);
         await _ownerDbContext.Owner.AddAsync(owner);
         await _ownerDbContext.SaveChangesAsync();
@@ -289,7 +289,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();
         var group = GroupFactory.GetInOwner(owner);
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         user.Verify(DateTime.Now);
         group.AddUser(user);
         ticket.ChangeProject(group.Id);
@@ -316,7 +316,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var ticket = await AddTicket();
         var owner = OwnerFactory.Get();
         var group = GroupFactory.GetInOwner(owner);
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         ticket.ChangeProject(group.Id);
         _ticketsDbContext.Tickets.Update(ticket);
         await _ticketsDbContext.SaveChangesAsync();

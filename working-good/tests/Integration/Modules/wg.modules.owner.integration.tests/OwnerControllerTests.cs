@@ -218,7 +218,7 @@ public sealed class OwnerControllerTests : BaseTestsController
 
     private async Task<User> AddUserToOwner(Owner owner, bool isActive = false)
     {
-        var user = UserFactory.GetUserInOwner(owner, Role.Manager());
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
         if (isActive)
         {
             user.Verify(DateTime.Now);
