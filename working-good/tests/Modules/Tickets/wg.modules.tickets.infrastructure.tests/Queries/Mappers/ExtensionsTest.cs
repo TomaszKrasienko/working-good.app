@@ -13,7 +13,7 @@ public class ExtensionsTest
     public void AsDto_GivenMessage_ShouldReturnMessageDto()
     {
         //arrange
-        var message = MessagesFactory.Get().Single();
+        var message = MessagesFactory.Get();
         
         //act
         var result = message.AsDto();
