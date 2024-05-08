@@ -15,7 +15,7 @@ public sealed class MessagesControllerTests : BaseTestsController
     public async Task Create_GivenExistingActiveEmployee_ShouldReturn202AcceptedStatusCode()
     {
         //arrange
-        var company = CompanyFactory.Get(1).Single();
+        var company = CompanyFactory.Get();
         var employee = EmployeeFactory.GetInCompany(company);
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();

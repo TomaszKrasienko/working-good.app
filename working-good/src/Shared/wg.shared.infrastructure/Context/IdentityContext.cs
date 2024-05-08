@@ -14,6 +14,12 @@ internal sealed class IdentityContext : IIdentityContext
     {
         var user = httpContext.User;
         IsAuthenticated = user.Identity?.IsAuthenticated ?? false;
+
+        if (!IsAuthenticated)
+        {
+            return;
+        }
+        
         if (!Guid.TryParse(user.Identity?.Name, out var userId))
         {
             throw new ArgumentException("Bad user id");

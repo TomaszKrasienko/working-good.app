@@ -103,9 +103,8 @@ public sealed class UsersControllerTests : BaseTestsController
         //arrange
         var owner = await AddOwner(false, false);
         var group = await AddGroup(owner);
-        var userInGroup = await AddUser(owner);
-        var userNotInGroup = await AddUser(owner);
-        owner.AddUserToGroup(group.Id, userInGroup.Id);
+        var users = await AddUsers(owner, 2);
+        owner.AddUserToGroup(group.Id, users[0].Id);
         OwnerDbContext.Owner.Update(owner);
         await OwnerDbContext.SaveChangesAsync();
         Authorize(Guid.NewGuid(), Role.User());
@@ -115,8 +114,8 @@ public sealed class UsersControllerTests : BaseTestsController
         
         //assert
         response.ShouldBeOfType<List<UserDto>>();
-        response?.Any(x => x.Id.Equals(userInGroup.Id)).ShouldBeTrue();
-        response?.Any(x => x.Id.Equals(userNotInGroup.Id)).ShouldBeFalse();
+        response?.Any(x => x.Id.Equals(users[0].Id)).ShouldBeTrue();
+        response?.Any(x => x.Id.Equals(users[1].Id)).ShouldBeFalse();
     }
     
     [Fact]
@@ -372,13 +371,17 @@ public sealed class UsersControllerTests : BaseTestsController
         return owner;
     }
 
-    private async Task<User> AddUser(Owner owner)
+    private async Task<List<User>> AddUsers(Owner owner, int count )
     {
-        var user = UserFactory.GetInOwner(owner, Role.Manager());
-        user.Verify(DateTime.Now);
-        OwnerDbContext.Owner.Update(owner);
-        await OwnerDbContext.SaveChangesAsync();
-        return user;
+        var users= UserFactory.GetInOwner(owner, Role.Manager(), count).ToList();
+        foreach (var user in users)
+        {
+            user.Verify(DateTime.Now);
+            OwnerDbContext.Owner.Update(owner);
+            await OwnerDbContext.SaveChangesAsync();
+        }
+
+        return users;
     }
 
     private async Task<Group> AddGroup(Owner owner)

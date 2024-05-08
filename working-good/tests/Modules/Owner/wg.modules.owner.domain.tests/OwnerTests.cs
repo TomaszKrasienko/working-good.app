@@ -301,17 +301,16 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetInOwner(owner, Role.Manager());
-        var group1 = GroupFactory.GetInOwner(owner);
-        var group2 = GroupFactory.GetInOwner(owner);
-        owner.AddUserToGroup(group1.Id, user.Id);
-        owner.AddUserToGroup(group2.Id, user.Id);
+        var groups = GroupFactory.GetInOwner(owner, 2).ToList();
+        owner.AddUserToGroup(groups[0].Id, user.Id);
+        owner.AddUserToGroup(groups[1].Id, user.Id);
         
         //act
         owner.DeactivateUser(user.Id);
 
         //assert
-        group1.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
-        group2.Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
+        groups[0].Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
+        groups[1].Users.Any(x => x.Id.Equals(user.Id)).ShouldBeFalse();
     }
     
     [Fact]

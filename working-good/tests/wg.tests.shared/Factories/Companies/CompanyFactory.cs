@@ -8,8 +8,8 @@ internal static class CompanyFactory
     internal static Company Get(string emailDomain = null)
         => Get(1, emailDomain).Single();
     
-    internal static List<Company> Get(int count, string emailDomain = "test.pl")
-        => GetFaker(emailDomain).Generate(count);
+    internal static List<Company> Get(int count, string emailDomain = null)
+        => GetFaker(string.IsNullOrWhiteSpace(emailDomain) ? "test.pl" : emailDomain).Generate(count);
     
      private static Faker<Company> GetFaker(string emailDomain)
         => new Faker<Company>()

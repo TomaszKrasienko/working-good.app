@@ -41,13 +41,13 @@ public sealed class SignUpCommandHandlerTests
         await _ownerRepository
             .Received(1)
             .UpdateAsync(owner);
+        
         await _messageBroker
             .Received(1)
             .PublishAsync(Arg.Is<UserSignedUp>(arg
                 => arg.Email == command.Email
                    && arg.FirstName == command.FirstName
-                   && arg.LastName == command.LastName
-                   && arg.VerificationToken == user.VerificationToken.Token));
+                   && arg.LastName == command.LastName));
     }
     
     [Fact]

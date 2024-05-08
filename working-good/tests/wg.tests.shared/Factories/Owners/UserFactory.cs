@@ -8,7 +8,7 @@ internal static class UserFactory
     internal static User GetInOwner(Owner owner, string role)
         => GetInOwner(owner, role, 1).Single();
 
-    private static IEnumerable<User> GetInOwner(Owner owner, string role, int count)
+    internal static IEnumerable<User> GetInOwner(Owner owner, string role, int count)
     {
         var users = GetFaker(role).Generate(count);
         foreach (var user in users)

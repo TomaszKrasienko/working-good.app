@@ -3,12 +3,12 @@ using wg.modules.owner.domain.Entities;
 
 namespace wg.tests.shared.Factories.Owners;
 
-public static class GroupFactory
+internal static class GroupFactory
 {
-    public static Group GetInOwner(Owner owner)
+    internal static Group GetInOwner(Owner owner)
         => GetInOwner(owner, 1).Single();
 
-    private static IEnumerable<Group> GetInOwner(Owner owner, int count)
+    internal static IEnumerable<Group> GetInOwner(Owner owner, int count)
     {
         var groups = GetFaker().Generate(count);
         foreach (var group in groups)
