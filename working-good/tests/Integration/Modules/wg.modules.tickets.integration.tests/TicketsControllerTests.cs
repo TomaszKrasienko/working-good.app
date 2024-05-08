@@ -366,7 +366,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         var ticket = TicketsFactory.GetOnlyRequired(state: State.Open()).Single();
         if (withMessage)
         {
-            var message = MessagesFactory.Get().Single();
+            var message = MessagesFactory.Get();
             ticket.AddMessage(message.Id, message.Sender, message.Subject, message.Content, 
                 message.CreatedAt);
         }

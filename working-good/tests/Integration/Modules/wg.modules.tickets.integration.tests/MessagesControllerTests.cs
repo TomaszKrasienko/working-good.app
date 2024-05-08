@@ -123,7 +123,7 @@ public sealed class MessagesControllerTests : BaseTestsController
 
     private async Task<Message> AddMessageToTicketAsync(Ticket ticket)
     {
-        var message = MessagesFactory.Get().Single();
+        var message = MessagesFactory.Get();
         ticket.AddMessage(message.Id, message.Sender, message.Subject, message.Content,
             message.CreatedAt);
         TicketsDbContext.Tickets.Update(ticket);
