@@ -18,6 +18,7 @@ internal sealed class ActivitiesController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> GetById()
     {
+        //TODO: to finish
         return Ok();
     }
     

@@ -174,7 +174,7 @@ public sealed class TicketTests
         
         //assert
         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
-        ticket.State.Value.ShouldBe(State.Open());
+        ticket.State.Value.ShouldBe(State.WaitingForResponse());
         message.ShouldNotBeNull();
         message.Id.Value.ShouldBe(id);
         message.Sender.Value.ShouldBe(sender);

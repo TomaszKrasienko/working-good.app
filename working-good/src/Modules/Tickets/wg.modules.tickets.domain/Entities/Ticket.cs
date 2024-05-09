@@ -132,7 +132,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
     {
-        State = new State(State.Open(), createdAt);
+        State = new State(State.WaitingForResponse(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }

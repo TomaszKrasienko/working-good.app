@@ -45,7 +45,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"00000000-0000-0000-0000-000000000000"
+    "token":"QBA7LujCtgb210ccbxaEN2rnaUhljBY0KKaL0BLSY0mBoyWDNCws94QNzACKFbVidoSxRLncOHQ1ralVILhi6g"
 }
 
 ###
@@ -109,7 +109,7 @@ Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "email": "tom.krasienko@outlook1.com",
+    "email": "tom.krasienko@outlook.com",
     "phoneNumber": "555000111"
 }
 
@@ -135,10 +135,25 @@ Content-Type: application/json
 ###
 # @ticketId = {{ticket_add.response.headers.x-resource-id}}
 
-@ticketId = 733c7d39-b9f8-4961-b507-f7aee073032c
+@ticketId = aced5e26-1008-4504-aba7-1af1fcd7b35c
 
 ###
 GET {{url}}/tickets-module/tickets/{{ticketId}}
+Authorization: bearer {{token}}
+
+
+###
+POST {{url}}/messages-module/messages
+Content-Type: application/json
+
+{
+    "email":"tom.krasienko@outlook.com",
+    "subject":"My first test",
+    "content":"My first test of sending ticket"
+}
+
+###
+PATCH {{url}}/tickets-module/tickets/{{ticketId}}/assign/user/{{userId}}
 Authorization: bearer {{token}}
 
 ###
@@ -146,12 +161,20 @@ GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
 Authorization: bearer {{token}}
 
 ###
+POST {{url}}/tickets-module/messages/ticket/{{ticketId}}/add
+Authorization: bearer {{token}}
+Content-Type: application/json
+
+{
+    "content":"My respond"
+}
+
+###
 POST {{url}}/activities-module/activities/add
 Authorization: bearer {{token}}
 Content-Type: application/json
 
 {
-    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
     "userId": "{{userId}}",
     "ticketId": "{{ticketId}}",
     "content": "Test activity",

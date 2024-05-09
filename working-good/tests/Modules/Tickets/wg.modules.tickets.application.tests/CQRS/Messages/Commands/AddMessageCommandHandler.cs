@@ -51,11 +51,13 @@ public sealed class AddMessageCommandHandlerTests
         await Act(command);
         
         //assert
+        ticket.State.Value.ShouldBe(State.WaitingForResponse());
+        
         await _ticketRepository
             .Received(1)
             .UpdateAsync(Arg.Is<Ticket>(arg
                 => arg.Id == ticket.Id
-                   && arg.State.Value == State.Open()
+                   && arg.State.Value == State.WaitingForResponse()
                    && arg.Messages.Any(m 
                        => m.Content == command.Content
                        && m.Sender == userDto.Email
@@ -105,7 +107,7 @@ public sealed class AddMessageCommandHandlerTests
             .Received(1)
             .UpdateAsync(Arg.Is<Ticket>(arg
                 => arg.Id == ticket.Id
-                   && arg.State.Value == State.Open()
+                   && arg.State.Value == State.WaitingForResponse()
                    && arg.Messages.Any(m 
                        => m.Content == command.Content
                           && m.Sender == userDto.Email
