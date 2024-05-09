@@ -15,5 +15,6 @@
 
     <ItemGroup>
       <Folder Include="Clients\Users\DTOs\" />
+      <Folder Include="CQRS\Activities\" />
     </ItemGroup>
 </Project>

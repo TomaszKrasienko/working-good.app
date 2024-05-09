@@ -1,4 +1,3 @@
-using wg.modules.activities.application.Clients;
 using wg.modules.activities.application.Clients.Tickets;
 using wg.modules.activities.application.Clients.Tickets.DTOs;
 using wg.modules.activities.application.Exceptions;
@@ -6,7 +5,7 @@ using wg.modules.activities.domain.Entities;
 using wg.modules.activities.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 
-namespace wg.modules.activities.application.CQRS.AddActivity;
+namespace wg.modules.activities.application.CQRS.Activities.Commands.AddActivity;
 
 internal sealed class AddActivityCommandHandler(
     IDailyUserActivityRepository dailyUserActivityRepository,

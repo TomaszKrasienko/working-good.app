@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using wg.modules.activities.application.CQRS.AddActivity;
+using wg.modules.activities.application.CQRS.Activities.Commands.AddActivity;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.tickets.domain.Entities;
 using wg.tests.shared.Factories.Tickets;

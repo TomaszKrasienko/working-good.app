@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using wg.modules.activities.application.CQRS.AddActivity;
+using wg.modules.activities.application.CQRS.Activities.Commands.AddActivity;
 using wg.shared.abstractions.CQRS.Commands;
 
 namespace wg.modules.activities.api.Controllers;
