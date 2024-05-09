@@ -5,6 +5,6 @@ namespace wg.modules.activities.infrastructure.Queries.Mappers;
 
 internal static class Extensions
 {
-    internal static ActivityDto AsDto(Activity activity)
+    internal static ActivityDto AsDto(this Activity activity)
         => new ActivityDto();
 }

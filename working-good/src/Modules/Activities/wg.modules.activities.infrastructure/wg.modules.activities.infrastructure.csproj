@@ -18,4 +18,8 @@
         <InternalsVisibleTo Include="wg.tests.shared"/>
         <InternalsVisibleTo Include="wg.modules.activities.integration.tests"/>
     </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.modules.activities.infrastructure.tests"/>
+    </ItemGroup>
 </Project>
