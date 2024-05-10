@@ -30,7 +30,7 @@ internal sealed class ActivitiesController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Adding new activity", Description = @"Endpoint for adding new activity
-    to ticket for user")]
+        to ticket for user")]
     public async Task<ActionResult> AddActivity(AddActivityCommand command, CancellationToken cancellationToken)
     {
         var activityId = Guid.NewGuid();
