@@ -159,45 +159,87 @@ public sealed class TicketTests
          //assert
          ticket.AssignedUser.Value.ShouldBe(oldUserId);
      }
-//     
-//     [Fact]
-//     public void ChangeProject_GivenProjectId_ChangeProjectId()
-//     {        
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
-//         var projectId = Guid.NewGuid();
-//         
-//         //act
-//         ticket.ChangeProject(projectId);
-//         
-//         //assert
-//         ticket.ProjectId.Value.ShouldBe(projectId);
-//     }
-//     
-//     [Fact]
-//     public void AddMessage_GivenMessageAnd_ShouldAddToMessages()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.New());
-//         var id = Guid.NewGuid();
-//         var sender = "joe@doe.pl";
-//         var subject = "Test subject";
-//         var content = "Test content";
-//         var createdAt = DateTime.Now;
-//         
-//         //act
-//         ticket.AddMessage(id, sender, subject, content, createdAt);
-//         
-//         //assert
-//         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
-//         ticket.State.Value.ShouldBe(State.WaitingForResponse());
-//         message.ShouldNotBeNull();
-//         message.Id.Value.ShouldBe(id);
-//         message.Sender.Value.ShouldBe(sender);
-//         message.Subject.Value.ShouldBe(subject);
-//         message.Content.Value.ShouldBe(content);
-//         message.CreatedAt.Value.ShouldBe(createdAt);
-//     }
-//
+     
+     [Fact]
+     public void ChangeProject_GivenStatusForChanges_ShouldChangeProjectId()
+     {        
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var projectId = Guid.NewGuid();
+         
+         //act
+         ticket.ChangeProject(projectId);
+         
+         //assert
+         ticket.ProjectId.Value.ShouldBe(projectId);
+     }
+     
+     [Fact]
+     public void ChangeProject_GivenStatusNotForChanges_ShouldNotChangeProjectId()
+     {        
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var oldProjectId = Guid.NewGuid();
+         ticket.ChangeProject(oldProjectId);
+         ticket.ChangeStatus(Status.Cancelled(), DateTime.Now);
+         
+         //act
+         ticket.ChangeProject(Guid.NewGuid());
+         
+         //assert
+         ticket.ProjectId.Value.ShouldBe(oldProjectId);
+     }
+     
+     [Fact]
+     public void AddMessage_GivenMessageFromUser_ShouldAddToMessagesAndChangeStatusToWaitingForResponse()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var id = Guid.NewGuid();
+         var sender = "joe@doe.pl";
+         var subject = "Test subject";
+         var content = "Test content";
+         var createdAt = DateTime.Now;
+         
+         //act
+         ticket.AddMessage(id, sender, subject, content, createdAt, true);
+         
+         //assert
+         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+         ticket.Status.Value.ShouldBe(Status.WaitingForResponse());
+         message.ShouldNotBeNull();
+         message.Id.Value.ShouldBe(id);
+         message.Sender.Value.ShouldBe(sender);
+         message.Subject.Value.ShouldBe(subject);
+         message.Content.Value.ShouldBe(content);
+         message.CreatedAt.Value.ShouldBe(createdAt);
+     }
+     
+     [Fact]
+     public void AddMessage_GivenMessageNotFromUser_ShouldAddToMessagesAndChangeStatusToCustomerReplied()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeStatus(Status.Done(), DateTime.Now);
+         var id = Guid.NewGuid();
+         var sender = "joe@doe.pl";
+         var subject = "Test subject";
+         var content = "Test content";
+         var createdAt = DateTime.Now;
+         
+         //act
+         ticket.AddMessage(id, sender, subject, content, createdAt, false);
+         
+         //assert
+         var message = ticket.Messages.FirstOrDefault(x => x.Id.Equals(id));
+         ticket.Status.Value.ShouldBe(Status.CustomerReplied());
+         message.ShouldNotBeNull();
+         message.Id.Value.ShouldBe(id);
+         message.Sender.Value.ShouldBe(sender);
+         message.Subject.Value.ShouldBe(subject);
+         message.Content.Value.ShouldBe(content);
+         message.CreatedAt.Value.ShouldBe(createdAt);
+     }
+
 
 }

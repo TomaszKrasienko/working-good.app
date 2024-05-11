@@ -18,23 +18,23 @@ internal sealed class AddMessageCommandHandler(
 {
     public async Task HandleAsync(AddMessageCommand command, CancellationToken cancellationToken)
     {
-        var ticket = await ticketRepository.GetByIdAsync(command.TicketId);
-        if (ticket is null)
-        {
-            throw new TicketNotFoundException(command.TicketId);
-        }
-
-        var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
-        if (user is null)
-        {
-            throw new UserNotFoundException(command.UserId);
-        }
-        
-        ticket.AddMessage(command.Id, user.Email, ticket.Subject, command.Content, 
-            clock.Now());
-        await ticketRepository.UpdateAsync(ticket);
-        var messageSent = new MessageAdded(ticket.Number, ticket.Subject, command.Content,
-            ticket.AssignedEmployee);
-        await messageBroker.PublishAsync(messageSent);
+        // var ticket = await ticketRepository.GetByIdAsync(command.TicketId);
+        // if (ticket is null)
+        // {
+        //     throw new TicketNotFoundException(command.TicketId);
+        // }
+        //
+        // var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
+        // if (user is null)
+        // {
+        //     throw new UserNotFoundException(command.UserId);
+        // }
+        //
+        // ticket.AddMessage(command.Id, user.Email, ticket.Subject, command.Content, 
+        //     clock.Now());
+        // await ticketRepository.UpdateAsync(ticket);
+        // var messageSent = new MessageAdded(ticket.Number, ticket.Subject, command.Content,
+        //     ticket.AssignedEmployee);
+        // await messageBroker.PublishAsync(messageSent);
     }
 }

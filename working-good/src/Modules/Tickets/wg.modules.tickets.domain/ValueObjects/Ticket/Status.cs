@@ -12,7 +12,7 @@ public record Status
     private static readonly IReadOnlyDictionary<string, bool> AvailableStatuses
         = new Dictionary<string, bool>()
         {
-            {"New", true}, {"Open", true}, {"WaitingForResponse", true}, 
+            {"New", true}, {"Open", true}, {"WaitingForResponse", true}, {"CustomerReplied", true}, 
             {"Cancelled", false} , {"Done", false}
         };
 
@@ -48,6 +48,9 @@ public record Status
     
     public static string WaitingForResponse()
         => "WaitingForResponse";
+    
+    public static string CustomerReplied()
+        => "CustomerReplied";
     
     public static string Cancelled()
         => "Cancelled";

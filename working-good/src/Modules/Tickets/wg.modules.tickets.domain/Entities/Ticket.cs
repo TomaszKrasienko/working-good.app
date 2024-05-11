@@ -86,14 +86,26 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
-    //TODO: Add unit tests
     public void ChangeProject(Guid projectId)
-        => ProjectId = projectId;
+    {
+        var statePolicy = TicketStatePolicy.Create();
+        if (statePolicy.CanChangeState(Status))
+        {
+            ProjectId = projectId;
+        }
+    }
 
     public void AddMessage(Guid id, string sender, string subject, string content,
-        DateTime createdAt)
+        DateTime createdAt, bool isFromUser)
     {
-        Status = new Status(Status.WaitingForResponse(), createdAt);
+        if (isFromUser)
+        {
+            Status = new Status(Status.WaitingForResponse(), createdAt);   
+        }
+        else
+        {
+            Status = new Status(Status.CustomerReplied(), createdAt);
+        }
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }
