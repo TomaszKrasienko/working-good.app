@@ -130,33 +130,35 @@ public sealed class TicketTests
          ticket.AssignedUser.Value.ShouldBe(oldUserId);
      }
 
-//     [Fact]
-//     public void RemoveAssignedUser_ForOpenState_ShouldRemoveAssignedUser()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetAll(state: State.Open());
-//         
-//         //act
-//         ticket.RemoveAssignedUser();
-//         
-//         //assert
-//         ticket.AssignedUser.ShouldBeNull();
-//     }
-//     
-//     [Fact]
-//     public void RemoveAssignedUser_ForCancelledState_ShouldNotRemoveAssignedUser()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetAll(state: State.Open());
-//         var userId = ticket.AssignedUser;
-//         ticket.ChangeState(State.Cancelled(), DateTime.Now);
-//         
-//         //act
-//         ticket.RemoveAssignedUser();
-//         
-//         //assert
-//         ticket.AssignedUser.Value.ShouldBe(userId.Value);
-//     }
+     [Fact]
+     public void RemoveAssignedUser_GivenStatusForChanges_ShouldRemoveAssignedUser()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedUser(Guid.NewGuid());
+         
+         //act
+         ticket.RemoveAssignedUser();
+         
+         //assert
+         ticket.AssignedUser.ShouldBeNull();
+     }
+     
+     [Fact]
+     public void RemoveAssignedUser_GivenStatusNotForChanges_ShouldNotRemoveAssignedUser()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var oldUserId = Guid.NewGuid();
+         ticket.ChangeAssignedUser(oldUserId);
+         ticket.ChangeStatus(Status.Done(), DateTime.Now);
+         
+         //act
+         ticket.RemoveAssignedUser();
+         
+         //assert
+         ticket.AssignedUser.Value.ShouldBe(oldUserId);
+     }
 //     
 //     [Fact]
 //     public void ChangeProject_GivenProjectId_ChangeProjectId()

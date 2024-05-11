@@ -79,10 +79,11 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     public void RemoveAssignedUser()
     {
-        //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
-        if (!statePolicy.CanChangeState(Status)) return;
-        AssignedUser = null;
+        if (statePolicy.CanChangeState(Status))
+        {
+            AssignedUser = null;
+        }
     }
 
     //TODO: Add unit tests
