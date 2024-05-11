@@ -9,4 +9,10 @@ internal sealed class CompaniesApiClient(
 {
     public Task<CompanyDto> GetCompanyByEmployeeIdAsync(EmployeeIdDto dto)
         => moduleClient.SendAsync<CompanyDto>("companies/get/by-employee-id", dto);
+
+    public Task<IsProjectForCompanyDto> IsProjectForCompanyAsync(EmployeeWithProjectDto dto)
+        => moduleClient.SendAsync<IsProjectForCompanyDto>("companies/is-project-for-company/get", dto);
+
+    public Task<IsProjectActiveDto> IsProjectActiveAsync(ProjectIdDto dto)
+        => moduleClient.SendAsync<IsProjectActiveDto>("companies/is-project-active/get", dto);
 }

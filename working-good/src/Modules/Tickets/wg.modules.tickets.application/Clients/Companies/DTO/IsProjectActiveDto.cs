@@ -1,6 +1,6 @@
 namespace wg.modules.tickets.application.Clients.Companies.DTO;
 
-public class IsEmployeeExistsDto
+public sealed class IsProjectActiveDto
 {
     public bool Value { get; set; }
 }

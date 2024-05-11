@@ -1,6 +1,6 @@
 namespace wg.modules.tickets.application.Clients.Companies.DTO;
 
-public class IsProjectExistsDto
+public class ProjectIdDto
 {
-    public bool Value { get; set; }
+    public Guid Id { get; set; }
 }
