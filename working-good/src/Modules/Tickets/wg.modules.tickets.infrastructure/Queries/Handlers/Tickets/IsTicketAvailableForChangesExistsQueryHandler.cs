@@ -17,7 +17,7 @@ internal sealed class IsTicketAvailableForChangesExistsQueryHandler(
             Value = await dbContext
                 .Tickets
                 .AsNoTracking()
-                .AnyAsync(x => Status.AvailableForChangesStatuses.Contains(x.State.Value),
+                .AnyAsync(x => Status.AvailableForChangesStatuses.Contains(x.Status.Value),
                     cancellationToken)
         };
 }

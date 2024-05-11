@@ -18,7 +18,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public CreatedAt CreatedAt { get; }
     public CreatedBy CreatedBy { get; }
     public IsPriority IsPriority { get; private set; }
-    public Status State { get; private set; }
+    public Status Status { get; private set; }
     public ExpirationDate ExpirationDate { get; private set; }
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
@@ -40,7 +40,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
         ticket.ChangeContent(content);
-        ticket.ChangeState(Status.New(), createdAt);
+        ticket.ChangeStatus(Status.New(), createdAt);
         return ticket;
     }
 
@@ -50,13 +50,13 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     private void ChangeContent(string content)
         => Content = content;
 
-    public void ChangeState(string state, DateTime changeDate)
+    public void ChangeStatus(string state, DateTime changeDate)
     {
         //TODO: Add tests for changes not while creating
         var statePolicy = TicketStatePolicy.Create();
-        if (State is null || statePolicy.CanChangeState(State))
+        if (Status is null || statePolicy.CanChangeState(Status))
         {
-            State = new Status(state, changeDate);
+            Status = new Status(state, changeDate);
         }
     }
 
@@ -64,7 +64,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     {
         //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
-        if (statePolicy.CanChangeState(State))
+        if (statePolicy.CanChangeState(Status))
         {
             AssignedEmployee = assignedEmployee;
         }
@@ -74,19 +74,15 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     {
         //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
-        if (!statePolicy.CanChangeState(State)) return;
+        if (!statePolicy.CanChangeState(Status)) return;
         AssignedUser = assignedUser;
-        if (State == Status.New())
-        {
-            ChangeState(Status.Open(), stateChangeDate);
-        }
     }
 
     public void RemoveAssignedUser()
     {
         //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
-        if (!statePolicy.CanChangeState(State)) return;
+        if (!statePolicy.CanChangeState(Status)) return;
         AssignedUser = null;
     }
 
@@ -97,7 +93,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
     {
-        State = new Status(Status.WaitingForResponse(), createdAt);
+        Status = new Status(Status.WaitingForResponse(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }

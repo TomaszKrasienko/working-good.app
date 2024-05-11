@@ -49,7 +49,7 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
             .IsRequired();
 
         builder
-            .OwnsOne(x => x.State, options =>
+            .OwnsOne(x => x.Status, options =>
             {
                 options
                     .Property(x => x.Value)

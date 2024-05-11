@@ -1,26 +1,88 @@
-// using Shouldly;
-// using wg.modules.tickets.domain.Exceptions;
-// using wg.modules.tickets.domain.ValueObjects.Ticket;
-// using wg.tests.shared.Factories.Tickets;
-// using Xunit;
-//
-// namespace wg.modules.tickets.domain.tests.Entities;
-//
-// public sealed class TicketTests
-// {
-//     [Fact]
-//     public void ChangeAssignedEmployee_ForTicketWithStatusToAssigning_ShouldChangeAssignedEmployee()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetAll(state: State.Open());
-//         var substituteEmployeeId = Guid.NewGuid();
-//         
-//         //act
-//         ticket.ChangeAssignedEmployee(substituteEmployeeId);
-//         
-//         //assert
-//         ticket.AssignedEmployee.Value.ShouldBe(substituteEmployeeId);
-//     }
+using System.Threading.RateLimiting;
+using Shouldly;
+using wg.modules.owner.domain.ValueObjects.User;
+using wg.modules.tickets.domain.Entities;
+using wg.modules.tickets.domain.Exceptions;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
+using wg.tests.shared.Factories.Tickets;
+using Xunit;
+
+namespace wg.modules.tickets.domain.tests.Entities;
+
+public sealed class TicketTests
+{ 
+    [Fact]
+     public void ChangeState_GivenValidStatusForAvailableForChangesStatus_ShouldChangeState()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var status = Status.Open();
+         var now = DateTime.Now;
+         
+         
+         //act
+         ticket.ChangeStatus(status, now);
+         
+         //assert
+         ticket.Status.Value.ShouldBe(status);
+         ticket.Status.ChangeDate.ShouldBe(now);    
+     }
+
+     [Fact]
+     public void ChangeStatus_GivenStatusNotForChanges_ShouldNotChangeStatus()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeStatus(Status.Done(), DateTime.Now);
+         var now = DateTime.Now;
+         
+         //act
+         ticket.ChangeStatus(Status.Open(), now);
+         
+         //assert
+         ticket.Status.Value.ShouldBe(Status.Done());
+         ticket.Status.ChangeDate.ShouldNotBe(now);  
+     }
+
+     [Fact]
+     public void ChangeStatus_GivenEmptyStatus_ShouldThrowEmptyStatusException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangeStatus(string.Empty, DateTime.Now));
+         
+         //assert
+         exception.ShouldBeOfType<EmptyStatusException>();
+     }
+
+     [Fact]
+     public void ChangeStatus_GivenNotAvailableStatus_ShouldThrowUnavailableStatusException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangeStatus("State", DateTime.Now));
+         
+         //assert
+         exception.ShouldBeOfType<UnavailableStatusException>();
+     }
+
+     // [Fact]
+     // public void ChangeAssignedEmployee_ForTicketWithStatusToAssigning_ShouldChangeAssignedEmployee()
+     // {
+     //     //arrange
+     //     var ticket = TicketsFactory.GetAll(state: State.Open());
+     //     var substituteEmployeeId = Guid.NewGuid();
+     //     
+     //     //act
+     //     ticket.ChangeAssignedEmployee(substituteEmployeeId);
+     //     
+     //     //assert
+     //     ticket.AssignedEmployee.Value.ShouldBe(substituteEmployeeId);
+     // }
 //     
 //     [Fact]
 //     public void ChangeAssignedEmployee_ForTicketWithStatusToNotAssigning_ShouldNotChangeAssignedEmployee()
@@ -183,35 +245,5 @@
 //         message.CreatedAt.Value.ShouldBe(createdAt);
 //     }
 //
-//     [Fact]
-//     public void ChangeState_GivenStateForChanges_ShouldChangeState()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetAll(state: State.New());
-//         var now = DateTime.Now;
-//         var state = State.InProgress();
-//         
-//         //act
-//         ticket.ChangeState(state, now);
-//         
-//         //assert
-//         ticket.State.Value.ShouldBe(state);
-//         ticket.State.ChangeDate.ShouldBe(now);    
-//     }
-//
-//     [Fact]
-//     public void ChangeState_GivenStateNotForChanges_ShouldNotChangeState()
-//     {
-//         //arrange
-//         var state = State.Cancelled();
-//         var ticket = TicketsFactory.GetAll(state: state);
-//         var now = DateTime.Now;
-//         
-//         //act
-//         ticket.ChangeState(State.Done(), now);
-//         
-//         //assert
-//         ticket.State.Value.ShouldBe(state);
-//         ticket.State.ChangeDate.ShouldNotBe(now);  
-//     }
-// }
+
+}
