@@ -61,7 +61,8 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     }
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
-    {        
+    {
+        //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
         if (statePolicy.CanChangeState(State))
         {
@@ -71,6 +72,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     public void ChangeAssignedUser(Guid assignedUser, DateTime stateChangeDate)
     {
+        //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
         if (!statePolicy.CanChangeState(State)) return;
         AssignedUser = assignedUser;
@@ -82,11 +84,13 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     public void RemoveAssignedUser()
     {
+        //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
         if (!statePolicy.CanChangeState(State)) return;
         AssignedUser = null;
     }
 
+    //TODO: Add unit tests
     public void ChangeProject(Guid projectId)
         => ProjectId = projectId;
 

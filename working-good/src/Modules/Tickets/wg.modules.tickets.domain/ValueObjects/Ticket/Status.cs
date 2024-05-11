@@ -33,7 +33,7 @@ public record Status
 
         if (!AvailableStatuses.Keys.Contains(value))
         {
-            throw new UnavailableStateException(value);
+            throw new UnavailableStatusException(value);
         }
 
         Value = value;
