@@ -20,7 +20,7 @@ public sealed class ChangeTicketStateCommandHandlerTests
     public async Task HandleAsync_GivenExistingTicket_ShouldUpdateTicketByRepository()
     {
         //arrange
-        var ticket = TicketsFactory.GetOnlyRequired(State.New());
+        var ticket = TicketsFactory.Get();
         _ticketRepository
             .GetByIdAsync(ticket.Id)
             .Returns(ticket);

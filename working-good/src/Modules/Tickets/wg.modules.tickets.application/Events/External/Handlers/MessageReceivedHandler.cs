@@ -28,11 +28,11 @@ internal sealed class MessageReceivedHandler(
         }
 
         var number = await ticketRepository.GetMaxNumberAsync();
-        var newTicket = Ticket.Create(Guid.NewGuid(), number + 1, @event.Subject,
-            @event.Content, @event.CreatedAt, @event.Sender, State.New(), @event.CreatedAt,
-            false, null, @event.AssignedEmployee, null, null,
-            @event.Sender);
-        await ticketRepository.AddAsync(newTicket);
-        await messageBroker.PublishAsync(newTicket.AsEvent());
+        // var newTicket = Ticket.Create(Guid.NewGuid(), number + 1, @event.Subject,
+        //     @event.Content, @event.CreatedAt, @event.Sender, State.New(), @event.CreatedAt,
+        //     false, null, @event.AssignedEmployee, null, null,
+        //     @event.Sender);
+        // await ticketRepository.AddAsync(newTicket);
+        // await messageBroker.PublishAsync(newTicket.AsEvent());
     }
 }

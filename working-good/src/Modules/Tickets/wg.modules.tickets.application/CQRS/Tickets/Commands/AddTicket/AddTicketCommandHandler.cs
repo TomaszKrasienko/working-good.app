@@ -64,13 +64,13 @@ internal sealed class AddTicketCommandHandler(
             }
         }
         
-        var maxNumber = await ticketRepository.GetMaxNumberAsync();
-        var ticket = Ticket.Create(command.Id, maxNumber + 1, command.Subject, command.Content,
-            now, createdBy.Email, command.State, now, command.IsPriority,
-            expirationDate, command.AssignedEmployee, command.AssignedUser, command.ProjectId);
+        // var maxNumber = await ticketRepository.GetMaxNumberAsync();
+        // var ticket = Ticket.Create(command.Id, maxNumber + 1, command.Subject, command.Content,
+        //     now, createdBy.Email, command.State, now, command.IsPriority,
+        //     expirationDate, command.AssignedEmployee, command.AssignedUser, command.ProjectId);
 
-        await ticketRepository.AddAsync(ticket);
-        await messageBroker.PublishAsync(ticket.AsEvent());
+        // await ticketRepository.AddAsync(ticket);
+        // await messageBroker.PublishAsync(ticket.AsEvent());
     }
 
     private bool IsProjectAssignedAndInProject(CompanyDto companyDto, Guid? projectId)

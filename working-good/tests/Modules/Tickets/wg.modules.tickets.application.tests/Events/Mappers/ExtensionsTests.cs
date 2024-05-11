@@ -12,7 +12,11 @@ public class ExtensionsTests
     public void AsEvent_GivenTicket_ShouldReturnTicketCreated()
     {
         //arrange
-        var ticket = TicketsFactory.GetAll(State.New());
+        var ticket = TicketsFactory.Get();
+        var userId = Guid.NewGuid();
+        var employeeId = Guid.NewGuid();
+        ticket.ChangeAssignedUser(userId, DateTime.Now);
+        ticket.ChangeAssignedEmployee(employeeId);
         
         //act
         var result = ticket.AsEvent();

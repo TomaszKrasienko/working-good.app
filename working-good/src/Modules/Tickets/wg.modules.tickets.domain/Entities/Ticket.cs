@@ -32,44 +32,14 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         CreatedAt = createdAt;
         CreatedBy = createdBy;
     }
-    
-    private Ticket(AggregateId id, Number number, Subject subject, Content content, CreatedAt createdAt, 
-        CreatedBy createdBy, IsPriority isPriority, State state, ExpirationDate expirationDate, 
-        EntityId assignedEmployee, EntityId assignedUser, EntityId projectId) : this(id, number, createdAt, createdBy)
-    {
-        Subject = subject;
-        Content = content;
-        IsPriority = isPriority;
-        ExpirationDate = expirationDate;
-        AssignedEmployee = assignedEmployee;
-        AssignedUser = assignedUser;
-        State = state;
-        ProjectId = projectId;
-    }
 
     public static Ticket Create(Guid id, int number, string subject, string content, DateTime createdAt,
-        string createdBy, string state, DateTime stateChangeDate, bool isPriority, DateTime? expirationDate = null, Guid? assignedEmployee = null,
-        Guid? assignedUser = null, Guid? projectId = null, string employeeEmail = null)
+        string createdBy)
     {
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
         ticket.ChangeContent(content);
-        ticket.ChangeState(state, stateChangeDate);
-        ticket.ChangePriority(isPriority, expirationDate);
-        if (assignedEmployee is not null)
-        {
-            ticket.ChangeAssignedEmployee((Guid)assignedEmployee);
-        }
-
-        if (assignedUser is not null)
-        {
-            ticket.ChangeAssignedUser((Guid)assignedUser, stateChangeDate);
-        }
-
-        if (projectId is not null)
-        {
-            ticket.ChangeProject((Guid)projectId);
-        }
+        ticket.ChangeState(State.New(), createdAt);
         return ticket;
     }
 
