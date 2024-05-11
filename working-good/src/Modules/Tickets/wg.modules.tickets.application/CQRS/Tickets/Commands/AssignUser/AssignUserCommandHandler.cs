@@ -43,7 +43,7 @@ internal sealed class AssignUserCommandHandler(
             }
         }
         
-        ticket.ChangeAssignedUser(command.UserId, clock.Now());
+        // ticket.ChangeAssignedUser(command.UserId, clock.Now());
         await ticketRepository.UpdateAsync(ticket);
     }
     

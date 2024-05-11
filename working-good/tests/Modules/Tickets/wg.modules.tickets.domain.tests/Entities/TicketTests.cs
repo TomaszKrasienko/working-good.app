@@ -99,87 +99,37 @@ public sealed class TicketTests
          //assert
          ticket.AssignedEmployee.Value.ShouldBe(oldAssignedEmployee);
      }
-//
-//     [Fact]
-//     public void ChangeAssignedUser_GivenUserIdAndDateForStateNew_ShouldChangeAssignedUserAndStateToOpenAndStateDate()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.New());
-//         var userId = Guid.NewGuid();
-//         var date = DateTime.Now;
-//         
-//         //act
-//         ticket.ChangeAssignedUser(userId, date);
-//         
-//         //assert
-//         ticket.AssignedUser.Value.ShouldBe(userId);
-//         ticket.State.Value.ShouldBe(State.Open());
-//         ticket.State.ChangeDate.ShouldBe(date);
-//     }
-//     
-//     [Fact]
-//     public void ChangeAssignedUser_GivenUserIdAndDateForStateInProgress_ShouldChangeAssignedUserAndNotChangeState()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress());
-//         var currentStateDate = ticket.State.ChangeDate;
-//         var userId = Guid.NewGuid();
-//         var date = DateTime.Now;
-//         
-//         //act
-//         ticket.ChangeAssignedUser(userId, date);
-//         
-//         //assert
-//         ticket.AssignedUser.Value.ShouldBe(userId);
-//         ticket.State.Value.ShouldBe(State.InProgress());
-//         ticket.State.ChangeDate.ShouldBe(currentStateDate);
-//     }
-//
-//     [Fact]
-//     public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeState()
-//     {        
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
-//         var originalState = ticket.State;
-//         var userId = Guid.NewGuid();
-//         var date = DateTime.Now;
-//         
-//         //act
-//         ticket.ChangeAssignedUser(userId, date);
-//         
-//         //assert
-//         ticket.State.ShouldBe(originalState);
-//     }
-//     
-//     [Fact]
-//     public void ChangeAssignedEmployee_GivenEmployeeIddForStateInProgress_ShouldChangeAssignedEmployee()
-//     {
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.InProgress());
-//         var employeeId = Guid.NewGuid();
-//         
-//         //act
-//         ticket.ChangeAssignedEmployee(employeeId);
-//         
-//         //assert
-//         ticket.AssignedEmployee.Value.ShouldBe(employeeId);
-//     }
-//
-//     [Fact]
-//     public void ChangeAssignedUser_ForCancelledState_ShouldNotChangeAssigning()
-//     {        
-//         //arrange
-//         var ticket = TicketsFactory.GetOnlyRequired(state: State.Cancelled());
-//         var originalEmployee = ticket.AssignedEmployee;
-//         var employeeId = Guid.NewGuid();
-//         
-//         //act
-//         ticket.ChangeAssignedEmployee(employeeId);
-//         
-//         //assert
-//         ticket.AssignedEmployee.ShouldBe(originalEmployee);
-//     }
-//
+
+     [Fact]
+     public void ChangeAssignedUser_GivenStatusForChanges_ShouldChangeAssignedUser()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var userId = Guid.NewGuid();
+         
+         //act
+         ticket.ChangeAssignedUser(userId);
+         
+         //assert
+         ticket.AssignedUser.Value.ShouldBe(userId);
+     }
+     
+     [Fact]
+     public void ChangeAssignedUser_GivenStatusNotForChanges_ShouldNotChangeAssignedUser()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         var oldUserId = Guid.NewGuid();
+         ticket.ChangeAssignedUser(oldUserId);
+         ticket.ChangeStatus(Status.Cancelled(), DateTime.Now);
+         
+         //act
+         ticket.ChangeAssignedUser(oldUserId);
+         
+         //assert
+         ticket.AssignedUser.Value.ShouldBe(oldUserId);
+     }
+
 //     [Fact]
 //     public void RemoveAssignedUser_ForOpenState_ShouldRemoveAssignedUser()
 //     {

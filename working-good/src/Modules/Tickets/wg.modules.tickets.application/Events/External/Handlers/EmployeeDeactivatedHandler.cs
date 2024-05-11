@@ -13,7 +13,7 @@ internal sealed class EmployeeDeactivatedHandler(
         var tickets = await ticketRepository.GetAllForAssignedEmployee(@event.EmployeeId);
         foreach (var ticket in tickets)
         {
-            ticket.ChangeAssignedUser(@event.SubstituteEmployeeId, clock.Now());
+            // ticket.ChangeAssignedUser(@event.SubstituteEmployeeId, clock.Now());
             await ticketRepository.UpdateAsync(ticket);
         }
     }
