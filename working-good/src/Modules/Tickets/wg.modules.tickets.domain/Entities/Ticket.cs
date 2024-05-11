@@ -52,7 +52,6 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     public void ChangeStatus(string state, DateTime changeDate)
     {
-        //TODO: Add tests for changes not while creating
         var statePolicy = TicketStatePolicy.Create();
         if (Status is null || statePolicy.CanChangeState(Status))
         {
@@ -62,7 +61,6 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
     {
-        //TODO: Add unit tests
         var statePolicy = TicketStatePolicy.Create();
         if (statePolicy.CanChangeState(Status))
         {
