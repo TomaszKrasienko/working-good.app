@@ -1,7 +1,4 @@
-using System.Threading.RateLimiting;
 using Shouldly;
-using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.tests.shared.Factories.Tickets;
@@ -240,6 +237,4 @@ public sealed class TicketTests
          message.Content.Value.ShouldBe(content);
          message.CreatedAt.Value.ShouldBe(createdAt);
      }
-
-
 }

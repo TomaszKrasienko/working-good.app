@@ -15,7 +15,7 @@ public class ExtensionsTests
         var ticket = TicketsFactory.Get();
         var userId = Guid.NewGuid();
         var employeeId = Guid.NewGuid();
-        ticket.ChangeAssignedUser(userId, DateTime.Now);
+        ticket.ChangeAssignedUser(userId);
         ticket.ChangeAssignedEmployee(employeeId);
         
         //act
