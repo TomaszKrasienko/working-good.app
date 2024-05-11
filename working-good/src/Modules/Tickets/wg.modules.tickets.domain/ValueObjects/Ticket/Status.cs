@@ -7,31 +7,31 @@ using wg.modules.tickets.domain.Exceptions;
 
 namespace wg.modules.tickets.domain.ValueObjects.Ticket;
 
-public record State
+public record Status
 {
-    public static readonly IReadOnlyDictionary<string, bool> AvailableStates
+    private static readonly IReadOnlyDictionary<string, bool> AvailableStatuses
         = new Dictionary<string, bool>()
         {
-            {"New", true}, {"Open", true}, {"InProgress", true}, {"WaitingForResponse", true}, 
+            {"New", true}, {"Open", true}, {"WaitingForResponse", true}, 
             {"Cancelled", false} , {"Done", false}
         };
 
-    public static IEnumerable<string> AvailableChangesStates => AvailableStates
+    public static IEnumerable<string> AvailableForChangesStatuses => AvailableStatuses
         .Where(x => x.Value is true)
         .Select(x => x.Key)
         .ToImmutableList();
     
-    public string Value { get; private set; }
-    public DateTime ChangeDate { get; private set; }
+    public string Value { get; }
+    public DateTime ChangeDate { get; }
 
-    public State(string value, DateTime changeDate)
+    public Status(string value, DateTime changeDate)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new EmptyStateException();
         }
 
-        if (!AvailableStates.Keys.Contains(value))
+        if (!AvailableStatuses.Keys.Contains(value))
         {
             throw new UnavailableStateException(value);
         }
@@ -45,10 +45,7 @@ public record State
 
     public static string Open()
         => "Open";
-
-    public static string InProgress()
-        => "InProgress";
-
+    
     public static string WaitingForResponse()
         => "WaitingForResponse";
     
@@ -58,9 +55,9 @@ public record State
     public static string Done()
         => "Done";
 
-    public static bool operator ==(State state, string stateValue)
+    public static bool operator ==(Status state, string stateValue)
         => state?.Value == stateValue;
 
-    public static bool operator !=(State state, string stateValue) 
+    public static bool operator !=(Status state, string stateValue) 
         => state?.Value != stateValue;
 }

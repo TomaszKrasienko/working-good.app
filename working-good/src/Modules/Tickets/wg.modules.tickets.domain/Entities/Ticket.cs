@@ -17,7 +17,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public CreatedAt CreatedAt { get; private set; }
     public CreatedBy CreatedBy { get; private set; }
     public IsPriority IsPriority { get; private set; }
-    public State State { get; private set; }
+    public Status State { get; private set; }
     public ExpirationDate ExpirationDate { get; private set; }
     public EntityId AssignedEmployee { get; private set; }
     public EntityId AssignedUser { get; private set; }
@@ -39,7 +39,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         var ticket = new Ticket(id, number, createdAt, createdBy);
         ticket.ChangeSubject(subject);
         ticket.ChangeContent(content);
-        ticket.ChangeState(State.New(), createdAt);
+        ticket.ChangeState(Status.New(), createdAt);
         return ticket;
     }
 
@@ -54,7 +54,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         var statePolicy = TicketStatePolicy.Create();
         if (State is null || statePolicy.CanChangeState(State))
         {
-            State = new State(state, changeDate);
+            State = new Status(state, changeDate);
         }
     }
 
@@ -83,9 +83,9 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         var statePolicy = TicketStatePolicy.Create();
         if (!statePolicy.CanChangeState(State)) return;
         AssignedUser = assignedUser;
-        if (State == State.New())
+        if (State == Status.New())
         {
-            ChangeState(State.Open(), stateChangeDate);
+            ChangeState(Status.Open(), stateChangeDate);
         }
     }
 
@@ -102,7 +102,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt)
     {
-        State = new State(State.WaitingForResponse(), createdAt);
+        State = new Status(Status.WaitingForResponse(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }

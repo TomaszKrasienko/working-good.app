@@ -25,7 +25,7 @@ public sealed class ChangeTicketStateCommandHandlerTests
             .GetByIdAsync(ticket.Id)
             .Returns(ticket);
         
-        var command = new ChangeTicketStateCommand(ticket.Id, State.Cancelled());
+        var command = new ChangeTicketStateCommand(ticket.Id, Status.Cancelled());
         
         //act
         await Act(command);
@@ -42,7 +42,7 @@ public sealed class ChangeTicketStateCommandHandlerTests
     public async Task HandleAsync_GivenNotExistingTicket_ShouldThrowTicketNotFoundException()
     {
         //arrange
-        var command = new ChangeTicketStateCommand(Guid.NewGuid(), State.Cancelled());
+        var command = new ChangeTicketStateCommand(Guid.NewGuid(), Status.Cancelled());
         
         //act
         var exception = await Record.ExceptionAsync(async() => await Act(command));

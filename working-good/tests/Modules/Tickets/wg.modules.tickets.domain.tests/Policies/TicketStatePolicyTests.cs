@@ -18,7 +18,7 @@ public sealed class TicketStatePolicyTests
         var policy = TicketStatePolicy.Create();
         
         //act
-        var result = policy.CanChangeState(new State(state, DateTime.Now));
+        var result = policy.CanChangeState(new Status(state, DateTime.Now));
         
         //assert
         result.ShouldBeTrue();
@@ -33,7 +33,7 @@ public sealed class TicketStatePolicyTests
         var policy = TicketStatePolicy.Create();
         
         //act
-        var result = policy.CanChangeState(new State(state, DateTime.Now));
+        var result = policy.CanChangeState(new Status(state, DateTime.Now));
         
         //assert
         result.ShouldBeFalse();

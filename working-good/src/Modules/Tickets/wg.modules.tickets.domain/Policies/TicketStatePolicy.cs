@@ -8,6 +8,6 @@ internal sealed class TicketStatePolicy : IStatePolicy
     internal static TicketStatePolicy Create()
         => new TicketStatePolicy();
     
-    public bool CanChangeState(State currentState)
-        => currentState != State.Cancelled() && currentState != State.Done();
+    public bool CanChangeState(Status currentState)
+        => currentState != Status.Cancelled() && currentState != Status.Done();
 }

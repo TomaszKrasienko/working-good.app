@@ -4,5 +4,5 @@ namespace wg.modules.tickets.domain.Policies.Abstractions;
 
 public interface IStatePolicy
 {
-    bool CanChangeState(State currentState);
+    bool CanChangeState(Status currentState);
 }
