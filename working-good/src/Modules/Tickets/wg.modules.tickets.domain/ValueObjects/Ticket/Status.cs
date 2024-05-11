@@ -28,7 +28,7 @@ public record Status
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new EmptyStateException();
+            throw new EmptyStatusException();
         }
 
         if (!AvailableStatuses.Keys.Contains(value))

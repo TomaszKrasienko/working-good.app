@@ -11,11 +11,12 @@ namespace wg.modules.tickets.domain.Entities;
 
 public sealed class Ticket : AggregateRoot<AggregateId>
 {
-    public Number Number { get; private set; }
+    //TODO: Add change priority with unit tests and checking employee and user
+    public Number Number { get; }
     public Subject Subject { get; private set; }
     public Content Content { get; private set; }
-    public CreatedAt CreatedAt { get; private set; }
-    public CreatedBy CreatedBy { get; private set; }
+    public CreatedAt CreatedAt { get; }
+    public CreatedBy CreatedBy { get; }
     public IsPriority IsPriority { get; private set; }
     public Status State { get; private set; }
     public ExpirationDate ExpirationDate { get; private set; }
@@ -51,22 +52,12 @@ public sealed class Ticket : AggregateRoot<AggregateId>
 
     public void ChangeState(string state, DateTime changeDate)
     {
+        //TODO: Add tests for changes not while creating
         var statePolicy = TicketStatePolicy.Create();
         if (State is null || statePolicy.CanChangeState(State))
         {
             State = new Status(state, changeDate);
         }
-    }
-
-    private void ChangePriority(bool priority, DateTime? expirationDate)
-    {
-        if (priority && expirationDate is null)
-        {
-            throw new MissingExpirationDateException(true);
-        }
-
-        IsPriority = priority;
-        ExpirationDate = expirationDate;
     }
 
     internal void ChangeAssignedEmployee(Guid assignedEmployee)
