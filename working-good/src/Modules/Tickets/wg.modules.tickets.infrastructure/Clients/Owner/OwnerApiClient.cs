@@ -9,6 +9,10 @@ internal sealed class OwnerApiClient(
 {
     public Task<OwnerDto> GetOwnerAsync(GetOwnerDto dto)
         => moduleClient.SendAsync<OwnerDto>("owner/get", dto);
+    
     public Task<UserDto> GetActiveUserByIdAsync(UserIdDto dto)
         => moduleClient.SendAsync<UserDto>("owner/user/active/get", dto);
+    
+    public Task<IsGroupMembershipExists> IsMembershipExistsAsync(GetMembershipDto dto)
+        => moduleClient.SendAsync<IsGroupMembershipExists>("owner/group/membership/get", dto);
 }

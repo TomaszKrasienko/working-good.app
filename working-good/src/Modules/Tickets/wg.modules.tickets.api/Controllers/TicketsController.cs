@@ -80,4 +80,15 @@ internal sealed class TicketsController(
         await commandDispatcher.SendAsync(new AssignUserCommand(userId, id), cancellationToken);
         return Ok();
     }
+
+    [HttpPatch("{id:guid}/project/{projectId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> AssignProject(Guid id, Guid projectId, CancellationToken cancellationToken)
+    {
+        return Ok();
+    }
+    
 }

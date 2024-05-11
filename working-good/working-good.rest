@@ -45,7 +45,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"QBA7LujCtgb210ccbxaEN2rnaUhljBY0KKaL0BLSY0mBoyWDNCws94QNzACKFbVidoSxRLncOHQ1ralVILhi6g"
+    "token":"TC2zpzzNHi7JVPg0CIr9IOJhmSIwJsqWGng7E03zhdUJIOKdALTZKRQGu3i9HtNEjNSuAHGiUu2pbCADDGLg"
 }
 
 ###
@@ -115,7 +115,6 @@ Content-Type: application/json
 
 ###
 @employeeId = {{add_employee.response.headers.x-resource-id}}
-# @employeeId = 
 
 ###
 # @name ticket_add
@@ -133,16 +132,6 @@ Content-Type: application/json
 }
 
 ###
-# @ticketId = {{ticket_add.response.headers.x-resource-id}}
-
-@ticketId = aced5e26-1008-4504-aba7-1af1fcd7b35c
-
-###
-GET {{url}}/tickets-module/tickets/{{ticketId}}
-Authorization: bearer {{token}}
-
-
-###
 POST {{url}}/messages-module/messages
 Content-Type: application/json
 
@@ -153,12 +142,23 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{url}}/tickets-module/tickets/{{ticketId}}/assign/user/{{userId}}
-Authorization: bearer {{token}}
+# @ticketId = {{ticket_add.response.headers.x-resource-id}}
 
 ###
 GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
 Authorization: bearer {{token}}
+
+@ticketId = c5a9090d-b752-48e2-991d-b76c42f20e83
+
+###
+GET {{url}}/tickets-module/tickets/{{ticketId}}
+Authorization: bearer {{token}}
+
+###
+PATCH {{url}}/tickets-module/tickets/{{ticketId}}/assign/user/{{userId}}
+Authorization: bearer {{token}}
+
+### Assign to project
 
 ###
 POST {{url}}/tickets-module/messages/ticket/{{ticketId}}/add
