@@ -3,8 +3,11 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.activities.application.CQRS.Activities.Commands.AddActivity;
+using wg.modules.activities.application.DTOs;
+using wg.modules.activities.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.tickets.domain.Entities;
+using wg.tests.shared.Factories.Activities;
 using wg.tests.shared.Factories.Tickets;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -73,6 +76,45 @@ public sealed class ActivitiesControllerTests : BaseTestsController
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task GetById_GivenExistingId_ShouldReturn200OkStatusCodeWithActivityId()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var activity = await AddActivity();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<ActivityDto>($"activities-module/activities/{activity.Id.Value}");
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.ShouldBeOfType<ActivityDto>();
+    }
+
+    [Fact]
+    public async Task GetById_GivenNotExistingId_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var result = await HttpClient.GetAsync($"activities-module/activities/{Guid.NewGuid()}");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldBe401UnauthorizedStatusCode()
+    {
+        //act
+        var result = await HttpClient.GetAsync($"activities-module/activities/{Guid.NewGuid()}");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
     
     private async Task<Ticket> AddTicket()
     {
@@ -81,4 +123,12 @@ public sealed class ActivitiesControllerTests : BaseTestsController
         await TicketsDbContext.SaveChangesAsync();
         return ticket;
     }
+
+    private async Task<Activity> AddActivity()
+    {
+        var activity = ActivityFactory.GetRandom(DateTime.Now.AddHours(-1), DateTime.Now);
+        await ActivitiesDbContext.Activities.AddAsync(activity);
+        await ActivitiesDbContext.SaveChangesAsync();
+        return activity;
+    } 
 }
