@@ -3,7 +3,7 @@ using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using Xunit;
 
-namespace wg.modules.tickets.domain.tests.Entities;
+namespace wg.modules.tickets.domain.tests.Entities.Create;
 
 public sealed class TicketCreateTests
 {
@@ -29,6 +29,7 @@ public sealed class TicketCreateTests
         result.Content.Value.ShouldBe(content);
         result.CreatedAt.Value.ShouldBe(createdAt);
         result.CreatedBy.Value.ShouldBe(createdBy);
+        result.IsPriority.Value.ShouldBeFalse();
     }
 
     [Fact]

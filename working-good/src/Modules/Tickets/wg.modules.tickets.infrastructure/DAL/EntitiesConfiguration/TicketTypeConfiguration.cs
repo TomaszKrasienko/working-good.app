@@ -55,11 +55,11 @@ internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<Ticket>
                     .Property(x => x.Value)
                     .IsRequired()
                     .HasMaxLength(40)
-                    .HasColumnName("State");
+                    .HasColumnName("Status");
                 options
                     .Property(x => x.ChangeDate)
                     .IsRequired()
-                    .HasColumnName("StateChangeDate");
+                    .HasColumnName("StatusChangeDate");
             });
 
         builder

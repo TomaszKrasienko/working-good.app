@@ -39,6 +39,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         ticket.ChangeSubject(subject);
         ticket.ChangeContent(content);
         ticket.ChangeStatus(Status.New(), createdAt);
+        ticket.ChangePriority(false);
         return ticket;
     }
 
@@ -92,6 +93,9 @@ public sealed class Ticket : AggregateRoot<AggregateId>
             ProjectId = projectId;
         }
     }
+
+    private void ChangePriority(bool isPriority)
+        => IsPriority = isPriority;
 
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt, bool isFromUser)
