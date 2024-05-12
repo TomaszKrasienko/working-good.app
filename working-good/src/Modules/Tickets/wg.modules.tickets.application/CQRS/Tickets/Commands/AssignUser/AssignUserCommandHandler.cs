@@ -21,41 +21,20 @@ internal sealed class AssignUserCommandHandler(
             throw new TicketNotFoundException(command.TicketId);
         }
 
-        if (ticket.ProjectId is null)
+        if (ticket.ProjectId is not null)
         {
-            var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
-            if (user is null)
+            var isMembershipExists = await ownerApiClient.IsMembershipExistsAsync(new GetMembershipDto()
             {
-                throw new UserNotFoundException(command.UserId);
-            }
-        }
-        else
-        {
-            var owner = await ownerApiClient.GetOwnerAsync(new GetOwnerDto());
-            if (!IsUserExists(owner, command.UserId))
-            {
-                throw new UserNotFoundException(command.UserId);
-            }
-            
-            if (!IsGroupAssignedAndUserInGroup(owner, command.UserId, ticket.ProjectId))
+                GroupId = ticket.ProjectId,
+                UserId = command.UserId
+            });
+            if (!isMembershipExists.Value)
             {
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
             }
         }
         
         // ticket.ChangeAssignedUser(command.UserId, clock.Now());
-        await ticketRepository.UpdateAsync(ticket);
-    }
-    
-    private bool IsUserExists(OwnerDto dto, Guid? userId)
-        => dto.Users?.Any(u => u.Id.Equals(userId)) ?? false;
-    
-    private bool IsGroupAssignedAndUserInGroup(OwnerDto ownerDto, Guid? userId, Guid? projectId)
-    {
-        if (projectId is null) return true;
-        return ownerDto.Groups?.Any(g 
-                   => g.Id.Equals(projectId) 
-                   && (g.Users?.Any(x => x == userId) ?? false))
-               ?? false;
+        // await ticketRepository.UpdateAsync(ticket);
     }
 }
