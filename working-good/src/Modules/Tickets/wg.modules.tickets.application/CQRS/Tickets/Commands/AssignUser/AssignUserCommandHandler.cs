@@ -1,9 +1,11 @@
 using wg.modules.tickets.application.Clients.Owner;
 using wg.modules.tickets.application.Clients.Owner.DTO;
+using wg.modules.tickets.application.Events;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
+using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 
 namespace wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
@@ -11,7 +13,7 @@ namespace wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 internal sealed class AssignUserCommandHandler(
     ITicketRepository ticketRepository,
     IOwnerApiClient ownerApiClient,
-    IClock clock) : ICommandHandler<AssignUserCommand>
+    IMessageBroker messageBroker) : ICommandHandler<AssignUserCommand>
 {
     public async Task HandleAsync(AssignUserCommand command, CancellationToken cancellationToken)
     {
@@ -34,7 +36,10 @@ internal sealed class AssignUserCommandHandler(
             }
         }
         
-        // ticket.ChangeAssignedUser(command.UserId, clock.Now());
-        // await ticketRepository.UpdateAsync(ticket);
+        ticket.ChangeAssignedUser(command.UserId);
+        await ticketRepository.UpdateAsync(ticket);
+
+        var @event = new UserAssigned(ticket.Id, ticket.Number, ticket.AssignedUser);
+        await messageBroker.PublishAsync(@event);
     }
 }
