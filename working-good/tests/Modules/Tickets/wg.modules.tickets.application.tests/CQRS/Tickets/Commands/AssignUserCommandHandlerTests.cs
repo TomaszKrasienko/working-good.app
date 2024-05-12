@@ -41,6 +41,10 @@ public sealed class AssignUserCommandHandlerTests
           var projectId = Guid.NewGuid();
           ticket.ChangeProject(projectId);
 
+          _ticketRepository
+              .GetByIdAsync(ticket.Id)
+              .Returns(ticket);
+
           _ownerApiClient
               .IsMembershipExistsAsync(Arg.Is<GetMembershipDto>(arg
                   => arg.UserId == command.UserId
