@@ -2,6 +2,7 @@ using System.Collections.Specialized;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
@@ -47,6 +48,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation("Adds ticket")]
     public async Task<ActionResult> AddTicket(AddTicketCommand command, CancellationToken cancellationToken)
     {
         var ticketId = Guid.NewGuid();
@@ -59,6 +61,18 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
+    [HttpPatch("{id:guid}/user/{userId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Assigns user to ticket")]
+    public async Task<ActionResult> AssignUser(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(new AssignUserCommand(userId, id), cancellationToken);
+        return Ok();
+    }
+    
     [HttpPatch("{id:guid}/change-state")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -70,16 +84,7 @@ internal sealed class TicketsController(
         return Ok();
     }
     
-    [HttpPatch("{id:guid}/assign/user/{userId:guid}")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> AssignUser(Guid id, Guid userId, CancellationToken cancellationToken)
-    {
-        await commandDispatcher.SendAsync(new AssignUserCommand(userId, id), cancellationToken);
-        return Ok();
-    }
+
 
     [HttpPatch("{id:guid}/project/{projectId:guid}")]
     [Authorize]

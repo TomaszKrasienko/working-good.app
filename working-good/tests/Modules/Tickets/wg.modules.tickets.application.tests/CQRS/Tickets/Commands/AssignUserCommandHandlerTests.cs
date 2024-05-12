@@ -1,5 +1,4 @@
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Shouldly;
 using wg.modules.tickets.application.Clients.Owner;
 using wg.modules.tickets.application.Clients.Owner.DTO;
@@ -8,12 +7,8 @@ using wg.modules.tickets.application.Events;
 using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
-using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Messaging;
-using wg.shared.abstractions.Time;
-using wg.tests.shared.Factories.DTOs.Tickets.Owner;
 using wg.tests.shared.Factories.Tickets;
-using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.CQRS.Tickets.Commands;
@@ -23,7 +18,42 @@ public sealed class AssignUserCommandHandlerTests
     private Task Act(AssignUserCommand command) => _handler.HandleAsync(command, default);    
 
     [Fact]
-    public async Task HandleAsync_GivenValidArguments_ShouldUpdateTicketAndSentEvent()
+    public async Task HandleAsync_GivenExistingActiveUser_ShouldUpdateTicketAndSentEvent()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
+
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+
+        _ownerApiClient
+            .IsActiveUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == command.UserId))
+            .Returns(new IsActiveUserExistsDto()
+            {
+                Value = true
+            });
+      
+        //act
+        await Act(command);
+      
+        //assert
+        ticket.AssignedUser.Value.ShouldBe(command.UserId);
+
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
+
+        await _messageBroker
+            .PublishAsync(Arg.Is<UserAssigned>(arg
+                => arg.TicketId == command.TicketId
+                   && arg.TicketNumber == ticket.Number.Value
+                   && arg.UserId == command.UserId));
+    }
+    
+    [Fact]
+    public async Task HandleAsync_GivenTicketWithProjectAndValidMembership_ShouldUpdateTicketAndSentEvent()
     {
       //arrange
       var ticket = TicketsFactory.Get();
@@ -101,6 +131,31 @@ public sealed class AssignUserCommandHandlerTests
       
       //assert
       exception.ShouldBeOfType<UserDoesNotBelongToGroupException>();
+    }
+
+    [Fact]
+    public async Task HandleAsync_GivenNotExistedActiveUser_ShouldThrowActiveUserNotFoundException()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        var command = new AssignUserCommand(Guid.NewGuid(), ticket.Id);
+
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+
+        _ownerApiClient
+            .IsActiveUserExistsAsync(Arg.Is<UserIdDto>(arg => arg.Id == command.UserId))
+            .Returns(new IsActiveUserExistsDto()
+            {
+                Value = false
+            });
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+      
+        //assert
+        exception.ShouldBeOfType<ActiveUserNotFoundException>();
     }
      
     #region arrange

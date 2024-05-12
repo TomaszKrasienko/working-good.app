@@ -30,9 +30,17 @@ internal sealed class AssignUserCommandHandler(
                 GroupId = ticket.ProjectId,
                 UserId = command.UserId
             });
-            if (!isMembershipExists.Value)
+            if (!isMembershipExists?.Value ?? false)
             {
                 throw new UserDoesNotBelongToGroupException(ticket.ProjectId, command.UserId);
+            }
+        }
+        else
+        {
+            var isActiveUserExists = await ownerApiClient.IsActiveUserExistsAsync(new UserIdDto(command.UserId));
+            if (!isActiveUserExists?.Value ?? false)
+            {
+                throw new ActiveUserNotFoundException(command.UserId);
             }
         }
         
