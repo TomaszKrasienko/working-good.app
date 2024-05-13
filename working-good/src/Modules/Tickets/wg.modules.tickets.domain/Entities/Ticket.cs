@@ -58,7 +58,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
-    internal void ChangeAssignedEmployee(Guid assignedEmployee)
+    public void ChangeAssignedEmployee(Guid assignedEmployee)
     {
         var statePolicy = TicketStatePolicy.Create();
         if (statePolicy.CanChangeState(Status))

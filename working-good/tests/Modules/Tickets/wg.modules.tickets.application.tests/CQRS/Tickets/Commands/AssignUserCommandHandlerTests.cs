@@ -18,7 +18,7 @@ public sealed class AssignUserCommandHandlerTests
     private Task Act(AssignUserCommand command) => _handler.HandleAsync(command, default);    
 
     [Fact]
-    public async Task HandleAsync_GivenExistingActiveUser_ShouldUpdateTicketAndSentEvent()
+    public async Task HandleAsync_GivenExistingActiveUser_ShouldAssignUserUpdateTicketAndSentEvent()
     {
         //arrange
         var ticket = TicketsFactory.Get();
@@ -53,7 +53,7 @@ public sealed class AssignUserCommandHandlerTests
     }
     
     [Fact]
-    public async Task HandleAsync_GivenTicketWithProjectAndValidMembership_ShouldUpdateTicketAndSentEvent()
+    public async Task HandleAsync_GivenTicketWithProjectAndValidMembership_ShouldAssignUserUpdateTicketAndSentEvent()
     {
       //arrange
       var ticket = TicketsFactory.Get();
