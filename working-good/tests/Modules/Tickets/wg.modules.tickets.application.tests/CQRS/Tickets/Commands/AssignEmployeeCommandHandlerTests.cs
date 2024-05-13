@@ -55,7 +55,7 @@ public sealed class AssignEmployeeCommandHandlerTests
     }
     
     [Fact]
-    public async Task HandleAsync_GivenTicketWithProjectAndEmployeeForCompany_ShouldAssignEmployeeUpdateTicketAndSentEvent()
+    public async Task HandleAsync_GivenTicketWithProjectAndEmployeeForCompany_ShouldAssignEmployeeUpdateTicketAndSendEvent()
     {
         //arrange
         var ticket = TicketsFactory.Get();
