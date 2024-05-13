@@ -59,7 +59,7 @@ public sealed class AssignProjectCommandHandlerTests
         var ticket = TicketsFactory.Get();
         var employeeId = Guid.NewGuid();
         ticket.ChangeAssignedEmployee(employeeId);
-        var command = new AssignProjectCommand(Guid.NewGuid(), ticket.Id);
+        var command = new AssignProjectCommand(ticket.Id, Guid.NewGuid());
 
         _ticketRepository
             .GetByIdAsync(ticket.Id)
@@ -211,7 +211,7 @@ public sealed class AssignProjectCommandHandlerTests
         exception.ShouldBeOfType<ActiveProjectNotFoundException>();
     }
 
-#region arrange
+    #region arrange
     private readonly ITicketRepository _ticketRepository;
     private readonly IOwnerApiClient _ownerApiClient;
     private readonly ICompaniesApiClient _companiesApiClient;
@@ -222,7 +222,8 @@ public sealed class AssignProjectCommandHandlerTests
         _ticketRepository = Substitute.For<ITicketRepository>();
         _ownerApiClient = Substitute.For<IOwnerApiClient>();
         _companiesApiClient = Substitute.For<ICompaniesApiClient>();
-        _handler = new AssignProjectCommandHandler(_ticketRepository, _ownerApiClient);
+        _handler = new AssignProjectCommandHandler(_ticketRepository, _ownerApiClient,
+            _companiesApiClient);
     }
 
     #endregion
