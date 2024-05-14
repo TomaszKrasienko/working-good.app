@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignEmployee;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
@@ -12,6 +13,7 @@ using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Context;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Exceptions.DTOs;
 using wg.shared.infrastructure.Pagination.Mappers;
 
 namespace wg.modules.tickets.api.Controllers;
@@ -47,7 +49,7 @@ internal sealed class TicketsController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation("Adds ticket")]
     public async Task<ActionResult> AddTicket(AddTicketCommand command, CancellationToken cancellationToken)
     {
@@ -61,10 +63,22 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
+    [HttpPatch("{ticketId:guid}/employee/{employeeId:guid}")]
+    [Authorize]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Assigns employee to ticket")]
+    public async Task<ActionResult> AssignEmployee(Guid ticketId, Guid employeeId, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(new AssignEmployeeCommand(employeeId, ticketId), cancellationToken);
+        return Ok();
+    }
+
     [HttpPatch("{id:guid}/user/{userId:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Assigns user to ticket")]
     public async Task<ActionResult> AssignUser(Guid id, Guid userId, CancellationToken cancellationToken)
