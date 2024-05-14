@@ -78,7 +78,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStateCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStatusCommand command, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
         return Ok();
