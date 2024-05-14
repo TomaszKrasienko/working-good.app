@@ -21,6 +21,14 @@ internal sealed class EmployeesController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid id, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
+
+    [HttpGet("{id:guid}/active")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IsExistsDto>> GetActiveById(Guid id, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(id), cancellationToken);
     
     [HttpPost("companies/{companyId}/add")]
     [Authorize(Roles = "Manager")]

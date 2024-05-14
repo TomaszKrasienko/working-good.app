@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
@@ -16,6 +17,7 @@ namespace wg.modules.companies.integration.tests;
 [Collection("#1")]
 public sealed class EmployeesControllerTests : BaseTestsController
 {
+    //TODO: Adding employee in method
     [Fact]
     public async Task GetById_GivenExistingId_ShouldReturnEmployeeDto()
     {
@@ -61,6 +63,23 @@ public sealed class EmployeesControllerTests : BaseTestsController
 
         //assert
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task GetActiveById_GivenExistingActiveEmployeeId_ShouldReturnIsExistsDto()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetInCompany(company);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/employees/{employee.Id.Value}/active");
+        
+        //assert
+        result.Value.ShouldBeTrue();
     }
 
     [Fact]
