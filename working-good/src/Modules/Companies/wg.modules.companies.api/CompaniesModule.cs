@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.CQRS.Employees.Queries;
+using wg.modules.companies.application.CQRS.Projects.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.modules.companies.infrastructure.Configuration;
 using wg.shared.abstractions.CQRS.Queries;
@@ -31,6 +32,8 @@ internal sealed class CompaniesModule : IModule
             .Subscribe<GetEmployeeByIdQuery, EmployeeDto>("companies/employee/get/by-id",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsActiveEmployeeExistsQuery, IsExistsDto>("companies/employees/is-active-exists/get",
-            (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
+            (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<IsProjectInCompanyQuery, IsExistsDto>("companies/projects/is-project-for-company/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }

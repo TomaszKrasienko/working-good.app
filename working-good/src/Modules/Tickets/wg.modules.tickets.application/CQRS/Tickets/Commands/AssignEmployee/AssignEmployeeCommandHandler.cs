@@ -49,6 +49,5 @@ internal sealed class AssignEmployeeCommandHandler(
 
         var @event = new EmployeeAssigned(command.TicketId, ticket.Number, command.EmployeeId);
         await messageBroker.PublishAsync(@event);
-
     }
 }
