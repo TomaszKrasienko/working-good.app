@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Projects.Commands.AddProject;
 using wg.modules.companies.application.CQRS.Projects.Commands.EditProject;
+using wg.modules.companies.application.DTOs;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -17,6 +18,25 @@ namespace wg.modules.companies.integration.tests;
 [Collection("#1")]
 public sealed class ProjectsControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task IsActiveProjectForEmployeeExists_GivenExistingProjectInCompany_ShouldReturnIsExistsDtoWithTrue()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        var project = ProjectFactory.GetInCompany(company, true, false);
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/projects/{project.Id.Value}/employee/{employee.Id.Value}/active");
+        
+        //assert
+        result.Value.ShouldBeTrue();
+    }
+    
     [Fact]
     public async Task AddProject_GivenExistingCompanyIdAndAddProjectCommandAndAuthorizedManager_ShouldReturn204CreatedStatusCodeAndResourceIdHeaderAndLocationHeaderAndAddToDb()
     {

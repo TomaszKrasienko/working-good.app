@@ -12,16 +12,22 @@ internal sealed class IsProjectInCompanyQueryHandler(
     IClock clock) : IQueryHandler<IsProjectInCompanyQuery, IsExistsDto>
 {
     public async Task<IsExistsDto> HandleAsync(IsProjectInCompanyQuery query, CancellationToken cancellationToken)
-        => new IsExistsDto()
+    {
+        var projectsForEmployee = await dbContext
+            .Companies
+            .Include(x => x.Projects)
+            .Include(x => x.Employees)
+            .Where(x
+                => x.Employees.Any(y => y.Id.Equals(query.EmployeeId))
+                   && x.Projects.Any(y => y.Id.Equals(query.ProjectId)))
+            .ToListAsync(cancellationToken);
+        
+        return new IsExistsDto()
         {
-            Value = await dbContext
-                .Companies
-                .Include(x => x.Projects)
-                .Include(x => x.Employees)
-                .AnyAsync(x
-                        => x.Employees.Any(y => y.Id.Equals(query.EmployeeId))
-                           && x.Projects.Any(y => y.Id.Equals(query.ProjectId))
-                           && x.Projects.Any(y => y.PlannedFinish == null || y.PlannedFinish.Value < clock.Now()),
-                    cancellationToken)
+            Value = projectsForEmployee.Any(x 
+                => x.Projects.Any(y => y.PlannedFinish == null 
+                                       || y.PlannedFinish.Value < clock.Now()))
         };
+        
+    } 
 }
