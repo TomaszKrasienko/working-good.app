@@ -38,6 +38,36 @@ public sealed class ProjectsControllerTests : BaseTestsController
     }
     
     [Fact]
+    public async Task IsActiveProjectForEmployeeExists_GivenNotExistingProjectInCompany_ShouldReturnIsExistsDtoWithFalse()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        var project = ProjectFactory.GetInCompany(company, true, false);
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/projects/{Guid.NewGuid()}/employee/{employee.Id.Value}/active");
+        
+        //assert
+        result.Value.ShouldBeFalse();
+    }
+    
+    [Fact]
+    public async Task IsActiveProjectForEmployeeExists_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/projects/{Guid.NewGuid()}/employee/{Guid.NewGuid()}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task AddProject_GivenExistingCompanyIdAndAddProjectCommandAndAuthorizedManager_ShouldReturn204CreatedStatusCodeAndResourceIdHeaderAndLocationHeaderAndAddToDb()
     {
         //arrange
