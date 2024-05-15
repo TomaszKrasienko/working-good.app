@@ -1,6 +1,6 @@
 namespace wg.modules.owner.application.DTOs;
 
-public class IsUserExistsDto
+public class  IsExistsDto
 {
     public bool Value { get; set; }
 }
