@@ -218,7 +218,7 @@ public sealed class TicketsControllerTests : BaseTestsController
     }
 
     [Fact]
-    public async Task AssignEmployee_GivenExistingActiveEmployee_ShouldReturn200OkStatusCodeAndAssignEmployee()
+    public async Task AssignEmployee_GivenExistingActiveEmployeeAndTicketWithoutProject_ShouldReturn200OkStatusCodeAndAssignEmployee()
     {
         //arrange
         var ticket = await AddTicket();
@@ -238,6 +238,32 @@ public sealed class TicketsControllerTests : BaseTestsController
         updatedTicket.AssignedEmployee.Value.ShouldBe(employee.Id.Value);
     }
 
+    [Fact]
+    public async Task AssignEmployee_GivenExistingActiveEmployeeAndTicketWithProject_ShouldReturn200OkStatusCodeAndAssignEmployee()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        var project = ProjectFactory.GetInCompany(company, true, false);
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        ticket.ChangeProject(project.Id);
+        TicketsDbContext.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/employee/{employee.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.AssignedEmployee.Value.ShouldBe(employee.Id.Value);
+    }
+    
 //     [Fact]
 //     public async Task AssignUser_GivenExistingTicketIdAndUserId_ShouldReturn200OkStatusCodeAndUpdateTicket()
 //     {
