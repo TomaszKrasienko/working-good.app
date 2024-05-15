@@ -287,27 +287,32 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     
-//     [Fact]
-//     public async Task AssignUser_GivenExistingTicketIdAndUserId_ShouldReturn200OkStatusCodeAndUpdateTicket()
-//     {
-//         //arrange
-//         var ticket = await AddTicket();
-//         var owner = OwnerFactory.Get();
-//         var user = UserFactory.GetInOwner(owner, Role.Manager());
-//         user.Verify(DateTime.Now);
-//         await _ownerDbContext.Owner.AddAsync(owner);
-//         await _ownerDbContext.SaveChangesAsync();
-//         Authorize(Guid.NewGuid(), Role.User());
-//         
-//         //act
-//         var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/assign/user/{user.Id.Value}", null);
-//         
-//         //assert
-//         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-//
-//         var updatedTicket = await GetTicketByIdAsync(ticket.Id);
-//         updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
-//     }
+     [Fact]
+     public async Task AssignUser_GivenExistingUserAndTicketWithProject_ShouldReturn200OkStatusCodeAndUpdateTicket()
+     {
+         //arrange
+         var owner = OwnerFactory.Get();
+         var user = UserFactory.GetInOwner(owner, Role.Manager());
+         var group = GroupFactory.GetInOwner(owner);
+         user.Verify(DateTime.Now);
+         await _ownerDbContext.Owner.AddAsync(owner);
+         await _ownerDbContext.SaveChangesAsync();
+         
+         var ticket = await AddTicket();
+         ticket.ChangeProject(group.Id);
+         TicketsDbContext.Tickets.Update(ticket);
+         await TicketsDbContext.SaveChangesAsync();
+         Authorize(Guid.NewGuid(), Role.User());
+         
+         //act
+         var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/user/{user.Id.Value}", null);
+         
+         //assert
+         response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+         var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+         updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
+     }
 //     
 //     [Fact]
 //     public async Task AssignUser_GivenExistingTicketIdAndUserIdAndProjectId_ShouldReturn200OkStatusCodeAndUpdateTicket()
