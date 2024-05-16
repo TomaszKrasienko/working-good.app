@@ -3,14 +3,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
+using wg.modules.owner.application.CQRS.Groups.Queries;
 using wg.shared.abstractions.CQRS.Commands;
+using wg.shared.abstractions.CQRS.Queries;
 using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.owner.api.Controllers;
 
 internal sealed class GroupsController(
-    ICommandDispatcher commandDispatcher) : BaseController 
+    ICommandDispatcher commandDispatcher,
+    IQueryDispatcher queryDispatcher) : BaseController
 {
+    [HttpGet("{groupId:guid}/{userId:guid}/is-membership-exists")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> IsMembershipExists(Guid groupId, Guid userId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new IsMembershipExistsQuery(userId, groupId), cancellationToken));
+    
     [HttpPost("{groupId:guid}/add-user")]
     [Authorize(Roles = "Manager")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -23,4 +33,6 @@ internal sealed class GroupsController(
         await commandDispatcher.SendAsync(command with { GroupId = groupId }, cancellationToken);
         return NoContent();
     }
+    
+    
 }
