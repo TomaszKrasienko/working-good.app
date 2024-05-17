@@ -10,7 +10,7 @@ public sealed class TicketStatePolicyTests
     [Theory]
     [InlineData("New")]
     [InlineData("Open")]
-    [InlineData("InProgress")]
+    [InlineData("CustomerReplied")]
     [InlineData("WaitingForResponse")]
     public void CanChangeState_GivenStateForChange_ShouldReturnTrue(string state)
     {

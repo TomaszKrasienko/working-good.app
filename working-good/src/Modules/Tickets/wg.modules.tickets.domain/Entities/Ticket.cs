@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Policies;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -94,20 +95,29 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
-    private void ChangePriority(bool isPriority)
-        => IsPriority = isPriority;
+    public void ChangePriority(bool isPriority, TimeSpan? slaTime = null)
+    {
+        if (isPriority)
+        {
+            if (AssignedEmployee is null)
+            {
+                throw new MissingAssignedEmployeeException(Id);
+            }
+
+            if (slaTime is null || slaTime <= TimeSpan.Zero)
+            {
+                throw new InvalidSlaTimeForTicketException(Id, slaTime);
+            }
+        }
+
+        IsPriority = new IsPriority(isPriority);
+    }
+    
 
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt, bool isFromUser)
     {
-        if (isFromUser)
-        {
-            Status = new Status(Status.WaitingForResponse(), createdAt);   
-        }
-        else
-        {
-            Status = new Status(Status.CustomerReplied(), createdAt);
-        }
+        Status = isFromUser ? new Status(Status.WaitingForResponse(), createdAt) : new Status(Status.CustomerReplied(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }

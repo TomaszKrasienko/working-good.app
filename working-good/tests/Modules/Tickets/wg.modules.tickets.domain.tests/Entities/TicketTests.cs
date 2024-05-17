@@ -1,4 +1,6 @@
+using Org.BouncyCastle.Asn1.X509;
 using Shouldly;
+using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.tests.shared.Factories.Tickets;
@@ -185,6 +187,74 @@ public sealed class TicketTests
          
          //assert
          ticket.ProjectId.Value.ShouldBe(oldProjectId);
+     }
+
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueAndNullEmployee_ShouldThrowMissingAssignedEmployeeException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangePriority(true, TimeSpan.FromHours(15)));
+         
+         //assert
+         exception.ShouldBeOfType<MissingAssignedEmployeeException>();
+     }
+
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueWithAssignedEmployeeAndValidSlaTime_ShouldChangePriority()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         
+         //act
+         ticket.ChangePriority(true, TimeSpan.FromHours(10));
+         
+         //assert
+         ticket.IsPriority.Value.ShouldBeTrue();
+     }
+
+     [Fact]
+     public void ChangePriority_GivenPriorityAsFalse_ShouldChangePriority()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         
+         //act
+         ticket.ChangePriority(false);
+         
+         //assert
+         ticket.IsPriority.Value.ShouldBeFalse();
+     }
+     
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueAndNullSlaTime_ShouldThrowInvalidSlaTimeForAssignedEmployeeException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangePriority(true, null));
+         
+         //assert
+         exception.ShouldBeOfType<InvalidSlaTimeForTicketException>();
+     }
+     
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueAndSlaTimeBelowZero_ShouldThrowInvalidSlaTimeForAssignedEmployeeException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangePriority(true, TimeSpan.FromHours(-1)));
+         
+         //assert
+         exception.ShouldBeOfType<InvalidSlaTimeForTicketException>();
      }
      
      [Fact]
