@@ -37,6 +37,36 @@ public sealed class GroupControllerTests : BaseTestsController
     }
     
     [Fact]
+    public async Task IsMembershipExists_GivenNotExistingMembership_ShouldReturnIsExistsDtoWithFalseValue()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
+        var group = GroupFactory.GetInOwner(owner);
+        user.Verify(DateTime.Now);
+
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"owner-module/groups/{group.Id.Value}/{user.Id.Value}/is-membership-exists");
+        
+        //assert
+        result.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task IsMembershipExists_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"owner-module/groups/{Guid.NewGuid()}/{Guid.NewGuid()}/is-membership-exists");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task AddUserToGroup_GivenAuthorizedManagerAndExistingGroupIdAndUserId_ShouldReturn204NoContentStatusCodeAndAddUserToGroup()
     {
         //arrange
