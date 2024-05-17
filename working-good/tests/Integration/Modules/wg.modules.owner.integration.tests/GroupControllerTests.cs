@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using wg.modules.companies.application.DTOs;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -14,6 +15,27 @@ namespace wg.modules.owner.integration.tests;
 [Collection("#1")]
 public sealed class GroupControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task IsMembershipExists_GivenExistingMembership_ShouldReturnIsExistsDtoWithTrueValue()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
+        var group = GroupFactory.GetInOwner(owner);
+        user.Verify(DateTime.Now);
+        group.AddUser(user);
+
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.Manager());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"owner-module/groups/{group.Id.Value}/{user.Id.Value}/is-membership-exists");
+        
+        //assert
+        result.Value.ShouldBeTrue();
+    }
+    
     [Fact]
     public async Task AddUserToGroup_GivenAuthorizedManagerAndExistingGroupIdAndUserId_ShouldReturn204NoContentStatusCodeAndAddUserToGroup()
     {
