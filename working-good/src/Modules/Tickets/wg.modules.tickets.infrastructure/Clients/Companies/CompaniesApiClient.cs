@@ -7,9 +7,6 @@ namespace wg.modules.tickets.infrastructure.Clients.Companies;
 internal sealed class CompaniesApiClient(
     IModuleClient moduleClient) : ICompaniesApiClient
 {
-    public Task<CompanyDto> GetCompanyByEmployeeIdAsync(EmployeeIdDto dto)
-        => moduleClient.SendAsync<CompanyDto>("companies/get/by-employee-id", dto);
-
     public Task<IsProjectForCompanyDto> IsProjectForCompanyAsync(EmployeeWithProjectDto dto)
         => moduleClient.SendAsync<IsProjectForCompanyDto>("companies/projects/is-project-for-company/get", dto);
 
