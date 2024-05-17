@@ -314,7 +314,30 @@ public sealed class TicketsControllerTests : BaseTestsController
         var updatedTicket = await GetTicketByIdAsync(ticket.Id);
         updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
     }
-    
+
+    [Fact]
+    public async Task AssignUser_GivenExistingActiveUserAndTicketNotWithProject_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
+        
+        await _ownerDbContext.Owner.AddAsync(owner);
+        await _ownerDbContext.SaveChangesAsync();
+
+        var ticket = await AddTicket();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act        
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/user/{user.Id.Value}", null);
+
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.AssignedUser.Value.ShouldBe(user.Id.Value);
+    }
 
     [Fact]
     public async Task AssignUser_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
