@@ -30,6 +30,8 @@ internal sealed class OwnerModule : IModule
             .Subscribe<GetActiveUserByIdQuery, UserDto>("owner/users/active/get",
             (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsMembershipExistsQuery, IsExistsDto>("owner/group/is-membership-exists/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<IsActiveUserExistsQuery, IsExistsDto>("owner/users/is-active-exists/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }
