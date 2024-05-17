@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.owner.application.CQRS.Users.Queries;
 
-public sealed record IsUserExistsQuery(Guid Id) : IQuery<IsExistsDto>;
+public sealed record IsActiveUserExistsQuery(Guid Id) : IQuery<IsExistsDto>;

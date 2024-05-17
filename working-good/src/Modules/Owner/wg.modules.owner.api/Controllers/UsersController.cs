@@ -56,6 +56,14 @@ internal sealed class UsersController(
     [SwaggerOperation(Summary = "Gets user by \"ID\" only if user state is active")]
     public async Task<ActionResult<UserDto>> GetActiveUserById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken));
+
+    [HttpGet("{id:guid}/is-active-exists")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets existing of active user be \"ID\"")]
+    public async Task<ActionResult<IsExistsDto>> IsActiveUserExists(Guid id, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new IsActiveUserExistsQuery(id), cancellationToken));
     
     [HttpGet("me")]
     [Authorize]
