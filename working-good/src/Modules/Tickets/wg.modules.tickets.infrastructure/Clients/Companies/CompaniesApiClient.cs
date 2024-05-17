@@ -15,4 +15,7 @@ internal sealed class CompaniesApiClient(
 
     public Task<IsActiveEmployeeExistsDto> IsActiveEmployeeExistsAsync(EmployeeIdDto dto)
         => moduleClient.SendAsync<IsActiveEmployeeExistsDto>("companies/employees/is-active-exists/get", dto);
+
+    public Task<SlaTimeDto> GetSlaTimeByEmployeeAsync(EmployeeIdDto dto)
+        => moduleClient.SendAsync<SlaTimeDto>("companies/sla-time/by-employee/get", dto);
 }

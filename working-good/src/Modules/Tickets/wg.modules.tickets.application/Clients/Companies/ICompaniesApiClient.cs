@@ -7,4 +7,5 @@ public interface ICompaniesApiClient
     Task<IsProjectForCompanyDto> IsProjectForCompanyAsync(EmployeeWithProjectDto dto);
     Task<IsProjectActiveDto> IsProjectActiveAsync(ProjectIdDto dto);
     Task<IsActiveEmployeeExistsDto> IsActiveEmployeeExistsAsync(EmployeeIdDto dto);
+    Task<SlaTimeDto> GetSlaTimeByEmployeeAsync(EmployeeIdDto dto);
 }
