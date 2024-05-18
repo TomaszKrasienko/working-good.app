@@ -203,17 +203,57 @@ public sealed class TicketTests
      }
 
      [Fact]
-     public void ChangePriority_GivenPriorityAsTrueWithAssignedEmployeeAndValidSlaTime_ShouldChangePriority()
+     public void ChangePriority_GivenPriorityAsTrueWithAssignedEmployeeAndValidSlaTimeAndTicketWithoutExpirationDate_ShouldChangePriorityAndExpirationDate()
      {
          //arrange
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         var now = DateTime.Now;
+         var timeSpan = TimeSpan.FromHours(10);
          
          //act
-         ticket.ChangePriority(true, TimeSpan.FromHours(10));
+         ticket.ChangePriority(true, timeSpan, now);
          
          //assert
          ticket.IsPriority.Value.ShouldBeTrue();
+         ticket.ExpirationDate.Value.ShouldBe(now.Add(timeSpan));
+     }
+     
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueWithAssignedEmployeeAndValidSlaTimeAndTicketWithBiggerExpirationDate_ShouldChangePriorityAndExpirationDate()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         ticket.ChangeExpirationDate(DateTime.Now.AddDays(10));
+         var now = DateTime.Now;
+         var timeSpan = TimeSpan.FromHours(10);
+         
+         //act
+         ticket.ChangePriority(true, timeSpan, now);
+         
+         //assert
+         ticket.IsPriority.Value.ShouldBeTrue();
+         ticket.ExpirationDate.Value.ShouldBe(now.Add(timeSpan));
+     }
+    
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueWithAssignedEmployeeAndValidSlaTimeAndTicketWithSmallerExpirationDate_ShouldChangePriorityAndWithoutExpirationDate()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         var expirationDate = DateTime.Now.AddMinutes(30);
+         ticket.ChangeExpirationDate(expirationDate);
+         var now = DateTime.Now;
+         var timeSpan = TimeSpan.FromHours(10);
+         
+         //act
+         ticket.ChangePriority(true, timeSpan, now);
+         
+         //assert
+         ticket.IsPriority.Value.ShouldBeTrue();
+         ticket.ExpirationDate.Value.ShouldBe(expirationDate);
      }
 
      [Fact]
@@ -255,6 +295,20 @@ public sealed class TicketTests
          
          //assert
          exception.ShouldBeOfType<InvalidSlaTimeForTicketException>();
+     }
+
+     [Fact]
+     public void ChangePriority_GivenPriorityAsTrueAndNowTimeAsNull_ShouldThrowInvalidNowTimeForChangingPriorityException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangePriority(true, TimeSpan.FromHours(4), null));
+         
+         //assert
+         exception.ShouldBeOfType<InvalidNowTimeForChangingPriorityException>();
      }
      
      [Fact]

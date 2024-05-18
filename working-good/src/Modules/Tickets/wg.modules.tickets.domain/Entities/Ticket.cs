@@ -95,7 +95,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
-    public void ChangePriority(bool isPriority, TimeSpan? slaTime = null)
+    public void ChangePriority(bool isPriority, TimeSpan? slaTime = null, DateTime? now = null)
     {
         if (isPriority)
         {
@@ -108,11 +108,26 @@ public sealed class Ticket : AggregateRoot<AggregateId>
             {
                 throw new InvalidSlaTimeForTicketException(Id, slaTime);
             }
+
+            if (now is null || now <= DateTime.MinValue)
+            {
+                throw new InvalidNowTimeForChangingPriorityException();
+            }
+
+            var newExpirationDate = now.Value.Add(slaTime.Value);
+            if (ExpirationDate is null || ExpirationDate.Value > newExpirationDate)
+            {
+                ExpirationDate = new ExpirationDate(now.Value.Add(slaTime.Value));   
+            }
         }
 
         IsPriority = new IsPriority(isPriority);
     }
-    
+
+    internal void ChangeExpirationDate(DateTime value)
+    {
+        ExpirationDate = value;
+    }
 
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt, bool isFromUser)

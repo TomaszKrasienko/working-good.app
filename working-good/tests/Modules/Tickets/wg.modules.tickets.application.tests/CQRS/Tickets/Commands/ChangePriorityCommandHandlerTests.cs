@@ -1,6 +1,7 @@
 using NSubstitute;
 using Shouldly;
 using wg.modules.tickets.application.Clients.Companies;
+using wg.modules.tickets.application.Clients.Companies.DTO;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
@@ -15,6 +16,41 @@ public sealed class ChangePriorityCommandHandlerTests
 {
     private Task Act(ChangePriorityCommand command) => _handler.HandleAsync(command, default);
 
+    [Fact]
+    public async Task HandleAsync_GivenNotPriorityTicketWithoutExpirationDate_ShouldUpdateTicketByRepositoryWithIsPriorityAsTrue()
+    {
+        //arrange 
+        var ticket = TicketsFactory.Get();
+        var employeeId = Guid.NewGuid();
+        var companySlaTime = new SlaTimeDto()
+        {
+            Value = TimeSpan.FromHours(4)
+        };
+        ticket.ChangeAssignedEmployee(employeeId);
+
+        _ticketRepository
+            .GetByIdAsync(ticket.Id)
+            .Returns(ticket);
+
+        _companiesApiClient
+            .GetSlaTimeByEmployeeAsync(new EmployeeIdDto(employeeId))
+            .Returns(companySlaTime);
+        
+        var command = new ChangePriorityCommand(ticket.Id);
+        
+        //act
+        await Act(command);
+        
+        //assert
+        ticket.IsPriority.Value.ShouldBeTrue();
+        ticket.ExpirationDate.Value.ShouldBe(_now.Add(companySlaTime.Value));
+
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(ticket);
+    }
+    
+    
     [Fact]
     public async Task HandleAsync_GivenPriorityTicket_ShouldUpdateTicketByRepositoryWithIsPriorityAsFalse()
     {
@@ -56,6 +92,7 @@ public sealed class ChangePriorityCommandHandlerTests
     #region arrange
     private readonly ITicketRepository _ticketRepository;
     private readonly ICompaniesApiClient _companiesApiClient;
+    private readonly DateTime _now;
     private readonly ICommandHandler<ChangePriorityCommand> _handler;
     
     public ChangePriorityCommandHandlerTests()
