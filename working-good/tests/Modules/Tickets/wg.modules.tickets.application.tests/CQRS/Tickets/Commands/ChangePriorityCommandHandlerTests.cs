@@ -8,6 +8,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.tests.shared.Factories.Tickets;
+using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.CQRS.Tickets.Commands;
@@ -17,7 +18,7 @@ public sealed class ChangePriorityCommandHandlerTests
     private Task Act(ChangePriorityCommand command) => _handler.HandleAsync(command, default);
 
     [Fact]
-    public async Task HandleAsync_GivenNotPriorityTicketWithoutExpirationDate_ShouldUpdateTicketByRepositoryWithIsPriorityAsTrue()
+    public async Task HandleAsync_GivenNotPriorityTicketExpirationDate_ShouldUpdateTicketByRepositoryWithIsPriorityAsTrue()
     {
         //arrange 
         var ticket = TicketsFactory.Get();
@@ -57,7 +58,7 @@ public sealed class ChangePriorityCommandHandlerTests
         //arrange
         var ticket = TicketsFactory.Get();
         ticket.ChangeAssignedEmployee(Guid.NewGuid());
-        ticket.ChangePriority(true, TimeSpan.FromHours(1));
+        ticket.ChangePriority(true, TimeSpan.FromHours(1), DateTime.Now);
 
         _ticketRepository
             .GetByIdAsync(ticket.Id)
@@ -99,7 +100,9 @@ public sealed class ChangePriorityCommandHandlerTests
     {
         _ticketRepository = Substitute.For<ITicketRepository>();
         _companiesApiClient = Substitute.For<ICompaniesApiClient>();
-        _handler = new ChangePriorityCommandHandler();
+        _now = DateTime.Now;
+        
+        _handler = new ChangePriorityCommandHandler(_ticketRepository, _companiesApiClient, TestsClock.Create(_now));
     }
     #endregion
 }
