@@ -26,8 +26,9 @@ internal sealed class TicketsController(
     [HttpGet]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets all tickets by filters and pagination")]
     public async Task<ActionResult<IEnumerable<TicketDto>>> GetAll([FromQuery] GetTicketsQuery query,
         CancellationToken cancellationToken)
     {
@@ -40,15 +41,15 @@ internal sealed class TicketsController(
     [HttpGet("{id:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TicketDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetTicketByIdQuery(id), cancellationToken));
     
     [HttpPost("add")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation("Adds ticket")]
     public async Task<ActionResult> AddTicket(AddTicketCommand command, CancellationToken cancellationToken)
@@ -79,7 +80,7 @@ internal sealed class TicketsController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Assigns user to ticket")]
     public async Task<ActionResult> AssignUser(Guid id, Guid userId, CancellationToken cancellationToken)
     {
@@ -90,15 +91,16 @@ internal sealed class TicketsController(
     [HttpPatch("{id:guid}/change-state")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Changes ticket state")]
     public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStatusCommand command, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
         return Ok();
     }
     
-
+    
 
     [HttpPatch("{id:guid}/project/{projectId:guid}")]
     [Authorize]
