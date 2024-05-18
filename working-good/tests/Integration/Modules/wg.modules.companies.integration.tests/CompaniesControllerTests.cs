@@ -81,11 +81,52 @@ public sealed class CompaniesControllerTests : BaseTestsController
     [Fact]
     public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
     {
-        //act
+        //act   
         var result = await HttpClient.GetAsync($"companies-module/Companies/{Guid.NewGuid().ToString()}");
         
         //assert
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task GetSlaTimeByEmployeeId_GivenExistingCompany_ShouldReturnSlaTimeDto()
+    {
+        //arrange
+        var company = await AddCompanyAsync(true, false, false, false);
+        var employee = company
+            .Employees
+            .Single();
+
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<SlaTimeDto>($"companies-module/Companies/sla-time/{employee.Id.Value}");
+        
+        //assert
+        result.Value.ShouldBe(company.SlaTime.Value);
+    }
+    
+    [Fact]
+    public async Task GetSlaTimeByEmployeeId_GivenNotExistingCompany_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Companies/sla-time/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task GetSlaTimeByEmployeeId_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Companies/sla-time/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     
     [Fact]

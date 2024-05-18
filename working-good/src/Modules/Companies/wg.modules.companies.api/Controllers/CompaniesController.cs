@@ -6,6 +6,7 @@ using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
 using wg.modules.companies.application.CQRS.Companies.Commands.UpdateCompany;
 using wg.modules.companies.application.CQRS.Companies.Queries;
 using wg.modules.companies.application.DTOs;
+using wg.modules.companies.domain.ValueObjects.Company;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 using wg.shared.infrastructure.Exceptions.DTOs;
@@ -39,7 +40,15 @@ internal sealed class CompaniesController(
     [SwaggerOperation("Gets company by \"ID\"")]
     public async Task<ActionResult<CompanyDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetCompanyByIdQuery(id), cancellationToken));
-    
+
+    [Authorize]
+    [HttpGet("sla-time/{employeeId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets sla time by \"EmployeeId\"")]
+    public async Task<ActionResult<SlaTimeDto>> GetSlaTimeByEmployeeId(Guid employeeId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetSlaTimeByEmployeeIdQuery(employeeId), cancellationToken));
     
     [Authorize(Roles = "Manager")]
     [HttpPost("add")]
