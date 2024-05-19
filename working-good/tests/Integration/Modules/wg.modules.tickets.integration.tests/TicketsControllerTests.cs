@@ -343,7 +343,7 @@ public sealed class TicketsControllerTests : BaseTestsController
     public async Task AssignUser_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
     {
          //arrange
-             Authorize(Guid.NewGuid(), Role.User());
+         Authorize(Guid.NewGuid(), Role.User());
              
          //act
          var response = await HttpClient.PatchAsync($"tickets-module/tickets/{Guid.NewGuid()}/user/{Guid.NewGuid()}", null);
