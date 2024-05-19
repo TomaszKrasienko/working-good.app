@@ -14,7 +14,7 @@ internal sealed class GetSlaTimeByEmployeeIdQueryHandler(
         var result = await dbContext
             .Companies
             .Include(x => x.Employees)
-            .Where(x => x.Employees.Any(e => e.Id.Equals(query.Id)))
+            .Where(x => x.Employees.Any(e => e.Id.Equals(query.EmployeeId)))
             .Select(x => x.SlaTime)
             .SingleOrDefaultAsync(cancellationToken);
         return result is null ? null : new SlaTimeDto() { Value = result };

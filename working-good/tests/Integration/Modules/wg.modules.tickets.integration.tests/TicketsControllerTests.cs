@@ -361,6 +361,28 @@ public sealed class TicketsControllerTests : BaseTestsController
          //assert
          response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task ChangePriority_GivenNotPriorityTicket_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        ticket.ChangeAssignedEmployee(employee.Id);
+        TicketsDbContext.Tickets.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/change-priority", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
 //
 //     [Fact]
 //     public async Task ChangeTicketState_GivenValidArguments_ShouldReturn200OkStatusCodeAndChangedTicketInDb()
