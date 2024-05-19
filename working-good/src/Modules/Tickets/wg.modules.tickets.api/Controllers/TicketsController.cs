@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignEmployee;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
@@ -87,6 +88,18 @@ internal sealed class TicketsController(
         await commandDispatcher.SendAsync(new AssignUserCommand(userId, id), cancellationToken);
         return Ok();
     }
+
+    [HttpPatch("{id}/change-priority")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Changes ticket priority")]
+    public async Task<ActionResult> ChangePriority(Guid id, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(new ChangePriorityCommand(id), cancellationToken);
+        return Ok();
+    }
     
     [HttpPatch("{id:guid}/change-state")]
     [Authorize]
@@ -99,8 +112,6 @@ internal sealed class TicketsController(
         await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
         return Ok();
     }
-    
-    
 
     [HttpPatch("{id:guid}/project/{projectId:guid}")]
     [Authorize]
