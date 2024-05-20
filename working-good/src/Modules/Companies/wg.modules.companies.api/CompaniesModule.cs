@@ -33,9 +33,10 @@ internal sealed class CompaniesModule : IModule
             .Subscribe<GetEmployeeByIdQuery, EmployeeDto>("companies/employee/get/by-id",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsActiveEmployeeExistsQuery, IsExistsDto>("companies/employees/is-active-exists/get",
-            (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<IsProjectInCompanyQuery, IsExistsDto>("companies/projects/is-project-for-company/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
-            .Subscribe<GetSlaTimeByEmployeeIdQuery, SlaTimeDto>("companies/sla-time/by-employee/get", default);
+            .Subscribe<GetSlaTimeByEmployeeIdQuery, SlaTimeDto>("companies/sla-time/by-employee/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }
