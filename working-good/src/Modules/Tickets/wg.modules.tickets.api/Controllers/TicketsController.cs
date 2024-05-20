@@ -117,8 +117,8 @@ internal sealed class TicketsController(
     [HttpPatch("{id:guid}/project/{projectId:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AssignProject(Guid id, Guid projectId, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(new ChangeProjectCommand(id, projectId), cancellationToken);
