@@ -16,7 +16,7 @@ internal sealed class ChangeTicketStatusCommandHandler(
             throw new TicketNotFoundException(command.Id);
         }
         
-        ticket.ChangeStatus(command.State, clock.Now());
+        ticket.ChangeStatus(command.Status, clock.Now());
         await ticketRepository.UpdateAsync(ticket);
     }
 }

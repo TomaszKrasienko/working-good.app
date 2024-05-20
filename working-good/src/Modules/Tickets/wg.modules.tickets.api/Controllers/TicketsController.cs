@@ -101,12 +101,12 @@ internal sealed class TicketsController(
         return Ok();
     }
     
-    [HttpPatch("{id:guid}/change-state")]
+    [HttpPatch("{id:guid}/change-status")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
-    [SwaggerOperation("Changes ticket state")]
+    [SwaggerOperation("Changes ticket status")]
     public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStatusCommand command, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);

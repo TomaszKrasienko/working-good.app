@@ -14,6 +14,7 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.Entities;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.modules.tickets.infrastructure.DAL;
 using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Companies;
@@ -427,6 +428,51 @@ public sealed class TicketsControllerTests : BaseTestsController
     {
         //act
         var response = await HttpClient.PatchAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-priority", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task ChangeStatus_GivenExistingTicket_ShouldReturn200OkStatusCodeAndChangeStatus()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        Authorize(Guid.NewGuid(), Role.User());
+        var command = new ChangeTicketStatusCommand(Guid.Empty, Status.Open());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{ticket.Id.Value}/change-status", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.Status.Value.ShouldBe(Status.Open());
+    }
+
+    [Fact]
+    public async Task ChangeStatus_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        var command = new ChangeTicketStatusCommand(Guid.Empty, Status.Open());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-status", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ChangeStatus_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new ChangeTicketStatusCommand(Guid.Empty, Status.Open());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-status", command);
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);

@@ -35,7 +35,7 @@ public sealed class ChangeTicketStatusCommandHandlerTests
             .Received(1)
             .UpdateAsync(ticket);
         
-        ticket.Status.Value.ShouldBe(command.State);
+        ticket.Status.Value.ShouldBe(command.Status);
     }
     
     [Fact]
