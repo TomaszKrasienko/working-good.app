@@ -4,6 +4,8 @@ using Shouldly;
 using wg.modules.tickets.application.Clients.Companies;
 using wg.modules.tickets.application.Clients.Companies.DTO;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeProject;
+using wg.modules.tickets.application.Exceptions;
+using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.tests.shared.Factories.Tickets;
@@ -43,6 +45,44 @@ public sealed class ChangeProjectCommandHandlerTests
         
         ticket.ProjectId.Value.ShouldBe(command.ProjectId);
     }
+
+    [Fact]
+    public async Task HandleAsync_GivenNotExistingTicket_ShouldThrowTicketNotFoundException()
+    {
+        //arrange
+        var command = new ChangeProjectCommand(Guid.NewGuid(), Guid.NewGuid());
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<TicketNotFoundException>();
+    }
+
+    [Fact]
+    public async Task HandleAsync_GivenNotExistingActiveProject_ShouldThrowActiveProjectNotFoundException()
+    {
+        //arrange 
+        var ticket = TicketsFactory.Get();
+        var projectId = Guid.NewGuid();
+        var command = new ChangeProjectCommand(ticket.Id, projectId);
+        _ticketRepository
+            .GetByIdAsync(command.TicketId)
+            .Returns(ticket);
+
+        _companiesApiClient
+            .IsProjectActiveAsync(Arg.Is<ProjectIdDto>(arg => arg.Id.Equals(command.ProjectId)))
+            .Returns(new IsProjectActiveDto()
+            {
+                Value = false
+            });
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await Act(command));
+        
+        //assert
+        exception.ShouldBeOfType<ActiveProjectNotFoundException>();
+    } 
     
     #region arrage
     private readonly ITicketRepository _ticketRepository;
