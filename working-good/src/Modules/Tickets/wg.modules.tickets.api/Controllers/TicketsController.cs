@@ -7,6 +7,7 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignEmployee;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeProject;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
@@ -120,6 +121,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AssignProject(Guid id, Guid projectId, CancellationToken cancellationToken)
     {
+        await commandDispatcher.SendAsync(new ChangeProjectCommand(id, projectId), cancellationToken);
         return Ok();
     }
     
