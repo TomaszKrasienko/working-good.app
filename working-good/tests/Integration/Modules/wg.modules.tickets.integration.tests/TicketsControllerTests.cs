@@ -382,24 +382,55 @@ public sealed class TicketsControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.IsPriority.Value.ShouldBeTrue();
     }
-//
-//     [Fact]
-//     public async Task ChangeTicketState_GivenValidArguments_ShouldReturn200OkStatusCodeAndChangedTicketInDb()
-//     {
-//         //arrange
-//         var ticket = await AddTicket();
-//         Authorize(Guid.NewGuid(), Role.User());
-//         var command = new ChangeTicketStateCommand(Guid.Empty, State.InProgress());
-//         
-//         //act
-//         var response = await HttpClient.PatchAsJsonAsync($"/tickets-module/tickets/{ticket.Id.Value}/change-state", command);
-//         
-//         //assert
-//         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-//         var updatedTicket = await GetTicketByIdAsync(ticket.Id);
-//         updatedTicket.State.Value.ShouldBe(command.State);
-//     }
+
+    [Fact]
+    public async Task ChangePriority_GivenPriorityTicket_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        ticket.ChangeAssignedEmployee(Guid.NewGuid());
+        ticket.ChangePriority(true, TimeSpan.FromHours(9), DateTime.Now);
+
+        TicketsDbContext.Tickets.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/change-priority", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.IsPriority.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task ChangePriority_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-priority", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+    
+    [Fact]
+    public async Task ChangePriority_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-priority", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
 
      private async Task<Ticket> AddTicket(bool withMessage = false)
      {
