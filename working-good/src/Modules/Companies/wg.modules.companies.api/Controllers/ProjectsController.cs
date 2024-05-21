@@ -22,6 +22,13 @@ internal sealed class ProjectsController(
         throw new NotImplementedException();
     }
 
+    [HttpGet("{projectId:guid}/active")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IsExistsDto>> IsProjectActive(Guid projectId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new IsProjectActiveQuery(projectId), cancellationToken));
+
     [HttpGet("{projectId:guid}/employee/{employeeId:guid}/active")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
