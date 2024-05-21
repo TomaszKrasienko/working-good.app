@@ -38,6 +38,33 @@ public sealed class TicketTests
     }
     
     [Fact]
+    public void ChangeContent_GivenContent_ShouldChangeContent()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        var newContent = "New content";
+        
+        //act
+        ticket.ChangeContent(newContent);
+        
+        //assert
+        ticket.Subject.Value.ShouldBe(newContent);
+    }
+
+    [Fact]
+    public void ChangeContent_GivenEmptySubject_ShouldThrowEmptyContentException()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => ticket.ChangeContent(string.Empty));
+        
+        //assert
+        exception.ShouldBeOfType<EmptyContentException>();
+    }
+    
+    [Fact]
      public void ChangeState_GivenValidStatusForAvailableForChangesStatus_ShouldChangeState()
      {
          //arrange
