@@ -37,6 +37,36 @@ public sealed class ProjectsControllerTests : BaseTestsController
     }
     
     [Fact]
+    public async Task IsProjectActive_GivenNotActiveProject_ShouldReturnIsExistsDtoWithFalse()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var projectId = Guid.NewGuid();
+        company.AddProject(projectId, "test", "test", DateTime.Now.AddMonths(-1),
+            DateTime.Now.AddDays(-1));
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/Projects/{projectId}/active");
+        
+        //assert
+        result.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task IsProjectActive_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Employees/{Guid.NewGuid()}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task IsActiveProjectForEmployeeExists_GivenExistingProjectInCompany_ShouldReturnIsExistsDtoWithTrue()
     {
         //arrange
