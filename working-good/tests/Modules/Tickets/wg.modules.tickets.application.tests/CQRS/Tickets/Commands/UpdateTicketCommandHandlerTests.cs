@@ -24,7 +24,7 @@ public sealed class UpdateTicketCommandHandlerTests
             .GetByIdAsync(ticket.Id)
             .Returns(ticket);
 
-        var command = new UpdateTicketCommand(Guid.NewGuid(), "new_subject", "new_content");
+        var command = new UpdateTicketCommand(ticket.Id, "new_subject", "new_content");
         
         //act
         await Act(command);
