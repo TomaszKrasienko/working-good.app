@@ -22,11 +22,6 @@ internal sealed class ChangeProjectCommandHandler(
             throw new TicketNotFoundException(command.TicketId);
         }
 
-        var isActiveProjectExists = await companiesApiClient.IsProjectActiveAsync(new ProjectIdDto()
-        {
-            Id = command.ProjectId
-        });
-
         if (ticket.AssignedUser is not null)
         {
             var isUserBelongToGroup = await ownerApiClient.IsMembershipExistsAsync(new GetMembershipDto()
@@ -56,6 +51,11 @@ internal sealed class ChangeProjectCommandHandler(
         }
         else
         {
+            var isActiveProjectExists = await companiesApiClient.IsProjectActiveAsync(new ProjectIdDto()
+            {
+                Id = command.ProjectId
+            });
+            
             if (!isActiveProjectExists.Value)
             {
                 throw new ActiveProjectNotFoundException(command.ProjectId);

@@ -479,6 +479,67 @@ public sealed class TicketsControllerTests : BaseTestsController
     }
 
     [Fact]
+    public async Task AssignProject_GivenTicketWithoutEmployeeAndUser_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        var company = CompanyFactory.Get();
+        var project = ProjectFactory.GetInCompany(company, true, true);
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        Authorize(Guid.NewGuid(), Role.User());
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/project/{project.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.ProjectId.ShouldBe(project.Id);
+    }
+
+    [Fact]
+    public async Task AssignProject_GivenTicketWithEmployeeAndUser_ShouldReturn200OkStatusCodeAndUpdateTicket()
+    {
+        //arrange
+        var ticket = await AddTicket();
+        
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        var project = ProjectFactory.GetInCompany(company, true, true);
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
+        user.Verify(DateTime.Now);
+        owner.AddGroup(project.Id, project.Title);
+        owner.AddUserToGroup(project.Id, user.Id);
+
+        await OwnerDbContext.Owner.AddAsync(owner);
+        await OwnerDbContext.SaveChangesAsync();
+        
+        ticket.ChangeAssignedEmployee(employee.Id);
+        ticket.ChangeAssignedUser(user.Id);
+        TicketsDbContext.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsync($"tickets-module/tickets/{ticket.Id.Value}/project/{project.Id.Value}", null);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.ProjectId.ShouldBe(project.Id);
+    }
+
+    [Fact]
     public async Task AssignProject_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
     {
         //arrange

@@ -7,19 +7,15 @@ using wg.shared.abstractions.Time;
 
 namespace wg.modules.companies.infrastructure.Queries.Handlers.Projects;
 
-internal sealed class IsProjectInCompanyQueryHandler(
-    CompaniesDbContext dbContext,
-    IClock clock) : IQueryHandler<IsProjectInCompanyQuery, IsExistsDto>
+internal sealed class IsProjectActiveQueryHandler(
+    CompaniesDbContext dbContext, IClock clock) : IQueryHandler<IsProjectActiveQuery, IsExistsDto>
 {
-    public async Task<IsExistsDto> HandleAsync(IsProjectInCompanyQuery query, CancellationToken cancellationToken)
+    public async Task<IsExistsDto> HandleAsync(IsProjectActiveQuery query, CancellationToken cancellationToken)
     {
         var projectsForEmployee = await dbContext
             .Companies
             .Include(x => x.Projects)
-            .Include(x => x.Employees)
-            .Where(x
-                => x.Employees.Any(y => y.Id.Equals(query.EmployeeId))
-                   && x.Projects.Any(y => y.Id.Equals(query.ProjectId)))
+            .Where(x=> x.Projects.Any(y => y.Id.Equals(query.Id)))
             .ToListAsync(cancellationToken);
         
         return new IsExistsDto()
@@ -28,6 +24,5 @@ internal sealed class IsProjectInCompanyQueryHandler(
                 => x.Projects.Any(y => y.PlannedFinish == null 
                                        || y.PlannedFinish.Value > clock.Now()))
         };
-        
-    } 
+    }
 }

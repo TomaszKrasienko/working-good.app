@@ -11,7 +11,7 @@ internal sealed class CompaniesApiClient(
         => moduleClient.SendAsync<IsProjectForCompanyDto>("companies/projects/is-project-for-company/get", dto);
 
     public Task<IsProjectActiveDto> IsProjectActiveAsync(ProjectIdDto dto)
-        => moduleClient.SendAsync<IsProjectActiveDto>("companies/is-project-active/get", dto);
+        => moduleClient.SendAsync<IsProjectActiveDto>("companies/projects/is-active-exists/get", dto);
 
     public Task<IsActiveEmployeeExistsDto> IsActiveEmployeeExistsAsync(EmployeeIdDto dto)
         => moduleClient.SendAsync<IsActiveEmployeeExistsDto>("companies/employees/is-active-exists/get", dto);
