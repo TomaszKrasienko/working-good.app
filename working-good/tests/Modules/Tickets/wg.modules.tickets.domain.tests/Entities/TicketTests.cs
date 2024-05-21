@@ -48,7 +48,7 @@ public sealed class TicketTests
         ticket.ChangeContent(newContent);
         
         //assert
-        ticket.Subject.Value.ShouldBe(newContent);
+        ticket.Content.Value.ShouldBe(newContent);
     }
 
     [Fact]
