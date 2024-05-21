@@ -19,6 +19,24 @@ namespace wg.modules.companies.integration.tests;
 public sealed class ProjectsControllerTests : BaseTestsController
 {
     [Fact]
+    public async Task IsProjectActive_GivenActiveProject_ShouldReturnIsExistsDtoWithTrue()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var project = ProjectFactory.GetInCompany(company, true, true);
+
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/Projects/{project.Id.Value}/active");
+        
+        //assert
+        result.Value.ShouldBeTrue();
+    }
+    
+    [Fact]
     public async Task IsActiveProjectForEmployeeExists_GivenExistingProjectInCompany_ShouldReturnIsExistsDtoWithTrue()
     {
         //arrange
