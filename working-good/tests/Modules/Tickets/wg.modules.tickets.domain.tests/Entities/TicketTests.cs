@@ -9,7 +9,34 @@ using Xunit;
 namespace wg.modules.tickets.domain.tests.Entities;
 
 public sealed class TicketTests
-{ 
+{
+    [Fact]
+    public void ChangeSubject_GivenSubject_ShouldChangeSubject()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        var newSubject = "New subject";
+        
+        //act
+        ticket.ChangeSubject(newSubject);
+        
+        //assert
+        ticket.Subject.Value.ShouldBe(newSubject);
+    }
+
+    [Fact]
+    public void ChangeSubject_GivenEmptySubject_ShouldThrowEmptySubjectException()
+    {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => ticket.ChangeSubject(string.Empty));
+        
+        //assert
+        exception.ShouldBeOfType<EmptySubjectException>();
+    }
+    
     [Fact]
      public void ChangeState_GivenValidStatusForAvailableForChangesStatus_ShouldChangeState()
      {
