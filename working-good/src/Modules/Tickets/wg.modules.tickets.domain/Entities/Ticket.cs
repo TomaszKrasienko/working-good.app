@@ -44,7 +44,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         return ticket;
     }
 
-    private void ChangeSubject(string subject)
+    public void ChangeSubject(string subject)
         => Subject = subject;
 
     private void ChangeContent(string content)
