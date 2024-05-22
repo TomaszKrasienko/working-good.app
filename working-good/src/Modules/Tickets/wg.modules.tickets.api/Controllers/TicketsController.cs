@@ -9,6 +9,7 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeProject;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.UpdateTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
 using wg.modules.tickets.application.DTOs;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
@@ -66,6 +67,18 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
+    [HttpPatch("update")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Updates ticket")]
+    public async Task<ActionResult> UpdateTicket(UpdateTicketCommand command, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(command, cancellationToken);
+        return Ok();
+    }
+    
     [HttpPatch("{ticketId:guid}/employee/{employeeId:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
