@@ -239,6 +239,33 @@ public sealed class TicketsControllerTests : BaseTestsController
     }
 
     [Fact]
+    public async Task UpdateTicket_GivenNotExistingTicket_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        var command = new UpdateTicketCommand(Guid.Empty, "New subject", "New content");
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/update", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task UpdateTicket_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new UpdateTicketCommand(Guid.Empty, "New subject", "New content");
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/update", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task AssignEmployee_GivenExistingActiveEmployeeAndTicketWithoutProject_ShouldReturn200OkStatusCodeAndAssignEmployee()
     {
         //arrange
