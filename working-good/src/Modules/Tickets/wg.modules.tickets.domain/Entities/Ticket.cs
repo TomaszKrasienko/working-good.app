@@ -120,14 +120,14 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         IsPriority = new IsPriority(isPriority);
     }
 
-    public void ChangeExpirationDate(DateTime value, DateTime now, TimeSpan? limitTime = null)
+    public void ChangeExpirationDate(DateTime value, TimeSpan? limitTime = null)
     {
         if (IsPriority && limitTime is null)
         {
             throw new NullLimitTimeException();
         }
 
-        if (IsPriority && (value > now.Add(limitTime.Value)))
+        if (IsPriority && (value > ExpirationDate.Value.Add(limitTime.Value)))
         {
             throw new ExpirationDateTooLateException();
         }

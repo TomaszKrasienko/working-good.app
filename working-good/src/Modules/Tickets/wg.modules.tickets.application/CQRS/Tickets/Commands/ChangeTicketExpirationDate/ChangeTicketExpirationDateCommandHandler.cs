@@ -1,4 +1,5 @@
 using wg.modules.tickets.application.Clients.Companies;
+using wg.modules.tickets.application.Clients.Companies.DTO;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
@@ -16,5 +17,16 @@ internal sealed class ChangeTicketExpirationDateCommandHandler(
         {
             throw new TicketNotFoundException(command.Id);
         }
+
+        TimeSpan? limitTime = null;
+        if (ticket.AssignedEmployee is not null)
+        {
+            var slaTime = await companiesApiClient
+                .GetSlaTimeByEmployeeAsync(new EmployeeIdDto(ticket.AssignedEmployee));
+            limitTime = slaTime.Value;
+        }
+        
+        ticket.ChangeExpirationDate(command.ExpirationDate, limitTime);
+        await ticketRepository.UpdateAsync(ticket);
     }
 }
