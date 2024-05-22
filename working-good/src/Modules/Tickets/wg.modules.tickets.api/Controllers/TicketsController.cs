@@ -8,6 +8,7 @@ using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignEmployee;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AssignUser;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeProject;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketExpirationDate;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.UpdateTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
@@ -122,6 +123,19 @@ internal sealed class TicketsController(
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Changes ticket status")]
     public async Task<ActionResult> ChangeTicketState(Guid id, ChangeTicketStatusCommand command, CancellationToken cancellationToken)
+    {
+        await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
+        return Ok();
+    }
+
+    [HttpPatch("{id:guid}/change-expiration-date")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Changes expiration date")]
+    public async Task<ActionResult> ChangeExpirationDate(Guid id, ChangeTicketExpirationDateCommand command,
+        CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
         return Ok();
