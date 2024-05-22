@@ -4,6 +4,7 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Policies;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
+using wg.shared.abstractions.Exceptions;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.tickets.domain.Entities;
@@ -95,7 +96,7 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         }
     }
 
-    public void ChangePriority(bool isPriority, TimeSpan? slaTime = null, DateTime? now = null)
+    public void ChangePriority(bool isPriority, TimeSpan? slaTime = null)
     {
         if (isPriority)
         {
@@ -109,23 +110,27 @@ public sealed class Ticket : AggregateRoot<AggregateId>
                 throw new InvalidSlaTimeForTicketException(Id, slaTime);
             }
 
-            if (now is null || now <= DateTime.MinValue)
-            {
-                throw new InvalidNowTimeForChangingPriorityException();
-            }
-
-            var newExpirationDate = now.Value.Add(slaTime.Value);
+            var newExpirationDate = CreatedAt.Value.Add(slaTime.Value);
             if (ExpirationDate is null || ExpirationDate.Value > newExpirationDate)
             {
-                ExpirationDate = new ExpirationDate(now.Value.Add(slaTime.Value));   
+                ExpirationDate = new ExpirationDate(CreatedAt.Value.Add(slaTime.Value));   
             }
         }
 
         IsPriority = new IsPriority(isPriority);
     }
 
-    internal void ChangeExpirationDate(DateTime value)
+    public void ChangeExpirationDate(DateTime value, DateTime now, TimeSpan? limitTime = null)
     {
+        if (IsPriority && limitTime is null)
+        {
+            throw new NullLimitTimeException();
+        }
+
+        if (IsPriority && (value > now.Add(limitTime.Value)))
+        {
+            throw new ExpirationDateTooLateException();
+        }
         ExpirationDate = value;
     }
 
@@ -136,3 +141,9 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }
+
+public sealed class NullLimitTimeException() : 
+    WgException("Limit time can not be null for priority ticket");
+    
+    public sealed class ExpirationDateTooLateException()
+    : WgException("Provided expiration date is too late");

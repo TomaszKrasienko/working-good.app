@@ -262,15 +262,14 @@ public sealed class TicketTests
          //arrange
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
-         var now = DateTime.Now;
          var timeSpan = TimeSpan.FromHours(10);
          
          //act
-         ticket.ChangePriority(true, timeSpan, now);
+         ticket.ChangePriority(true, timeSpan);
          
          //assert
          ticket.IsPriority.Value.ShouldBeTrue();
-         ticket.ExpirationDate.Value.ShouldBe(now.Add(timeSpan));
+         ticket.ExpirationDate.Value.ShouldBe(ticket.CreatedAt.Value.Add(timeSpan));
      }
      
      [Fact]
@@ -279,16 +278,15 @@ public sealed class TicketTests
          //arrange
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
-         ticket.ChangeExpirationDate(DateTime.Now.AddDays(10));
-         var now = DateTime.Now;
+         ticket.ChangeExpirationDate(DateTime.Now.AddDays(10), DateTime.Now);
          var timeSpan = TimeSpan.FromHours(10);
          
          //act
-         ticket.ChangePriority(true, timeSpan, now);
+         ticket.ChangePriority(true, timeSpan);
          
          //assert
          ticket.IsPriority.Value.ShouldBeTrue();
-         ticket.ExpirationDate.Value.ShouldBe(now.Add(timeSpan));
+         ticket.ExpirationDate.Value.ShouldBe(ticket.CreatedAt.Value.Add(timeSpan));
      }
     
      [Fact]
@@ -298,12 +296,11 @@ public sealed class TicketTests
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
          var expirationDate = DateTime.Now.AddMinutes(30);
-         ticket.ChangeExpirationDate(expirationDate);
-         var now = DateTime.Now;
+         ticket.ChangeExpirationDate(expirationDate, DateTime.Now);
          var timeSpan = TimeSpan.FromHours(10);
          
          //act
-         ticket.ChangePriority(true, timeSpan, now);
+         ticket.ChangePriority(true, timeSpan);
          
          //assert
          ticket.IsPriority.Value.ShouldBeTrue();
@@ -352,17 +349,71 @@ public sealed class TicketTests
      }
 
      [Fact]
-     public void ChangePriority_GivenPriorityAsTrueAndNowTimeAsNull_ShouldThrowInvalidNowTimeForChangingPriorityException()
+     public void ChangeExpirationDate_GivenNotPriorityTicketAndDateNotBeforeNowDate_ShouldChangeExpirationDate()
+     {
+        //arrange
+        var ticket = TicketsFactory.Get();
+        var now = DateTime.Now;
+        var expirationDate = DateTime.Now.AddDays(2);
+
+        //act
+        ticket.ChangeExpirationDate(expirationDate, now);
+        
+        //assert
+        ticket.ExpirationDate.Value.ShouldBe(expirationDate);
+     }
+
+     [Fact]
+     public void ChangeExpirationDate_GivenPriorityTicketAndNotNullLimitedTime_ShouldChangeExpirationDate()
      {
          //arrange
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         ticket.ChangePriority(true, TimeSpan.FromDays(2));
+         var now = DateTime.Now;
+         var expirationDate = DateTime.Now.AddDays(2);
+         var limitTime = TimeSpan.FromDays(3);
+
+         //act
+         ticket.ChangeExpirationDate(expirationDate, now, limitTime);
+        
+         //assert
+         ticket.ExpirationDate.Value.ShouldBe(expirationDate);
+     }
+
+     [Fact]
+     public void ChangeExpirationDate_GivenPriorityTicketAndNullLimitedTime_ShouldThrowNullLimitTimeException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         ticket.ChangePriority(true, TimeSpan.FromDays(2));
+         var now = DateTime.Now;
+         var expirationDate = DateTime.Now.AddDays(2);
          
          //act
-         var exception = Record.Exception(() => ticket.ChangePriority(true, TimeSpan.FromHours(4), null));
+         var exception = Record.Exception(() => ticket.ChangeExpirationDate(expirationDate, now, null));
          
          //assert
-         exception.ShouldBeOfType<InvalidNowTimeForChangingPriorityException>();
+         exception.ShouldBeOfType<NullLimitTimeException>();
+     }
+
+     [Fact]
+     public void ChangeExpirationDate_GivenPriorityTicketAndTooLateExpirationDate_ShouldThrowExpirationDateTooLateException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
+         ticket.ChangePriority(true, TimeSpan.FromDays(2));
+         var now = DateTime.Now;
+         var limitTime = TimeSpan.FromDays(3);
+         var expirationDate = DateTime.Now.AddDays(4);
+         
+         //act
+         var exception = Record.Exception(() => ticket.ChangeExpirationDate(expirationDate, now, limitTime));
+         
+         //assert
+         exception.ShouldBeOfType<ExpirationDateTooLateException>();
      }
      
      [Fact]

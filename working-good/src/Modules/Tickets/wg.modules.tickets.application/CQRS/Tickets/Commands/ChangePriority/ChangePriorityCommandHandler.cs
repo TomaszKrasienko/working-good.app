@@ -9,8 +9,7 @@ namespace wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
 
 internal sealed class ChangePriorityCommandHandler(
     ITicketRepository ticketRepository,
-    ICompaniesApiClient companiesApiClient,
-    IClock clock) : ICommandHandler<ChangePriorityCommand>
+    ICompaniesApiClient companiesApiClient) : ICommandHandler<ChangePriorityCommand>
 {
     public async Task HandleAsync(ChangePriorityCommand command, CancellationToken cancellationToken)
     {
@@ -28,7 +27,7 @@ internal sealed class ChangePriorityCommandHandler(
                 .GetSlaTimeByEmployeeAsync(new EmployeeIdDto(ticket.AssignedEmployee));
             slaTime = result.Value;
         }
-        ticket.ChangePriority(!ticketPriority, slaTime, clock.Now());
+        ticket.ChangePriority(!ticketPriority, slaTime);
         await ticketRepository.UpdateAsync(ticket);
     }
 }

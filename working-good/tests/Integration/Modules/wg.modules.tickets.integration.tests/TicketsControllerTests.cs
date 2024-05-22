@@ -441,7 +441,7 @@ public sealed class TicketsControllerTests : BaseTestsController
         //arrange
         var ticket = await AddTicket();
         ticket.ChangeAssignedEmployee(Guid.NewGuid());
-        ticket.ChangePriority(true, TimeSpan.FromHours(9), DateTime.Now);
+        ticket.ChangePriority(true, TimeSpan.FromHours(9));
 
         TicketsDbContext.Tickets.Update(ticket);
         await TicketsDbContext.SaveChangesAsync();

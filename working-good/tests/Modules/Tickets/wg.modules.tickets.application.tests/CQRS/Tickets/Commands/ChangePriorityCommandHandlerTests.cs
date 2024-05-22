@@ -3,12 +3,10 @@ using Shouldly;
 using wg.modules.tickets.application.Clients.Companies;
 using wg.modules.tickets.application.Clients.Companies.DTO;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangePriority;
-using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.tests.shared.Factories.Tickets;
-using wg.tests.shared.Mocks;
 using Xunit;
 
 namespace wg.modules.tickets.application.tests.CQRS.Tickets.Commands;
@@ -44,7 +42,7 @@ public sealed class ChangePriorityCommandHandlerTests
         
         //assert
         ticket.IsPriority.Value.ShouldBeTrue();
-        ticket.ExpirationDate.Value.ShouldBe(_now.Add(companySlaTime.Value));
+        ticket.ExpirationDate.Value.ShouldBe(ticket.CreatedAt.Value.Add(companySlaTime.Value));
 
         await _ticketRepository
             .Received(1)
@@ -58,7 +56,7 @@ public sealed class ChangePriorityCommandHandlerTests
         //arrange
         var ticket = TicketsFactory.Get();
         ticket.ChangeAssignedEmployee(Guid.NewGuid());
-        ticket.ChangePriority(true, TimeSpan.FromHours(1), DateTime.Now);
+        ticket.ChangePriority(true, TimeSpan.FromHours(1));
 
         _ticketRepository
             .GetByIdAsync(ticket.Id)
@@ -93,16 +91,13 @@ public sealed class ChangePriorityCommandHandlerTests
     #region arrange
     private readonly ITicketRepository _ticketRepository;
     private readonly ICompaniesApiClient _companiesApiClient;
-    private readonly DateTime _now;
     private readonly ICommandHandler<ChangePriorityCommand> _handler;
     
     public ChangePriorityCommandHandlerTests()
     {
         _ticketRepository = Substitute.For<ITicketRepository>();
         _companiesApiClient = Substitute.For<ICompaniesApiClient>();
-        _now = DateTime.Now;
-        
-        _handler = new ChangePriorityCommandHandler(_ticketRepository, _companiesApiClient, TestsClock.Create(_now));
+        _handler = new ChangePriorityCommandHandler(_ticketRepository, _companiesApiClient);
     }
     #endregion
 }
