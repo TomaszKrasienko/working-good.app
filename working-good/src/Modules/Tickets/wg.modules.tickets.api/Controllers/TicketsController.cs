@@ -67,15 +67,15 @@ internal sealed class TicketsController(
         return CreatedAtAction(nameof(GetById), new { id = ticketId }, null);
     }
 
-    [HttpPatch("update")]
+    [HttpPatch("{ticketId:guid}/update")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Updates ticket")]
-    public async Task<ActionResult> UpdateTicket(UpdateTicketCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult> UpdateTicket(Guid ticketId, UpdateTicketCommand command, CancellationToken cancellationToken)
     {
-        await commandDispatcher.SendAsync(command, cancellationToken);
+        await commandDispatcher.SendAsync(command with {Id = ticketId}, cancellationToken);
         return Ok();
     }
     
