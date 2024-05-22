@@ -295,7 +295,7 @@ public sealed class TicketTests
          //arrange
          var ticket = TicketsFactory.Get();
          ticket.ChangeAssignedEmployee(Guid.NewGuid());
-         var expirationDate = DateTime.Now.AddMinutes(30);
+         var expirationDate = ticket.CreatedAt.Value.Add(TimeSpan.FromMinutes(30));
          ticket.ChangeExpirationDate(expirationDate, DateTime.Now);
          var timeSpan = TimeSpan.FromHours(10);
          
