@@ -527,6 +527,55 @@ public sealed class TicketsControllerTests : BaseTestsController
     }
 
     [Fact]
+    public async Task ChangeExpirationDate_GivenNotPriorityTicket_ShouldReturn200OkStatusCode()
+    {
+        //arrange 
+        var ticket = await AddTicket();
+        var expirationDate = DateTime.Now.AddDays(1);
+        var command = new ChangeTicketExpirationDateCommand(ticket.Id, expirationDate);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{ticket.Id.Value}/change-expiration-date",
+            command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.ExpirationDate.Value.ShouldBe(expirationDate);
+    }
+    
+    [Fact]
+    public async Task ChangeExpirationDate_GivenPriorityTicket_ShouldReturn200OkStatusCode()
+    {
+        //arrange 
+        var ticket = await AddTicket();
+        var company = CompanyFactory.Get();
+        var employee = EmployeeFactory.GetInCompany(company);
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        ticket.ChangeAssignedEmployee(employee.Id);
+        ticket.ChangePriority(true, company.SlaTime);
+        TicketsDbContext.Update(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        
+        var expirationDate = ticket.ExpirationDate.Value.Add(company.SlaTime.Value - TimeSpan.FromHours(1));
+        var command = new ChangeTicketExpirationDateCommand(ticket.Id, expirationDate);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{ticket.Id.Value}/change-expiration-date",
+            command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedTicket = await GetTicketByIdAsync(ticket.Id);
+        updatedTicket.ExpirationDate.Value.ShouldBe(expirationDate);
+    }
+
+    [Fact]
     public async Task ChangeExpirationDate_GivenNotExistingTicketId_ShouldReturn400BadRequestStatusCode()
     {
         //arrange
@@ -539,6 +588,20 @@ public sealed class TicketsControllerTests : BaseTestsController
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ChangeExpirationDate_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new ChangeTicketExpirationDateCommand(Guid.Empty, DateTime.Now.AddDays(1));
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-expiration-date",
+            command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     
     [Fact]
