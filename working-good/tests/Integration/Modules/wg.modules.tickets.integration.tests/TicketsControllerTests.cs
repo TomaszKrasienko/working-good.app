@@ -10,6 +10,7 @@ using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.AddTicket;
+using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketExpirationDate;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.ChangeTicketState;
 using wg.modules.tickets.application.CQRS.Tickets.Commands.UpdateTicket;
 using wg.modules.tickets.application.CQRS.Tickets.Queries;
@@ -525,6 +526,21 @@ public sealed class TicketsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
+    [Fact]
+    public async Task ChangeExpirationDate_GivenNotExistingTicketId_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var command = new ChangeTicketExpirationDateCommand(Guid.Empty, DateTime.Now.AddDays(1));
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"tickets-module/tickets/{Guid.NewGuid()}/change-expiration-date",
+                command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+    
     [Fact]
     public async Task AssignProject_GivenTicketWithoutEmployeeAndUser_ShouldReturn200OkStatusCodeAndUpdateTicket()
     {
