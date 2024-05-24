@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
+using wg.shared.infrastructure.Cache.Configuration;
 using wg.shared.infrastructure.Context.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
@@ -33,6 +34,7 @@ public static class Extensions
             .AddTime()
             .AddAuth(configuration)
             .AddDal(configuration)
+            .AddRedis(configuration)
             .AddExceptionMiddleware()
             .AddMessaging()
             .AddEvents(assemblies)
