@@ -35,7 +35,8 @@ services:
     cap_add:
       - IPC_LOCK
     networks:
-      - working_good
+      - working_good 
+
   prometheus:
     build: ./prometheus
     container_name: Prometheus
@@ -54,6 +55,18 @@ services:
     networks:
       - working_good
 
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 5015:6379
+    volumes: 
+      - cache:/data
+
 networks:
   working_good:
     name: working_good
+
+volumes:
+  cache:
+    driver: local
