@@ -7,5 +7,5 @@ internal static class Extensions
 {
     internal static IServiceCollection AddServices(this IServiceCollection services)
         => services
-            .AddScoped<IEmailPublisher, EmailPublisher>();
+            .AddScoped<IEmailPublisher, FakeEmailPublisher>();
 }
