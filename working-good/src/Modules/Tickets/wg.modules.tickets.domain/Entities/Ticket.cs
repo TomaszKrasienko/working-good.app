@@ -4,7 +4,6 @@ using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Policies;
 using wg.modules.tickets.domain.ValueObjects;
 using wg.modules.tickets.domain.ValueObjects.Ticket;
-using wg.shared.abstractions.Exceptions;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.tickets.domain.Entities;
@@ -141,9 +140,3 @@ public sealed class Ticket : AggregateRoot<AggregateId>
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }
-
-public sealed class NullLimitTimeException() : 
-    WgException("Limit time can not be null for priority ticket");
-    
-    public sealed class ExpirationDateTooLateException()
-    : WgException("Provided expiration date is too late");
