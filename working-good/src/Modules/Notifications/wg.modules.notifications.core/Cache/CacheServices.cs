@@ -1,12 +1,15 @@
+using System.Text;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 
 namespace wg.modules.notifications.core.Cache;
 
-internal sealed class CacheService(IDatabase database) : ICacheService
+internal sealed class CacheService(
+    IDistributedCache distributedCache) : ICacheService
 {
     public async Task Add(string key, string value)
-        => await database.StringSetAsync(key, value);
+        => await distributedCache.SetAsync(key, Encoding.UTF8.GetBytes(value));
 
     public async Task<string> Get(string key)
-        => await database.StringGetAsync(key);
+        => await distributedCache.GetStringAsync(key);
 }
