@@ -10,7 +10,7 @@ internal sealed class FakeEmailPublisher(
     public Task PublishAsync(EmailNotification emailNotification, CancellationToken cancellationToken)
     {
         logger.LogInformation("Sending email notification\n"
-            + $"Recipient: {emailNotification.Recipient}"
+            + $"Recipient: {string.Join(",", emailNotification.Recipient.Select(x => x))}"
             + $"Subject: {emailNotification.Subject}"
             + $"Content: {emailNotification.Content}");
         return Task.CompletedTask;
