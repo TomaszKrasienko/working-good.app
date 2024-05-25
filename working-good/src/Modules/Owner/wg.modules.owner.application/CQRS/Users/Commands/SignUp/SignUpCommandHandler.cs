@@ -25,7 +25,7 @@ internal sealed class SignUpCommandHandler(
         var user = owner.AddUser(command.Id, command.Email, command.FirstName,
             command.LastName, securedPassword, command.Role);
         await ownerRepository.UpdateAsync(owner);
-        await messageBroker.PublishAsync(new UserSignedUp(user.Email, user.FullName.FirstName,
+        await messageBroker.PublishAsync(new UserSignedUp(user.Id,user.Email, user.FullName.FirstName,
             user.FullName.LastName, user.VerificationToken.Token));
     }
 }

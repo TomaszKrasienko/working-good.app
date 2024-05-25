@@ -12,7 +12,7 @@ internal static class Extensions
 
     internal static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
         => services
-            .AddOptions()
+            .AddOptions(configuration)
             .AddConnection();
 
     private static IServiceCollection AddConnection(this IServiceCollection services)
