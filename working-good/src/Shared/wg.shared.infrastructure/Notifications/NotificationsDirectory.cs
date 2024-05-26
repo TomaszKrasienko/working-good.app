@@ -16,4 +16,10 @@ public static class NotificationsDirectory
 
     public static string GetNewUserContent(string firstName, string lastName, string verificationToken)
         => $"Hello {firstName} {lastName}.\nThank you for registration. Here is your verification token:{verificationToken}";
+
+    public static string GetAssigningSubject(int ticketNumber)
+        => $"Ticket with number: {ticketNumber} has been assigned to you";
+    
+    public static string GetAssigningContent(int ticketNumber)
+        => $"Ticket with number: {ticketNumber} has been assigned to you";
 }

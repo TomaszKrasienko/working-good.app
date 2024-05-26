@@ -49,4 +49,14 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
             Content = NotificationsDirectory.GetNewUserContent(firstName, lastName, verificationToken)
         };
     }
+
+    public EmailNotification GetForAssigning(string recipient, int ticketNumber)
+    {
+        return new EmailNotification()
+        {
+            Recipient = [recipient],
+            Subject = NotificationsDirectory.GetAssigningSubject(ticketNumber),
+            Content = NotificationsDirectory.GetAssigningContent(ticketNumber)
+        };
+    }
 }

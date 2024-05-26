@@ -4,7 +4,7 @@ namespace wg.modules.owner.domain.ValueObjects.User;
 
 public sealed record Role
 {
-    private static IEnumerable<string> AvailableRoles = new[] {"Manager", "User"};
+    internal static IEnumerable<string> AvailableRoles = new[] {"Manager", "User"};
     public string Value { get; }
 
     private Role()

@@ -135,6 +135,22 @@ public sealed class EmailNotificationProviderTests
         //assert
         result.ShouldBeNull();
     }
+
+    [Fact]
+    public void GetForAssigning_GivenRecipientAndTicketNumber_ShouldReturnEmailNotification()
+    {
+        //arrange
+        var recipient = "test@test.pl";
+        var ticketNumber = 123;
+        
+        //act
+        var result = _emailNotificationProvider.GetForAssigning(recipient, ticketNumber);
+        
+        //assert
+        result.Recipient[0].ShouldBe(recipient);
+        result.Subject.ShouldBe($"Ticket with number: {ticketNumber} has been assigned to you");
+        result.Content.ShouldBe($"Ticket with number: {ticketNumber} has been assigned to you");
+    }
     
     #region arrange
     private readonly IEmailNotificationProvider _emailNotificationProvider;
