@@ -45,7 +45,7 @@ POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"TC2zpzzNHi7JVPg0CIr9IOJhmSIwJsqWGng7E03zhdUJIOKdALTZKRQGu3i9HtNEjNSuAHGiUu2pbCADDGLg"
+    "token":"wUTVOx9GmlO2R7f3AZj8453FBILzmMtHPUVqWdaKTjLmc9inrGHSqY5Nqmysm6if46U+eSiSO17TpcjxA"
 }
 
 ###
