@@ -151,6 +151,21 @@ public sealed class EmailNotificationProviderTests
         result.Subject.ShouldBe($"Ticket with number: {ticketNumber} has been assigned to you");
         result.Content.ShouldBe($"Ticket with number: {ticketNumber} has been assigned to you");
     }
+
+    [Fact]
+    public void GetForNewEmployee_GivenEmail_ShouldReturnEmailNotification()
+    {
+        //arrange
+        var email = "test@test.pl";
+        
+        //act
+        var result = _emailNotificationProvider.GetForNewEmployee(email);
+        
+        //assert
+        result.Recipient[0].ShouldBe(email);
+        result.Content.ShouldBe($"Your email: {email} now has a permission to sending tickets");
+        result.Subject.ShouldBe("Hello in working-good");
+    }
     
     #region arrange
     private readonly IEmailNotificationProvider _emailNotificationProvider;

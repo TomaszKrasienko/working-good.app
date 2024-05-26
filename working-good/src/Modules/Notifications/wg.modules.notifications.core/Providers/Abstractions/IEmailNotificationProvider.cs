@@ -7,5 +7,6 @@ public interface IEmailNotificationProvider
 {
     EmailNotification GetForNewTicket(string recipient, int ticketNumber, string content, string subject);
     EmailNotification GetForNewUser(string recipient, string firstName, string lastName, string verificationToken);
+    EmailNotification GetForNewEmployee(string email);
     EmailNotification GetForAssigning(string recipient, int ticketNumber);
 }

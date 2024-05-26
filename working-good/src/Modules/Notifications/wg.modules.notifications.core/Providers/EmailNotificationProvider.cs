@@ -50,6 +50,14 @@ internal sealed class EmailNotificationProvider : IEmailNotificationProvider
         };
     }
 
+    public EmailNotification GetForNewEmployee(string email)
+        => new EmailNotification()
+        {
+            Recipient = [email],
+            Content = $"Your email: {email} now has a permission to sending tickets",
+            Subject = "Hello in working-good"
+        };
+
     public EmailNotification GetForAssigning(string recipient, int ticketNumber)
     {
         return new EmailNotification()
