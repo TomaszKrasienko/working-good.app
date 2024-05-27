@@ -25,6 +25,8 @@ internal sealed class OwnerModule : IModule
     {
         app
             .UseModuleRequest()
+            .Subscribe<GetUserByIdQuery, UserDto>("owner/users/get",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(new GetUserByIdQuery(query.Id), default))
             .Subscribe<GetOwnerQuery, OwnerDto>("owner/get",
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
             .Subscribe<GetActiveUserByIdQuery, UserDto>("owner/users/active/get",

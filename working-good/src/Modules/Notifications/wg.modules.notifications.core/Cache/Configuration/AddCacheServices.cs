@@ -12,11 +12,11 @@ internal static class Extensions
             .AddDecorators();
 
     private static IServiceCollection AddServices(this IServiceCollection services)
-        => services.AddScoped<ICacheService, CacheService>();
+        => services.AddSingleton<ICacheService, CacheService>();
 
     private static IServiceCollection AddDecorators(this IServiceCollection services)
     {
-        services.TryDecorate(typeof(IOwnerApiClient), typeof(OwnerApiClientCacheDecorator));
+        services.Decorate<IOwnerApiClient,OwnerApiClientCacheDecorator>();
         return services;
     }
 }
