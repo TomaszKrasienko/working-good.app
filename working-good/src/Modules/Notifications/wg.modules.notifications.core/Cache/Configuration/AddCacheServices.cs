@@ -12,7 +12,7 @@ internal static class Extensions
             .AddDecorators();
 
     private static IServiceCollection AddServices(this IServiceCollection services)
-        => services.AddSingleton<ICacheService, CacheService>();
+        => services.AddScoped<ICacheService, CacheService>();
 
     private static IServiceCollection AddDecorators(this IServiceCollection services)
     {
