@@ -60,7 +60,7 @@ public sealed class UserAssignedHandlerTests
         var @event = new UserAssigned(Guid.NewGuid(), 123, userDto.Id);
 
         _ownerApiClient
-            .GetActiveUserAsync(Arg.Is<UserIdDto>(arg => arg.Id == @event.UserId))
+            .GetUserAsync(Arg.Is<UserIdDto>(arg => arg.Id == @event.UserId))
             .Returns(userDto);
         
         var notification = new EmailNotification()

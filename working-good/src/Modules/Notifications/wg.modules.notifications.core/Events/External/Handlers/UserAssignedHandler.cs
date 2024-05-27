@@ -18,7 +18,7 @@ internal sealed class UserAssignedHandler(
         var email = await cacheService.Get(@event.UserId.ToString());
         if (string.IsNullOrWhiteSpace(email))
         {
-            var userDto = await ownerApiClient.GetActiveUserAsync(new UserIdDto(){ Id = @event.UserId});
+            var userDto = await ownerApiClient.GetUserAsync(new UserIdDto(){ Id = @event.UserId});
             email = userDto.Email;
             await cacheService.Add(userDto.Id.ToString(), userDto.Email);
         }

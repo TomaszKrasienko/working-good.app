@@ -6,6 +6,6 @@ namespace wg.modules.notifications.core.Clients.Owner;
 internal sealed class OwnerApiClient(
     IModuleClient moduleClient) : IOwnerApiClient
 {
-    public Task<UserDto> GetActiveUserAsync(UserIdDto dto)
-        => moduleClient.SendAsync<UserDto>("owner/users/active/get", dto);
+    public Task<UserDto> GetUserAsync(UserIdDto dto)
+        => moduleClient.SendAsync<UserDto>("owner/users/get", dto);
 }

@@ -7,11 +7,11 @@ internal sealed class OwnerApiClientCacheDecorator(
     IOwnerApiClient apiClient,
     ICacheService cacheService) : IOwnerApiClient
 {
-    public async Task<UserDto> GetActiveUserAsync(UserIdDto dto)
+    public async Task<UserDto> GetUserAsync(UserIdDto dto)
     {
         var cachedUser = await cacheService.Get<UserDto>(dto.Id.ToString());
         if (cachedUser is not null) return cachedUser;
-        var userDto = await apiClient.GetActiveUserAsync(dto);
+        var userDto = await apiClient.GetUserAsync(dto);
         await cacheService.Add(dto.Id.ToString(), userDto);
         return userDto;
     }

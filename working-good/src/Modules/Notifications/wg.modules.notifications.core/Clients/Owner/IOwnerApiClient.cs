@@ -4,5 +4,5 @@ namespace wg.modules.notifications.core.Clients.Owner;
 
 public interface IOwnerApiClient
 {
-    Task<UserDto> GetActiveUserAsync(UserIdDto dto);
+    Task<UserDto> GetUserAsync(UserIdDto dto);
 }
