@@ -18,42 +18,7 @@ public sealed class UserAssignedHandlerTests
     private Task Act(UserAssigned @event) => _handler.HandleAsync(@event);
 
     [Fact]
-    public async Task HandleAsync_GivenUserInCache_ShouldSendByMailPublisher()
-    {
-        //arrange
-        var @event = new UserAssigned(Guid.NewGuid(), 123, Guid.NewGuid());
-        var email = "recipient@test.pl";
-        
-        _cacheService
-            .Get(Arg.Is<string>(arg => arg == @event.UserId.ToString()))
-            .Returns(email);
-
-        var notification = new EmailNotification()
-        {
-            Content = "Test",
-            Subject = "Test",
-            Recipient = [email]
-        };
-
-        _emailNotificationProvider
-            .GetForAssigning(email, @event.TicketNumber)
-            .Returns(notification);
-        
-        //act
-        await Act(@event);
-        
-        //assert
-        await _emailPublisher
-            .Received(1)
-            .PublishAsync(Arg.Is<EmailNotification>(arg
-                    => arg.Recipient[0] == email
-                    && arg.Content == notification.Content
-                    && arg.Subject == notification.Subject),
-                default);
-    }
-
-    [Fact]
-    public async Task HandleAsync_GivenUserNotInCache_ShouldSendByMailPublisher()
+    public async Task HandleAsync_GivenEvent_ShouldSendByMailPublisher()
     {
         //arrange
         var userDto = UserDtoFactory.Get();
@@ -82,14 +47,9 @@ public sealed class UserAssignedHandlerTests
             .Received(1)
             .PublishAsync(Arg.Is<EmailNotification>(arg => arg.Recipient[0] == userDto.Email),
                 default);
-
-        await _cacheService
-            .Received(1)
-            .Add(userDto.Id.ToString(), userDto.Email);
     }
     
     #region arrange
-    private readonly ICacheService _cacheService;
     private readonly IOwnerApiClient _ownerApiClient;
     private readonly IEmailPublisher _emailPublisher;
     private readonly IEmailNotificationProvider _emailNotificationProvider;
@@ -97,11 +57,10 @@ public sealed class UserAssignedHandlerTests
     
     public UserAssignedHandlerTests()
     {
-        _cacheService = Substitute.For<ICacheService>();
         _ownerApiClient = Substitute.For<IOwnerApiClient>();
         _emailPublisher = Substitute.For<IEmailPublisher>();
         _emailNotificationProvider = Substitute.For<IEmailNotificationProvider>();
-        _handler = new UserAssignedHandler(_cacheService, _ownerApiClient, _emailNotificationProvider,
+        _handler = new UserAssignedHandler(_ownerApiClient, _emailNotificationProvider,
             _emailPublisher);
     }
     #endregion
