@@ -12,6 +12,7 @@ internal sealed class UserSignedUpHandler(
 {
     public async Task HandleAsync(UserSignedUp @event)
     {
+        
         await cacheService.Add(@event.Id.ToString(), @event.Email);
 
         var emailNotification = emailNotificationProvider
