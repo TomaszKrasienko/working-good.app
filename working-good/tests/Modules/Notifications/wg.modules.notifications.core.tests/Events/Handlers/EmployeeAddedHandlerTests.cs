@@ -26,7 +26,7 @@ public sealed class EmployeeAddedHandlerTests
         var @event = new EmployeeAdded(employeeDto.Id, employeeDto.Email);
 
         _companiesApiClient
-            .GetEmployeeByIdAsync(new EmployeeIdDto() { Id = @event.Id })
+            .GetEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == @event.Id))
             .Returns(employeeDto);
 
         var emailNotification = new EmailNotification()
