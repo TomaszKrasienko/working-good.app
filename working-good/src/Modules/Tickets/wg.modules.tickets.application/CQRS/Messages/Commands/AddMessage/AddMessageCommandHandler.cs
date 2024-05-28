@@ -18,17 +18,17 @@ internal sealed class AddMessageCommandHandler(
 {
     public async Task HandleAsync(AddMessageCommand command, CancellationToken cancellationToken)
     {
-        // var ticket = await ticketRepository.GetByIdAsync(command.TicketId);
-        // if (ticket is null)
-        // {
-        //     throw new TicketNotFoundException(command.TicketId);
-        // }
-        //
-        // var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
-        // if (user is null)
-        // {
-        //     throw new UserNotFoundException(command.UserId);
-        // }
+        var ticket = await ticketRepository.GetByIdAsync(command.TicketId);
+        if (ticket is null)
+        {
+            throw new TicketNotFoundException(command.TicketId);
+        }
+        
+        var user = await ownerApiClient.GetActiveUserByIdAsync(new UserIdDto(command.UserId));
+        if (user is null)
+        {
+            throw new ActiveUserNotFoundException(command.UserId);
+        }
         //
         // ticket.AddMessage(command.Id, user.Email, ticket.Subject, command.Content, 
         //     clock.Now());
