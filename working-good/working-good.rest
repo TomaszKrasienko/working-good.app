@@ -209,47 +209,22 @@ GET {{url}}/tickets-module/tickets/{{ticket_id}}
 Authorization: bearer {{token_manager}}
 
 ###
-PATCH {{url}}/tickets-module/tickets/
-
-http://localhost:5001/tickets-module/Tickets/{id}/project/{projectId}
-#############
-###
-POST {{url}}/messages-module/messages
-Content-Type: application/json
-
-{
-    "email":"tom.krasienko@outlook.com",
-    "subject":"My first test",
-    "content":"My first test of sending ticket"
-}
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/project/{{projectId}}
+Authorization: bearer {{token_user}}
 
 ###
-# @ticketId = {{ticket_add.response.headers.x-resource-id}}
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
 
 ###
-GET {{url}}/tickets-module/tickets?pageSize=15&pageNumber=1
-Authorization: bearer {{token}}
-
-@ticketId = c5a9090d-b752-48e2-991d-b76c42f20e83
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/change-priority
+Authorization: bearer {{token_user}}
 
 ###
-GET {{url}}/tickets-module/tickets/{{ticketId}}
-Authorization: bearer {{token}}
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
 
-###
-PATCH {{url}}/tickets-module/tickets/{{ticketId}}/assign/user/{{userId}}
-Authorization: bearer {{token}}
 
-### Assign to project
-
-###
-POST {{url}}/tickets-module/messages/ticket/{{ticketId}}/add
-Authorization: bearer {{token}}
-Content-Type: application/json
-
-{
-    "content":"My respond"
-}
 
 ###
 POST {{url}}/activities-module/activities/add
