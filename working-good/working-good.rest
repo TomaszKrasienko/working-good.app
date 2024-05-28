@@ -3,7 +3,7 @@
 @manager_password = StrongPass123!
 
 @user_email = rajon.teller@working-good.pl
-@user_password = "VeryStrongPass123!"
+@user_password = VeryStrongPass123!
 
 ###
 GET {{url}}/companies-module
@@ -43,12 +43,14 @@ Content-Type: application/json
     "role":"Manager"
 }
 
+@manager_verification_token = BEjfwH4FBHPX9oJCFpksoUY1NEbDm+ZijwRO0Qa7ePHX7Hkcu9RevNOPwELhfUgi9TWQiLi8pDB6Z1XwJN51PA
+
 ###
 POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"wUTVOx9GmlO2R7f3AZj8453FBILzmMtHPUVqWdaKTjLmc9inrGHSqY5Nqmysm6if46U+eSiSO17TpcjxA"
+    "token":"{{manager_verification_token}}"
 }
 
 ###
@@ -86,20 +88,20 @@ Content-Type: application/json
 }
 
 ###
-@user_token = ""
+@user_verification_token = MWXsKj8VSnyhZ4P8nrDq2jamhR6xcfKtSIVxC4Ne2y6hPISU9K7RgoqsB9Iloefo1uHE4AfF27KfJyLd8XDJg
 
 ###
 POST {{url}}/owner-module/users/verify
 Content-Type: application/json
 
 {
-    "token":"{{user_token}}"
+    "token":"{{user_verification_token}}"
 }
 
 ###
 # @name sign_in_user
 POST {{url}}/owner-module/users/sign-in
-Content-Type: 
+Content-Type: application/json
 
 {
     "email":"{{user_email}}",
@@ -107,12 +109,12 @@ Content-Type:
 }
 
 ###
-@token_user = {{sign_in_user.response.headers.$.token}}
+@token_user = {{sign_in_user.response.body.$.token}}
 
 ###
 # @name me_user
 GET {{url}}/owner-module/users/me
-Authorization: bearer @{{token_user}}
+Authorization: bearer {{token_user}}
 
 ###
 @userId = {{me_user.response.body.$.id}}
@@ -173,7 +175,7 @@ Content-Type: application/json
 ###
 # @name ticket_add
 POST {{url}}/tickets-module/tickets/add
-Authorization: bearer {{user_token}}
+Authorization: bearer {{token_user}}
 Content-Type: application/json
 
 {
@@ -186,6 +188,7 @@ Content-Type: application/json
 
 ###
 GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
 
 
 #############
