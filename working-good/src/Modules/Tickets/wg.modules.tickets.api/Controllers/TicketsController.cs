@@ -146,6 +146,7 @@ internal sealed class TicketsController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Assigns project to ticket")]
     public async Task<ActionResult> AssignProject(Guid id, Guid projectId, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(new ChangeProjectCommand(id, projectId), cancellationToken);
