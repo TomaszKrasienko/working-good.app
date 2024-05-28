@@ -1,6 +1,9 @@
 @url = http://localhost:5001
-@email = tom.krasienko@gmail.pl
-@password = StrongPass123!
+@manager_email = joe.doe@working-good.pl
+@manager_password = StrongPass123!
+
+@user_email = rajon.teller@working-good.pl
+@user_password = "VeryStrongPass123!"
 
 ###
 GET {{url}}/companies-module
@@ -33,10 +36,10 @@ POST {{url}}/owner-module/users/sign-up
 Content-Type: application/json
 
 {
-    "email":"{{email}}",
+    "email":"{{manager_email}}",
     "firstName":"Joe",
     "lastName":"Doe",
-    "password":"{{password}}",
+    "password":"{{manager_password}}",
     "role":"Manager"
 }
 
@@ -49,38 +52,75 @@ Content-Type: application/json
 }
 
 ###
-# @name sign_in
+# @name sign_in_manager
 POST {{url}}/owner-module/users/sign-in
 Content-Type: application/json
 
 {
-    "email":"{{email}}",
-    "password":"{{password}}"
+    "email":"{{manager_email}}",
+    "password":"{{manager_password}}"
 }
 
 ###
-@token = {{sign_in.response.body.$.token}}
+@token_manager = {{sign_in_manager.response.body.$.token}}
 
 ###
-GET {{url}}/owner-module/owner
-Authorization: bearer {{token}}
-
-###
-# @name me
+# @name me_manager
 GET {{url}}/owner-module/users/me
-Authorization: Bearer {{token}}
+Authorization: Bearer {{token_manager}}
 
 ###
-@userId = {{me.response.body.$.id}}
+@managerId = {{me_manager.response.body.$.id}}
+
 
 ###
-GET {{url}}/owner-module/users/{{userId}}/active
-Authorization: bearer {{token}}
+POST {{url}}/owner-module/users/sign-up
+Content-Type: application/json
+
+{
+    "email":"{{user_email}}",
+    "firstName":"Rajon",
+    "lastName":"Teller",
+    "password":"{{user_password}}",
+    "role":"User"
+}
+
+###
+@user_token = ""
+
+###
+POST {{url}}/owner-module/users/verify
+Content-Type: application/json
+
+{
+    "token":"{{user_token}}"
+}
+
+###
+# @name sign_in_user
+POST {{url}}/owner-module/users/sign-in
+Content-Type: 
+
+{
+    "email":"{{user_email}}",
+    "password":"{{user_password}}"
+}
+
+###
+@token_user = {{sign_in_user.response.headers.$.token}}
+
+###
+# @name me_user
+GET {{url}}/owner-module/users/me
+Authorization: bearer @{{token_user}}
+
+###
+@userId = {{me_user.response.body.$.id}}
 
 ###
 # @name add_company
 POST {{url}}/companies-module/companies/add
-Authorization: bearer {{token}}
+Authorization: bearer {{token_manager}}
 Content-Type: application/json
 
 {
@@ -93,8 +133,9 @@ Content-Type: application/json
 @companyId = {{add_company.response.headers.x-resource-id}}
 
 ###
+# @name add_project
 POST {{url}}/companies-module/projects/companies/{{companyId}}/add
-Authorization: bearer {{token}}
+Authorization: bearer {{token_manager}}
 Content-Type: application/json
 
 {
@@ -103,9 +144,12 @@ Content-Type: application/json
 }
 
 ###
+@projectId = {{add_project.response.headers.x-resource-id}}
+
+###
 # @name add_employee
 POST {{url}}/companies-module/employees/companies/{{companyId}}/add
-Authorization: bearer {{token}}
+Authorization: bearer {{token_manager}}
 Content-Type: application/json
 
 {
@@ -117,20 +161,34 @@ Content-Type: application/json
 @employeeId = {{add_employee.response.headers.x-resource-id}}
 
 ###
+# @name add_user_to_group
+POST {{url}}/owner-module/groups/{{projectId}}/add-user
+Authorization: bearer {{token_manager}}
+Content-Type: application/json
+
+{
+    "userId":"{{userId}}"
+}
+
+###
 # @name ticket_add
 POST {{url}}/tickets-module/tickets/add
-Authorization: bearer {{token}}
+Authorization: bearer {{user_token}}
 Content-Type: application/json
 
 {
     "subject": "Can not open system!",
-    "content": "After comming to address i see only alert about problems with app",
-    "state": "New",
-    "isPriority": true,
-    "assignedEmployee": "{{employeeId}}",
-    "assignedUser": "{{userId}}"
+    "content": "After comming to address i see only alert about problems with app"
 }
 
+###
+@ticket_id = {{ticket_add.response.headers.x-resource-id}}
+
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+
+
+#############
 ###
 POST {{url}}/messages-module/messages
 Content-Type: application/json
