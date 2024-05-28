@@ -190,7 +190,28 @@ Content-Type: application/json
 GET {{url}}/tickets-module/tickets/{{ticket_id}}
 Authorization: bearer {{token_manager}}
 
+###
+# @name assign_user
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/user/{{userId}}
+Authorization: bearer {{token_user}}
 
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
+
+###
+# @name assign_employee
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/employee/{{employeeId}}
+Authorization: bearer {{token_user}}
+
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
+
+###
+PATCH {{url}}/tickets-module/tickets/
+
+http://localhost:5001/tickets-module/Tickets/{id}/project/{projectId}
 #############
 ###
 POST {{url}}/messages-module/messages
