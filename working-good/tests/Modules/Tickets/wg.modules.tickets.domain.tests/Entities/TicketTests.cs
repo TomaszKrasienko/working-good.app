@@ -462,4 +462,19 @@ public sealed class TicketTests
          message.Content.Value.ShouldBe(content);
          message.CreatedAt.Value.ShouldBe(createdAt);
      }
+
+     [Fact]
+     public void AddMessage_GivenMessageFromUserWithoutAssignedEmployee_ShouldThrowCanNotAddMessageWithoutAssignedEmployeeException()
+     {
+         //arrange
+         var ticket = TicketsFactory.Get();
+         ticket.ChangeStatus(Status.Done(), DateTime.Now);
+
+         //act
+         var exception = Record.Exception(() => ticket.AddMessage(Guid.NewGuid(), "test@test.pl", "My subject",
+             "My content", DateTime.Now, false));
+         
+         //assert
+         exception.ShouldBeOfType<CanNotAddMessageWithoutAssignedEmployeeException>();
+     }
 }
