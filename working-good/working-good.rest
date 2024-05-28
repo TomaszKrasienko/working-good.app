@@ -224,19 +224,29 @@ Authorization: bearer {{token_user}}
 GET {{url}}/tickets-module/tickets/{{ticket_id}}
 Authorization: bearer {{token_manager}}
 
+###
+POST {{url}}/tickets-module/messages/ticket/{{ticket_id}}/add
+Authorization: bearer {{token_user}}
+Content-Type: 
+
+{
+  "sender": "{{user_email}}",
+  "subject": "Can not open system!1",
+  "content": "Please try now"
+}
 
 
 ###
 POST {{url}}/activities-module/activities/add
-Authorization: bearer {{token}}
+Authorization: bearer {{token_user}}
 Content-Type: application/json
 
 {
     "userId": "{{userId}}",
-    "ticketId": "{{ticketId}}",
-    "content": "Test activity",
-    "timeFrom": "2019-08-24T14:15:22Z",
-    "timeTo": "2019-08-24T14:40:22Z",
+    "ticketId": "{{ticket_id}}",
+    "content": "My activity",
+    "timeFrom": "2019-05-28T16:00:00Z",
+    "timeTo": "2019-08-24T16:30:00Z",
     "isPaid": true
 }
 
