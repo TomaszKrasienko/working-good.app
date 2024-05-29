@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 ###
-@manager_verification_token = ck6lF9HIWb8LYN1chb5NaJct10hzZyiQGHlsRk0MdXTGFSrLSIciFnHMmCb95Y4PK6R581mk+mbxUUeziM48vA
+@manager_verification_token = Quc0QteWDR0hdE93sjET+JfGyv2lMBl1IOccdjXSUzSVeT4DQMiPtghyR7GIMi6UY+SnOpfs+6syM0Bygh8Q
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -89,7 +89,7 @@ Content-Type: application/json
 }
 
 ###
-@user_verification_token = rb+9qT9ftu+iDATQIvaYeTpq6xlCQbQcGJfUStTUidxuP9uhO++QpnVNlP+5BuFb7H0UJqpPQbU6G6YtNFGQ
+@user_verification_token = Aj7UqiqLqhUhvY2307F3bX+kPYwTZmK0IPYYx87X6NLa3ahoZtE6sqKzi+8nKjwcrSkJkM4yWuGxAm7Q4bHA
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -271,8 +271,8 @@ Content-Type: application/json
     "userId": "{{userId}}",
     "ticketId": "{{ticket_id}}",
     "content": "My activity",
-    "timeFrom": "2019-05-28T16:00:00Z",
-    "timeTo": "2019-08-24T16:30:00Z",
+    "timeFrom": "2019-05-29T16:00:00Z",
+    "timeTo": "2019-05-29T16:30:00Z",
     "isPaid": true
 }
 
