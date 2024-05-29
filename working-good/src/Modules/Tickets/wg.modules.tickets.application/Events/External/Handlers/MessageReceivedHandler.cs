@@ -14,25 +14,24 @@ internal sealed class MessageReceivedHandler(
 {
     public async Task HandleAsync(MessageReceived @event)
     {
-        // if (@event.TicketNumber is not null)
-        // {
-        //     var ticket = await ticketRepository.GetByNumberAsync((int)@event.TicketNumber);
-        //     if (ticket is null)
-        //     {
-        //         throw new TicketNumberNotFoundException((int)@event.TicketNumber);
-        //     }
-        //     ticket.AddMessage(Guid.NewGuid(), @event.Sender, @event.Subject,
-        //         @event.Content, @event.CreatedAt);
-        //     await ticketRepository.UpdateAsync(ticket);
-        //     return;
-        // }
-        //
-        // var number = await ticketRepository.GetMaxNumberAsync();
-        // var newTicket = Ticket.Create(Guid.NewGuid(), number + 1, @event.Subject,
-        //     @event.Content, @event.CreatedAt, @event.Sender, State.New(), @event.CreatedAt,
-        //     false, null, @event.AssignedEmployee, null, null,
-        //     @event.Sender);
-        // await ticketRepository.AddAsync(newTicket);
-        // await messageBroker.PublishAsync(newTicket.AsEvent());
+        if (@event.TicketNumber is not null)
+        {
+            var ticket = await ticketRepository.GetByNumberAsync(@event.TicketNumber.Value);
+            if (ticket is null)
+            {
+                throw new TicketNumberNotFoundException(@event.TicketNumber.Value);
+            }
+            ticket.AddMessage(Guid.NewGuid(), @event.Sender, @event.Subject,
+                @event.Content, @event.CreatedAt, false);
+            await ticketRepository.UpdateAsync(ticket); 
+            return;
+        }
+        
+        var number = await ticketRepository.GetMaxNumberAsync();
+        var newTicket = Ticket.Create(Guid.NewGuid(), number + 1, @event.Subject,
+            @event.Content, @event.CreatedAt, @event.Sender);
+        newTicket.ChangeAssignedEmployee(@event.AssignedEmployee);
+        await ticketRepository.AddAsync(newTicket);
+        await messageBroker.PublishAsync(newTicket.AsEvent());
     }
 }

@@ -417,6 +417,7 @@ public sealed class TicketTests
      {
          //arrange
          var ticket = TicketsFactory.Get();
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
          var id = Guid.NewGuid();
          var sender = "joe@doe.pl";
          var subject = "Test subject";
@@ -442,7 +443,8 @@ public sealed class TicketTests
      {
          //arrange
          var ticket = TicketsFactory.Get();
-         ticket.ChangeStatus(Status.Done(), DateTime.Now);
+         ticket.ChangeStatus(Status.Open(), DateTime.Now);
+         ticket.ChangeAssignedEmployee(Guid.NewGuid());
          var id = Guid.NewGuid();
          var sender = "joe@doe.pl";
          var subject = "Test subject";

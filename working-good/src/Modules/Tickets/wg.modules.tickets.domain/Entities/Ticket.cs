@@ -136,7 +136,13 @@ public sealed class Ticket : AggregateRoot<AggregateId>
     public void AddMessage(Guid id, string sender, string subject, string content,
         DateTime createdAt, bool isFromUser)
     {
-        Status = isFromUser ? new Status(Status.WaitingForResponse(), createdAt) : new Status(Status.CustomerReplied(), createdAt);
+        if (AssignedEmployee is null)
+        {
+            throw new CanNotAddMessageWithoutAssignedEmployeeException(Id);
+        }
+        Status = isFromUser 
+            ? new Status(Status.WaitingForResponse(), createdAt) 
+            : new Status(Status.CustomerReplied(), createdAt);
         _messages.Add(Message.Create(id, sender, subject, content, createdAt));
     }
 }
