@@ -20,7 +20,7 @@ internal sealed class MessageAddedHandler(
         if (string.IsNullOrWhiteSpace(@event.Content))
             return;
         
-        var recipient = await companiesApiClient.GetEmployeeByIdAsync(new EmployeeIdDto()
+        var recipient = await companiesApiClient.GetActiveEmployeeByIdAsync(new EmployeeIdDto()
         {
             Id = (Guid)@event.EmployeeId
         });

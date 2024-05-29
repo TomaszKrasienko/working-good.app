@@ -18,7 +18,7 @@ internal sealed class TicketCreatedHandler(
             return;
         }
 
-        var recipient = await companiesApiClient.GetEmployeeByIdAsync(new EmployeeIdDto()
+        var recipient = await companiesApiClient.GetActiveEmployeeByIdAsync(new EmployeeIdDto()
         {
             Id = (Guid)@event.EmployeeId
         });

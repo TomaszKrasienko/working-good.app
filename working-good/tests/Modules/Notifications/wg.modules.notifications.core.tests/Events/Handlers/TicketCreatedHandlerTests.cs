@@ -23,7 +23,7 @@ public sealed class TicketCreatedHandlerTests
         var @event = TicketCreatedFactory.Get(false, true);
         var employeeEmail = "test@test.pl";
         _companiesApiClient
-            .GetEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg
+            .GetActiveEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg
                 => arg.Id == @event.EmployeeId))
             .Returns(new EmployeeDto()
             {
@@ -62,7 +62,7 @@ public sealed class TicketCreatedHandlerTests
         //assert
         await _companiesApiClient
             .Received(0)
-            .GetEmployeeByIdAsync(Arg.Any<EmployeeIdDto>());
+            .GetActiveEmployeeByIdAsync(Arg.Any<EmployeeIdDto>());
 
         _emailNotificationProvider
             .Received(0)
@@ -81,7 +81,7 @@ public sealed class TicketCreatedHandlerTests
         
         var employeeEmail = "test@test.pl";
         _companiesApiClient
-            .GetEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg
+            .GetActiveEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg
                 => arg.Id == @event.EmployeeId))
             .Returns(new EmployeeDto()
             {

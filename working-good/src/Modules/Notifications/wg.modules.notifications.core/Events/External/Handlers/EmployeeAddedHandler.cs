@@ -13,7 +13,7 @@ internal sealed class EmployeeAddedHandler(
 {
     public async Task HandleAsync(EmployeeAdded @event)
     {
-        var employeeDto = await companiesApiClient.GetEmployeeByIdAsync(new EmployeeIdDto()
+        var employeeDto = await companiesApiClient.GetActiveEmployeeByIdAsync(new EmployeeIdDto()
         {
             Id = @event.Id
         });

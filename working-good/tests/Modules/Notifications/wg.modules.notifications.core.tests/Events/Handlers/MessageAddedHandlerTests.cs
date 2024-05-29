@@ -29,7 +29,7 @@ public sealed class MessageAddedHandlerTests
         };
 
         _companiesApiClient
-            .GetEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == @event.EmployeeId))
+            .GetActiveEmployeeByIdAsync(Arg.Is<EmployeeIdDto>(arg => arg.Id == @event.EmployeeId))
             .Returns(employeeDto);
         
         //act
