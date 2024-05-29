@@ -9,6 +9,7 @@ using wg.modules.tickets.application.Exceptions;
 using wg.modules.tickets.domain.Entities;
 using wg.modules.tickets.domain.Exceptions;
 using wg.modules.tickets.domain.Repositories;
+using wg.modules.tickets.domain.ValueObjects.Ticket;
 using wg.shared.abstractions.Messaging;
 using wg.shared.abstractions.Time;
 using wg.tests.shared.Factories.DTOs.Tickets.Owner;
@@ -22,58 +23,52 @@ public sealed class AddMessageCommandHandlerTests
 {
     private Task Act(AddMessageCommand command) => _handler.HandleAsync(command, default);
     
-    // [Fact]
-    // public async Task HandleAsync_GivenExistingTicket_ShouldUpdateTicketWithNewMessageAndSendEvent()
-    // {
-//         //arrange
-//         var ticket = TicketsFactory.Get();
-//         var command = new AddMessageCommand(Guid.NewGuid(), Guid.NewGuid(), "Test message contet",
-//             ticket.Id);
-//
-//         _ticketRepository
-//             .GetByIdAsync(command.TicketId)
-//             .Returns(ticket);
-//
-//         var userDto = new UserDto()
-//         {
-//             Id = command.UserId,
-//             Email = "test@tst.pl",
-//             FirstName = "Joe",
-//             LastName = "Doe",
-//             Role = Role.User()
-//         };
-//
-//         _ownerApiClient
-//             .GetActiveUserByIdAsync(new UserIdDto(command.UserId))
-//             .Returns(userDto);
-//         
-//         //act
-//         await Act(command);
-//         
-//         //assert
-//         ticket.State.Value.ShouldBe(State.WaitingForResponse());
-//         
-//         await _ticketRepository
-//             .Received(1)
-//             .UpdateAsync(Arg.Is<Ticket>(arg
-//                 => arg.Id == ticket.Id
-//                    && arg.State.Value == State.WaitingForResponse()
-//                    && arg.Messages.Any(m 
-//                        => m.Content == command.Content
-//                        && m.Sender == userDto.Email
-//                        && m.CreatedAt.Value == _now
-//                        )
-//             ));
-//
-//         await _messageBroker
-//             .Received(1)
-//             .PublishAsync(Arg.Is<MessageAdded>(arg
-//                 => arg.TicketNumber == ticket.Number
-//                    && arg.Subject == ticket.Subject
-//                    && arg.Content == command.Content
-//                    && arg.EmployeeId == ticket.AssignedEmployee.Value));
-//     }
-//
+    [Fact]
+    public async Task HandleAsync_GivenExistingTicket_ShouldUpdateTicketWithNewMessageAndSendEvent()
+    {
+        //arrange
+        var userDto = UserDtoFactory.Get();
+        var ticket = TicketsFactory.Get();
+        var employeeId = Guid.NewGuid();
+        ticket.ChangeAssignedEmployee(employeeId);
+        var command = new AddMessageCommand(Guid.NewGuid(),userDto.Id, "Test message contet",
+            ticket.Id);
+
+        _ticketRepository
+            .GetByIdAsync(command.TicketId)
+            .Returns(ticket);
+        
+        _ownerApiClient
+            .GetActiveUserByIdAsync(new UserIdDto(command.UserId))
+            .Returns(userDto);
+        
+        //act
+        await Act(command);
+        
+        //assert
+        ticket.Status.Value.ShouldBe(Status.WaitingForResponse());
+        
+        await _ticketRepository
+            .Received(1)
+            .UpdateAsync(Arg.Is<Ticket>(arg
+                => arg.Id == ticket.Id
+                   && arg.Status.Value == Status.WaitingForResponse()
+                   && arg.Messages.Any(m 
+                       => m.Content == command.Content
+                       && m.Sender == userDto.Email
+                       && m.CreatedAt.Value == _now
+                       )
+            ));
+
+        await _messageBroker
+            .Received(1)
+            .PublishAsync(Arg.Is<MessageAdded>(arg
+                => arg.TicketNumber == ticket.Number
+                   && arg.Subject == ticket.Subject
+                   && arg.Content == command.Content
+                   && arg.EmployeeId == ticket.AssignedEmployee.Value));
+    }
+
      
      [Fact]
      public async Task HandleAsync_GivenNotExistingTicket_ShouldUThrowTicketNotFoundException()

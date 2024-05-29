@@ -29,12 +29,12 @@ internal sealed class AddMessageCommandHandler(
         {
             throw new ActiveUserNotFoundException(command.UserId);
         }
-        //
-        // ticket.AddMessage(command.Id, user.Email, ticket.Subject, command.Content, 
-        //     clock.Now());
-        // await ticketRepository.UpdateAsync(ticket);
-        // var messageSent = new MessageAdded(ticket.Number, ticket.Subject, command.Content,
-        //     ticket.AssignedEmployee);
-        // await messageBroker.PublishAsync(messageSent);
+        
+        ticket.AddMessage(command.Id, user.Email, ticket.Subject, command.Content, 
+            clock.Now(), true);
+        await ticketRepository.UpdateAsync(ticket);
+        var messageSent = new MessageAdded(ticket.Number, ticket.Subject, command.Content,
+            ticket.AssignedEmployee);
+        await messageBroker.PublishAsync(messageSent);
     }
 }
