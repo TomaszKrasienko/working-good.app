@@ -16,7 +16,7 @@ public class PagedList<T> : List<T>
         TotalCount = count;
         PageSize = pageSize;
         CurrentPage = pageNumber;
-        TotalCount = (int)Math.Ceiling(count / (double)pageSize);
+        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         
         AddRange(items);
     }

@@ -8,7 +8,7 @@ using wg.shared.abstractions.Pagination;
 
 namespace wg.modules.tickets.infrastructure.Queries.Handlers.Tickets;
 
-internal sealed class GetTicketsQueryHandler(
+internal sealed class   GetTicketsQueryHandler(
     TicketsDbContext dbContext) : IQueryHandler<GetTicketsQuery, PagedList<TicketDto>>
 {
     public Task<PagedList<TicketDto>> HandleAsync(GetTicketsQuery query, CancellationToken cancellationToken)

@@ -23,6 +23,14 @@ internal sealed class ActivitiesController(
     [SwaggerOperation(Summary = "Gets activity by identifier")]
     public async Task<ActionResult<ActivityDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetActivityById(id), cancellationToken));
+
+    [HttpGet("ticket/{ticketId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation(Summary = "Gets activities by \"TicketId\"")]
+    public async Task<ActionResult<List<ActivityDto>>> GetByTicketId(Guid ticketId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetActivitiesByTicketIdQueryQuery(ticketId), cancellationToken));
     
     [HttpPost("add")]
     [Authorize]

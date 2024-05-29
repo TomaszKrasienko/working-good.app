@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 ###
-@manager_verification_token = Quc0QteWDR0hdE93sjET+JfGyv2lMBl1IOccdjXSUzSVeT4DQMiPtghyR7GIMi6UY+SnOpfs+6syM0Bygh8Q
+@manager_verification_token = WNg9KKhbxXtyO7CVnh5e4QnFhBcSs6lwCAR4vnm1SLcDlJfEszm3ITJvXikOEoJiwSfYjTDIZNv0jQ+XqnJTg
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -89,7 +89,7 @@ Content-Type: application/json
 }
 
 ###
-@user_verification_token = Aj7UqiqLqhUhvY2307F3bX+kPYwTZmK0IPYYx87X6NLa3ahoZtE6sqKzi+8nKjwcrSkJkM4yWuGxAm7Q4bHA
+@user_verification_token = S0QOl8G5JkdGxVFPiALecC1SWFuXqIMUSx6nwG1A3TWYiv9wJ+LAxNB4pymIvQKYxfhqW1YAWjiAGGCFAF1aQ
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -276,5 +276,34 @@ Content-Type: application/json
     "isPaid": true
 }
 
+###
+GET {{url}}/activities-module/activities/ticket/{{ticket_id}}
+Authorization: bearer {{token_user}}
+
+###
+PATCH {{url}}/tickets-module/tickets/{{ticket_id}}/change-status
+Authorization: bearer {{token_user}}
+Content-Type: application/json
+
+{
+    "status":"Done"
+}
 
 
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
+
+###
+POST {{url}}/messages-module/messages
+Content-Type: application/json
+
+{
+    "email":"{{employee_email}}",
+    "subject":"Again problem with something",
+    "content": "I have problem with something"
+}
+
+###
+GET {{url}}/tickets-module/Tickets?pageNumber=1&pageSize=10
+Authorization: bearer {{token_user}}
