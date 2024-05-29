@@ -43,7 +43,8 @@ Content-Type: application/json
     "role":"Manager"
 }
 
-@manager_verification_token = BEjfwH4FBHPX9oJCFpksoUY1NEbDm+ZijwRO0Qa7ePHX7Hkcu9RevNOPwELhfUgi9TWQiLi8pDB6Z1XwJN51PA
+###
+@manager_verification_token = ck6lF9HIWb8LYN1chb5NaJct10hzZyiQGHlsRk0MdXTGFSrLSIciFnHMmCb95Y4PK6R581mk+mbxUUeziM48vA
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -88,7 +89,7 @@ Content-Type: application/json
 }
 
 ###
-@user_verification_token = MWXsKj8VSnyhZ4P8nrDq2jamhR6xcfKtSIVxC4Ne2y6hPISU9K7RgoqsB9Iloefo1uHE4AfF27KfJyLd8XDJg
+@user_verification_token = rb+9qT9ftu+iDATQIvaYeTpq6xlCQbQcGJfUStTUidxuP9uhO++QpnVNlP+5BuFb7H0UJqpPQbU6G6YtNFGQ
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -149,13 +150,16 @@ Content-Type: application/json
 @projectId = {{add_project.response.headers.x-resource-id}}
 
 ###
+@employee_email = tom.krasienko@outlook.com
+
+###
 # @name add_employee
 POST {{url}}/companies-module/employees/companies/{{companyId}}/add
 Authorization: bearer {{token_manager}}
 Content-Type: application/json
 
 {
-    "email": "tom.krasienko@outlook.com",
+    "email": "{{employee_email}}",
     "phoneNumber": "555000111"
 }
 
@@ -227,7 +231,7 @@ Authorization: bearer {{token_manager}}
 ###
 POST {{url}}/tickets-module/messages/ticket/{{ticket_id}}/add
 Authorization: bearer {{token_user}}
-Content-Type: 
+Content-Type: application/json
 
 {
   "sender": "{{user_email}}",
@@ -235,6 +239,28 @@ Content-Type:
   "content": "Please try now"
 }
 
+###
+# @name get_ticket
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
+
+###
+@ticket_number = {{get_ticket.response.body.$.number}}
+
+###
+POST {{url}}/messages-module/messages
+Content-Type: application/json
+
+{
+    "email":"{{employee_email}}",
+    "subject":"Can not open system11",
+    "content": "Thank you, now is working",
+    "ticketNumber":{{ticket_number}}
+}
+
+###
+GET {{url}}/tickets-module/tickets/{{ticket_id}}
+Authorization: bearer {{token_manager}}
 
 ###
 POST {{url}}/activities-module/activities/add
