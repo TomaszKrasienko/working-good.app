@@ -57,6 +57,7 @@ services:
 
   redis:
     image: redis
+    container_name: Redis
     restart: always
     ports:
       - 5015:6379
