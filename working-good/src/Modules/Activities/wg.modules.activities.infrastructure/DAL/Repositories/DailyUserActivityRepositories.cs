@@ -9,7 +9,6 @@ internal sealed class DailyUserActivityRepository(
 {
     public async Task<DailyUserActivity> GetByDateForUser(DateTime dateTime, Guid userId)
     {
-        //Todo: Temporary solution => To Change
         var usersActivity = await dbContext
             .DailyUserActivities
             .Include(x => x.Activities)
