@@ -1,4 +1,5 @@
 using NSubstitute;
+using Org.BouncyCastle.Bcpg.Sig;
 using Shouldly;
 using wg.modules.tickets.application.Events;
 using wg.modules.tickets.application.Events.External;
@@ -22,8 +23,10 @@ public sealed class MessageReceivedHandlerTests
      {
          //arrange
          var ticket = TicketsFactory.Get();
+         var userId = Guid.NewGuid();
+         ticket.ChangeAssignedEmployee(userId);
          var @event = new MessageReceived("joe.doe@test.pl", "Some problems with app", "I have some problems with app",
-             DateTime.Now, Guid.NewGuid(), ticket.Number);
+             DateTime.Now, userId, ticket.Number);
 
          _ticketRepository
              .GetByNumberAsync((int)@event.TicketNumber!)

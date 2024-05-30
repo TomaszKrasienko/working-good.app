@@ -693,6 +693,7 @@ public sealed class TicketsControllerTests : BaseTestsController
          var ticket = TicketsFactory.Get();
          if (withMessage)
          {
+             ticket.ChangeAssignedEmployee(Guid.NewGuid());
              var message = MessagesFactory.Get();
              ticket.AddMessage(message.Id, message.Sender, message.Subject, message.Content, 
                  message.CreatedAt, false);
