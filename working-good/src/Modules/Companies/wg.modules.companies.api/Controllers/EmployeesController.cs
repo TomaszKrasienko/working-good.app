@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.companies.application.CQRS.Employees.Commands.AddEmployee;
 using wg.modules.companies.application.CQRS.Employees.Commands.DeactivateEmployee;
 using wg.modules.companies.application.CQRS.Employees.Queries;
@@ -26,8 +27,17 @@ internal sealed class EmployeesController(
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets active employee by \"ID\"")]
+    public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid id, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
+
+    [HttpGet("{id:guid}/is-active")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<IsExistsDto>> GetActiveById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IsExistsDto>> IsEmployeeActiveById(Guid id, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(id), cancellationToken);
     
     [HttpPost("companies/{companyId}/add")]

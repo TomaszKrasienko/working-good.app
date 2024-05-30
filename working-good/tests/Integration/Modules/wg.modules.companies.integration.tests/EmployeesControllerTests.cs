@@ -52,21 +52,63 @@ public sealed class EmployeesControllerTests : BaseTestsController
     [Fact]
     public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
     {
-        //arrange
-        var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
-        CompaniesDbContext.Companies.Update(company);
-        await CompaniesDbContext.SaveChangesAsync();
-        
         //act
-        var result = await HttpClient.GetAsync($"companies-module/Employees/{employee.Id.Value}");
+        var result = await HttpClient.GetAsync($"companies-module/Employees/{Guid.NewGuid()}");
 
         //assert
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
-    public async Task GetActiveById_GivenExistingActiveEmployeeId_ShouldReturnIsExistsDtoWithTrueValue()
+    public async Task GetActiveById_GivenExistingActiveEmployee_ShouldReturnEmployeeDto()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetInCompany(company);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<EmployeeDto>($"companies-module/Employees/{employee.Id.Value}/active");
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(employee.Id.Value);
+    }
+    
+    [Fact]
+    public async Task GetActiveById_GivenNotExistingActiveEmployee_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        var company = await AddCompanyAsync();
+        var employee = EmployeeFactory.GetInCompany(company);
+        employee.Deactivate();
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Employees/{employee.Id.Value}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetActiveById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Employees/{Guid.NewGuid()}/active");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
+    public async Task IsEmployeeActiveById_GivenExistingActiveEmployeeId_ShouldReturnIsExistsDtoWithTrueValue()
     {
         //arrange
         var company = await AddCompanyAsync();
@@ -76,14 +118,14 @@ public sealed class EmployeesControllerTests : BaseTestsController
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
-        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/employees/{employee.Id.Value}/active");
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/employees/{employee.Id.Value}/is-active");
         
         //assert
         result.Value.ShouldBeTrue();
     }
     
     [Fact]
-    public async Task GetActiveById_GivenNotExistingActiveEmployeeId_ShouldReturnIsExistsDtoWithFalseValue()
+    public async Task IsEmployeeActiveById_GivenNotExistingActiveEmployeeId_ShouldReturnIsExistsDtoWithFalseValue()
     {
         //arrange
         var company = await AddCompanyAsync();
@@ -94,17 +136,17 @@ public sealed class EmployeesControllerTests : BaseTestsController
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
-        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/employees/{employee.Id.Value}/active");
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/employees/{employee.Id.Value}/is-active");
         
         //assert
         result.Value.ShouldBeFalse();
     }
 
     [Fact]
-    public async Task GetActiveById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    public async Task IsEmployeeActiveById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
     {
         //act
-        var response = await HttpClient.GetAsync($"companies-module/employees/{Guid.NewGuid()}/active");
+        var response = await HttpClient.GetAsync($"companies-module/employees/{Guid.NewGuid()}/is-active");
         
         //assert
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
