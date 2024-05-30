@@ -17,12 +17,14 @@ internal sealed class ProjectsController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
 {
-    [HttpGet("{id:guid}")]
+    [HttpGet("{projectId:guid}")]
     [Authorize]
-    public async Task<ActionResult> GetById(Guid id)
-    {
-        throw new NotImplementedException();
-    }
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets project by \"ID\"")]
+    public async Task<ActionResult<ProjectDto>> GetById(Guid projectId, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new GetProjectByIdQuery(projectId), cancellationToken);
 
     [HttpGet("{projectId:guid}/active")]
     [Authorize]

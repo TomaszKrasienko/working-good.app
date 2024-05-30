@@ -19,6 +19,48 @@ namespace wg.modules.companies.integration.tests;
 public sealed class ProjectsControllerTests : BaseTestsController
 {
     [Fact]
+    public async Task GetById_GivenExistingProject_ShouldReturnProjectDto()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        var project = ProjectFactory.GetInCompany(company, true, true);
+        
+        await CompaniesDbContext.Companies.AddAsync(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<ProjectDto>($"companies-module/projects/{project.Id.Value}");
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(project.Id.Value);
+    }
+    
+    [Fact]
+    public async Task GetById_GivenNotExistingProject_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Projects/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"companies-module/Projects/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
+    [Fact]
     public async Task IsProjectActive_GivenActiveProject_ShouldReturnIsExistsDtoWithTrue()
     {
         //arrange
