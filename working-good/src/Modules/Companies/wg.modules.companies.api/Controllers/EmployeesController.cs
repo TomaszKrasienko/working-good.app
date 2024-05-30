@@ -30,7 +30,8 @@ internal sealed class EmployeesController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets active employee by \"ID\"")]
     public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid id, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken);
+        => await queryDispatcher.SendAsync(new GetActiveEmployeeByIdQuery(id), cancellationToken);
+
 
     [HttpGet("{id:guid}/is-active")]
     [Authorize]
