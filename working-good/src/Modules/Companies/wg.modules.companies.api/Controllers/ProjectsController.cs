@@ -59,7 +59,7 @@ internal sealed class ProjectsController(
             Id = projectId
         }, cancellationToken);
         AddResourceHeader(projectId);
-        return CreatedAtAction(nameof(GetById), new { id = companyId }, null);
+        return CreatedAtAction(nameof(GetById), new { projectId = projectId }, null);
     }
 
     [HttpPut("edit/{id:guid}")]
