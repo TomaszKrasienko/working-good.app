@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using wg.modules.wiki.core.DAL.Repositories.Configuration;
+using wg.modules.wiki.core.DAL.Configuration;
 using wg.modules.wiki.core.Services.Configuration;
 
 namespace wg.modules.wiki.core.Configuration;

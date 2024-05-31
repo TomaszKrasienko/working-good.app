@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using wg.modules.wiki.core.Entities;
 
-namespace wg.modules.wiki.core.DAL.Repositories;
+namespace wg.modules.wiki.core.DAL;
 
 internal sealed class WikiDbContext : DbContext
 {

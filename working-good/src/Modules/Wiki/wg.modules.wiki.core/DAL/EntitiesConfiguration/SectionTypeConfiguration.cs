@@ -4,7 +4,7 @@ using wg.modules.wiki.core.Entities;
 using wg.modules.wiki.core.ValueObjects.Section;
 using wg.shared.abstractions.Kernel.Types;
 
-namespace wg.modules.wiki.core.DAL.Repositories.EntitiesConfiguration;
+namespace wg.modules.wiki.core.DAL.EntitiesConfiguration;
 
 internal sealed class SectionTypeConfiguration : IEntityTypeConfiguration<Section>
 {
