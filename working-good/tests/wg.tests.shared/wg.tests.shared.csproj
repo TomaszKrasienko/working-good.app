@@ -26,6 +26,7 @@
       <ProjectReference Include="..\..\src\Modules\Owner\wg.modules.owner.infrastructure\wg.modules.owner.infrastructure.csproj" />
       <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.domain\wg.modules.tickets.domain.csproj" />
       <ProjectReference Include="..\..\src\Modules\Tickets\wg.modules.tickets.infrastructure\wg.modules.tickets.infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Wiki\wg.modules.wiki.core\wg.modules.wiki.core.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.abstractions\wg.shared.abstractions.csproj" />
       <ProjectReference Include="..\..\src\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
     </ItemGroup>
@@ -51,6 +52,7 @@
         <InternalsVisibleTo Include="wg.modules.activities.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.infrastructure.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.integration.tests"/>
+        <InternalsVisibleTo Include="wg.modules.wiki.core.tests"/>
         <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>       
     </ItemGroup>
     <ItemGroup>

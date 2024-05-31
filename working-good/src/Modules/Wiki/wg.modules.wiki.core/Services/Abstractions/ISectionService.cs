@@ -4,5 +4,5 @@ namespace wg.modules.wiki.core.Services.Abstractions;
 
 public interface ISectionService
 {
-    Task Add(AddSectionCommand command);
+    Task AddAsync(AddSectionCommand command, CancellationToken cancellationToken);
 }
