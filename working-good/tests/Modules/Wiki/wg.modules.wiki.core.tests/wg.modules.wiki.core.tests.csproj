@@ -24,4 +24,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Wiki\wg.modules.wiki.core\wg.modules.wiki.core.csproj" />
+    </ItemGroup>
+
 </Project>
