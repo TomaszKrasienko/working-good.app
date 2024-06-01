@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 ###
-@manager_verification_token = WNg9KKhbxXtyO7CVnh5e4QnFhBcSs6lwCAR4vnm1SLcDlJfEszm3ITJvXikOEoJiwSfYjTDIZNv0jQ+XqnJTg
+@manager_verification_token = 5zVR0Pcc8fx7b+GMqu0ycu1KCSK4Jbpr7SfKrDYKLuteUtawG9nrrQrvUkSwuuoY+hpahortd7PK+rtmcW5dyw
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -307,3 +307,12 @@ Content-Type: application/json
 ###
 GET {{url}}/tickets-module/Tickets?pageNumber=1&pageSize=10
 Authorization: bearer {{token_user}}
+
+###
+POST {{url}}/wiki-module/sections/add
+Authorization: bearer {{token_manager}}
+Content-Type: application/json
+
+{
+    "name":"Test 1"
+}

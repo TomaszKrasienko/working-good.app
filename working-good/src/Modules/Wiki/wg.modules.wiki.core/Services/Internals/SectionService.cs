@@ -10,7 +10,7 @@ internal sealed class SectionService(
     ISectionRepository sectionRepository) : ISectionService
 {
     public async Task AddAsync(AddSectionCommand command, CancellationToken cancellationToken)
-    {
+    { 
         if (await sectionRepository.IsNameExistsAsync(command.Name, cancellationToken))
         {
             throw new SectionNameAlreadyRegisteredException(command.Name);
