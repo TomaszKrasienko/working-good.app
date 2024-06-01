@@ -7,11 +7,13 @@ using wg.modules.wiki.core.DAL;
 using wg.modules.wiki.core.Entities;
 using wg.modules.wiki.core.Services.Commands;
 using wg.tests.shared.Integration;
+using Xunit;
 
 namespace wg.modules.wiki.integration.tests;
 
 public sealed class SectionsControllerTests : BaseTestsController
 {
+    [Fact]
     public async Task Add_GivenValidArguments_ShouldReturn201CreatedStatusCode()
     {
         //arrange
