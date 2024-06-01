@@ -6,7 +6,7 @@ using Xunit;
 namespace wg.modules.activities.integration.tests;
 
 [Collection("#1")]
-public sealed class HomeControllerTests : BaseTestsController
+public sealed class HomeControllerTests() : BaseTestsController()
 {
     [Fact]
     public async Task Get_ShouldReturn200OkStatusCode()

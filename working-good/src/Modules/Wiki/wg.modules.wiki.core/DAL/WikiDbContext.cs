@@ -3,7 +3,7 @@ using wg.modules.wiki.core.Entities;
 
 namespace wg.modules.wiki.core.DAL;
 
-internal sealed class WikiDbContext : DbContext
+public sealed class WikiDbContext : DbContext
 {
     public DbSet<Section> Sections { get; set; }
 

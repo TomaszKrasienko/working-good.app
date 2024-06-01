@@ -6,6 +6,7 @@ using wg.modules.companies.infrastructure.DAL;
 using wg.modules.notifications.core.Services.Abstractions;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
+using wg.modules.wiki.core.DAL;
 using wg.shared.abstractions.Pagination;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;
@@ -23,6 +24,7 @@ public abstract class BaseTestsController : IDisposable
     internal readonly OwnerDbContext OwnerDbContext;
     internal readonly TicketsDbContext TicketsDbContext;
     internal readonly ActivitiesDbContext ActivitiesDbContext;
+    internal readonly WikiDbContext WikiDbContext;
 
     protected BaseTestsController()
     {
@@ -33,6 +35,7 @@ public abstract class BaseTestsController : IDisposable
         OwnerDbContext = TestAppDb.OwnerDbContext;
         TicketsDbContext = TestAppDb.TicketsDbContext;
         ActivitiesDbContext = TestAppDb.ActivitiesDbContext;
+        WikiDbContext = TestAppDb.WikiDbContext;
     }
 
     protected virtual void ConfigureServices(IServiceCollection services)

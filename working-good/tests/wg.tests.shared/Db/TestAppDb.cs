@@ -2,6 +2,7 @@ using wg.modules.activities.infrastructure.DAL;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
+using wg.modules.wiki.core.DAL;
 using wg.tests.shared.Integration;
 
 namespace wg.tests.shared.Db;
@@ -12,6 +13,7 @@ internal sealed class TestAppDb : IDisposable
     public CompaniesDbContext CompaniesDbContext { get; }
     public OwnerDbContext OwnerDbContext { get; }
     public ActivitiesDbContext ActivitiesDbContext { get; set; }
+    public WikiDbContext WikiDbContext { get; set; }
 
     public TestAppDb()
     {

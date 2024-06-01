@@ -16,7 +16,7 @@ using Xunit;
 namespace wg.modules.activities.integration.tests;
 
 [Collection("#1")]
-public sealed class ActivitiesControllerTests : BaseTestsController
+public sealed class ActivitiesControllerTests() : BaseTestsController()
 {
     
     [Fact]
