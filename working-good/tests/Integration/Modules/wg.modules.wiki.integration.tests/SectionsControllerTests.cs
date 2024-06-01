@@ -17,7 +17,7 @@ public sealed class SectionsControllerTests : BaseTestsController
     public async Task Add_GivenValidArguments_ShouldReturn201CreatedStatusCode()
     {
         //arrange
-        var command = new AddSectionCommand(Guid.NewGuid(), "Section name", null);
+        var command = new AddSectionCommand(Guid.Empty, "Section name", null);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -32,8 +32,8 @@ public sealed class SectionsControllerTests : BaseTestsController
         resourceId.ShouldNotBeNull();
         resourceId.ShouldNotBe(Guid.Empty);
 
-        var owner = await GetSectionAsync(command.Id);
-        owner.ShouldNotBeNull();
+        var section = await GetSectionAsync(resourceId.Value);
+        section.ShouldNotBeNull();
     }
 
     private async Task<Section> GetSectionAsync(Guid id)

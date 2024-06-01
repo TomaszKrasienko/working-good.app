@@ -21,6 +21,7 @@ internal sealed class TestAppDb : IDisposable
         CompaniesDbContext = new CompaniesDbContext(DbContextOptionsProvider.GetDbContextOptions<CompaniesDbContext>());
         OwnerDbContext = new OwnerDbContext(DbContextOptionsProvider.GetDbContextOptions<OwnerDbContext>());
         ActivitiesDbContext = new ActivitiesDbContext(DbContextOptionsProvider.GetDbContextOptions<ActivitiesDbContext>());
+        WikiDbContext = new WikiDbContext(DbContextOptionsProvider.GetDbContextOptions<WikiDbContext>());
     }
     
     public void Dispose()

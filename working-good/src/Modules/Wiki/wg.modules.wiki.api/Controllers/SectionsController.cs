@@ -34,8 +34,9 @@ internal sealed class SectionsController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> Add(AddSectionCommand command, CancellationToken cancellationToken)
     {
-        var id = Guid.NewGuid();
-        await sectionService.AddAsync(command with { Id = id }, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new {sectionId = id}, null);
+        var sectionId = Guid.NewGuid();
+        await sectionService.AddAsync(command with { Id = sectionId }, cancellationToken);
+        AddResourceHeader(sectionId);
+        return CreatedAtAction(nameof(GetById), new {sectionId = sectionId}, null);
     }
 }
