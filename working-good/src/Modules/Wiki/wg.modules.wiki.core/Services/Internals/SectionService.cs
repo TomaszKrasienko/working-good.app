@@ -31,8 +31,21 @@ internal sealed class SectionService(
             .AddAsync(section, cancellationToken);
     }
 
-    public Task AddParentAsync(AddParentSectionCommand command, CancellationToken cancellationToken)
+    public async Task AddParentAsync(AddParentSectionCommand command, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var section = await sectionRepository.GetByIdAsync(command.SectionId, cancellationToken);
+        if (section is null)
+        {
+            throw new SectionNotFoundException(command.SectionId);
+        }
+
+        var parentSection = await sectionRepository.GetByIdAsync(command.ParentSectionId, cancellationToken);
+        if (parentSection is null)
+        {
+            throw new ParentSectionNotFoundException(command.ParentSectionId);
+        }
+        
+        section.ChangeParent(parentSection);
+        await sectionRepository.UpdateAsync(section, cancellationToken);
     }
 }

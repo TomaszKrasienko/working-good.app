@@ -32,7 +32,7 @@ public sealed class Section
     private void ChangeName(string name)
         => Name = name;
 
-    private void ChangeParent(Section parent)
+    internal void ChangeParent(Section parent)
         => Parent = parent;
 
 }
