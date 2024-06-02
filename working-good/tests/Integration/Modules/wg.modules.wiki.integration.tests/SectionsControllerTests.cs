@@ -6,6 +6,7 @@ using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.wiki.core.DAL;
 using wg.modules.wiki.core.Entities;
 using wg.modules.wiki.core.Services.Commands;
+using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
 using Xunit;
 
@@ -34,6 +35,42 @@ public sealed class SectionsControllerTests : BaseTestsController
 
         var section = await GetSectionAsync(resourceId.Value);
         section.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Add_GivenExistingSection_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var existingSection = await AddSection();
+        var command = new AddSectionCommand(Guid.NewGuid(), existingSection.Name, Guid.NewGuid());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("wiki-module/sections/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Add_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //arrange
+        var command = new AddSectionCommand(Guid.NewGuid(), "Section name", Guid.NewGuid());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync("wiki-module/sections/add", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    private async Task<Section> AddSection()
+    {
+        var section = SectionsFactory.Get();
+        await WikiDbContext.Sections.AddAsync(section);
+        await WikiDbContext.SaveChangesAsync();
+        return section;
     }
 
     private async Task<Section> GetSectionAsync(Guid id)
