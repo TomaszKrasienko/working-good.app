@@ -31,7 +31,7 @@ internal sealed class SectionService(
             .AddAsync(section, cancellationToken);
     }
 
-    public Task AddParent(AddParentSectionCommand command, CancellationToken cancellationToken)
+    public Task AddParentAsync(AddParentSectionCommand command, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

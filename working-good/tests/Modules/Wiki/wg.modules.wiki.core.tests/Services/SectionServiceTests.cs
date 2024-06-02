@@ -109,7 +109,7 @@ public sealed class SectionServiceTests
             .GetByIdAsync(command.SectionId, default);
         
         //act
-        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParent(command, default));
+        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParentAsync(command, default));
         
         //assert
         exception.ShouldBeOfType<SectionNotFoundException>();
@@ -130,12 +130,38 @@ public sealed class SectionServiceTests
             .GetByIdAsync(command.ParentSectionId, default);
         
         //act
-        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParent(command, default));
+        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParentAsync(command, default));
         
         //assert
         exception.ShouldBeOfType<ParentSectionNotFoundException>();
     }
 
+    [Fact]
+    public async Task AddParent_GivenExistingSectionAndParentSection_ShouldAddParentSectionToSectionAndUpateSection()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var parentSection = SectionsFactory.Get();
+        var command = new AddParentSectionCommand(section.Id, Guid.NewGuid());
+
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+
+        _sectionRepository
+            .GetByIdAsync(command.ParentSectionId, default)
+            .Returns(parentSection);
+        
+        //act
+        await _sectionService.AddParentAsync(command, default);
+        
+        //assert
+        await _sectionRepository
+            .Received(1)
+            .UpdateAsync(section, default);
+        
+        section.Parent.ShouldBe(parentSection);
+    }
     #region arrange
 
     private readonly ISectionRepository _sectionRepository;

@@ -23,4 +23,10 @@ internal sealed class SqlServerSectionRepository(
         await dbContext.Sections.AddAsync(section, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task UpdateAsync(Section section, CancellationToken cancellationToken)
+    {
+        dbContext.Sections.Update(section);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }
