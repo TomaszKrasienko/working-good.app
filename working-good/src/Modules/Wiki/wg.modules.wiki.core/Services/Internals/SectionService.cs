@@ -30,4 +30,9 @@ internal sealed class SectionService(
         await sectionRepository
             .AddAsync(section, cancellationToken);
     }
+
+    public Task AddParent(AddParentSectionCommand command, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }
