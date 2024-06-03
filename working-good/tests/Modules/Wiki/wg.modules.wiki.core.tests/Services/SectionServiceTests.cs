@@ -100,60 +100,23 @@ public sealed class SectionServiceTests
     }
 
     [Fact]
-    public async Task AddParent_GivenNotExistingSectionId_ShouldThrowSectionNotFoundException()
-    {
-        //arrange
-        var command = new AddParentSectionCommand(Guid.NewGuid(), Guid.NewGuid());
-
-        await _sectionRepository
-            .GetByIdAsync(command.SectionId, default);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParentAsync(command, default));
-        
-        //assert
-        exception.ShouldBeOfType<SectionNotFoundException>();
-    }
-
-    [Fact]
-    public async Task AddParent_GivenNotExistingParentId_ShouldThrowParentSectionNotFoundException()
-    {
-        //arrange
-        var section = SectionsFactory.Get();
-        var command = new AddParentSectionCommand(section.Id, Guid.NewGuid());
-
-        _sectionRepository
-            .GetByIdAsync(command.SectionId, default)
-            .Returns(section);
-
-        await _sectionRepository
-            .GetByIdAsync(command.ParentSectionId, default);
-        
-        //act
-        var exception = await Record.ExceptionAsync(async () => await _sectionService.AddParentAsync(command, default));
-        
-        //assert
-        exception.ShouldBeOfType<ParentSectionNotFoundException>();
-    }
-
-    [Fact]
-    public async Task AddParent_GivenExistingSectionAndParentSection_ShouldAddParentSectionToSectionAndUpateSection()
+    public async Task ChangeParentAsync_GivenExistingSectionAndParentSection_ShouldAddParentSectionToSectionAndUpateSection()
     {
         //arrange
         var section = SectionsFactory.Get();
         var parentSection = SectionsFactory.Get();
-        var command = new AddParentSectionCommand(section.Id, Guid.NewGuid());
+        var command = new ChangeParentSectionCommand(section.Id, Guid.NewGuid());
 
         _sectionRepository
             .GetByIdAsync(command.SectionId, default)
             .Returns(section);
 
         _sectionRepository
-            .GetByIdAsync(command.ParentSectionId, default)
+            .GetByIdAsync(command.ParentSectionId!.Value, default)
             .Returns(parentSection);
         
         //act
-        await _sectionService.AddParentAsync(command, default);
+        await _sectionService.ChangeParentAsync(command, default);
         
         //assert
         await _sectionRepository
@@ -161,6 +124,67 @@ public sealed class SectionServiceTests
             .UpdateAsync(section, default);
         
         section.Parent.ShouldBe(parentSection);
+    }
+
+    [Fact]
+    public async Task ChangeParentAsync_GivenNullParentSectionId_ShouldChangeParentToNullAndUpdate()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var parentSection = SectionsFactory.Get();
+        section.ChangeParent(parentSection);
+        var command = new ChangeParentSectionCommand(section.Id, null);
+
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+        
+        //act
+        await _sectionService.ChangeParentAsync(command, default);
+        
+        //assert
+        await _sectionRepository
+            .Received(1)
+            .UpdateAsync(section, default);
+
+        section.Parent.ShouldBeNull();
+    }
+    
+    [Fact]
+    public async Task ChangeParentAsync_GivenNotExistingParentId_ShouldThrowParentSectionNotFoundException()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var command = new ChangeParentSectionCommand(section.Id, Guid.NewGuid());
+
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+
+        await _sectionRepository
+            .GetByIdAsync(command.ParentSectionId!.Value, default);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await _sectionService.ChangeParentAsync(command, default));
+        
+        //assert
+        exception.ShouldBeOfType<ParentSectionNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ChangeParentAsync_GivenNotExistingSectionId_ShouldThrowSectionNotFoundException()
+    {
+        //arrange
+        var command = new ChangeParentSectionCommand(Guid.NewGuid(), Guid.NewGuid());
+
+        await _sectionRepository
+            .GetByIdAsync(command.SectionId, default);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async () => await _sectionService.ChangeParentAsync(command, default));
+        
+        //assert
+        exception.ShouldBeOfType<SectionNotFoundException>();
     }
     #region arrange
 

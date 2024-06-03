@@ -31,7 +31,7 @@ internal sealed class SectionService(
             .AddAsync(section, cancellationToken);
     }
 
-    public async Task AddParentAsync(AddParentSectionCommand command, CancellationToken cancellationToken)
+    public async Task ChangeParentAsync(ChangeParentSectionCommand command, CancellationToken cancellationToken)
     {
         var section = await sectionRepository.GetByIdAsync(command.SectionId, cancellationToken);
         if (section is null)
@@ -39,12 +39,16 @@ internal sealed class SectionService(
             throw new SectionNotFoundException(command.SectionId);
         }
 
-        var parentSection = await sectionRepository.GetByIdAsync(command.ParentSectionId, cancellationToken);
-        if (parentSection is null)
+        Section parentSection = null;
+        if (command.ParentSectionId is not null)
         {
-            throw new ParentSectionNotFoundException(command.ParentSectionId);
+            parentSection = await sectionRepository.GetByIdAsync(command.ParentSectionId.Value, cancellationToken);
+            if (parentSection is null)
+            {
+                throw new ParentSectionNotFoundException(command.ParentSectionId.Value);
+            }
         }
-        
+
         section.ChangeParent(parentSection);
         await sectionRepository.UpdateAsync(section, cancellationToken);
     }
