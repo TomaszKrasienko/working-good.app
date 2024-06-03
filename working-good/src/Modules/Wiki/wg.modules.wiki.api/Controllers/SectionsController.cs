@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.wiki.core.DAL;
 using wg.modules.wiki.core.DTOs;
 using wg.modules.wiki.core.Mappers;
@@ -38,5 +39,18 @@ internal sealed class SectionsController(
         await sectionService.AddAsync(command with { Id = sectionId }, cancellationToken);
         AddResourceHeader(sectionId);
         return CreatedAtAction(nameof(GetById), new {sectionId = sectionId}, null);
+    }
+
+    [HttpPatch("{sectionId:guid}/change-parent")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Changes parent for section")]
+    public async Task<ActionResult> ChangeParent(Guid sectionId, ChangeParentSectionCommand command,
+        CancellationToken cancellationToken)
+    {
+        await sectionService.ChangeParentAsync(command with {SectionId = sectionId}, cancellationToken);
+        return Ok();
     }
 }
