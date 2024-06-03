@@ -1,12 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.wiki.core.DAL;
-using wg.modules.wiki.core.Entities;
 using wg.modules.wiki.core.Services.Commands;
+using wg.modules.wiki.domain.Entities;
 using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
 using Xunit;

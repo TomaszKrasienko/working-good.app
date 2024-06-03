@@ -6,7 +6,7 @@ using wg.modules.companies.infrastructure.DAL;
 using wg.modules.notifications.core.Services.Abstractions;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
-using wg.modules.wiki.core.DAL;
+using wg.modules.wiki.infrastructure.DAL;
 using wg.shared.abstractions.Pagination;
 using wg.shared.infrastructure.Auth;
 using wg.shared.infrastructure.Auth.Configuration.Models;

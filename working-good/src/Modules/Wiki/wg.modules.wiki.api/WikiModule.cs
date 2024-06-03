@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using wg.modules.wiki.core.Configuration;
+using wg.modules.wiki.infrastructure.Configuration;
 using wg.shared.abstractions.Modules;
 
 namespace wg.modules.wiki.api;

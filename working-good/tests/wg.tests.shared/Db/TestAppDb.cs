@@ -2,7 +2,7 @@ using wg.modules.activities.infrastructure.DAL;
 using wg.modules.companies.infrastructure.DAL;
 using wg.modules.owner.infrastructure.DAL;
 using wg.modules.tickets.infrastructure.DAL;
-using wg.modules.wiki.core.DAL;
+using wg.modules.wiki.infrastructure.DAL;
 using wg.tests.shared.Integration;
 
 namespace wg.tests.shared.Db;

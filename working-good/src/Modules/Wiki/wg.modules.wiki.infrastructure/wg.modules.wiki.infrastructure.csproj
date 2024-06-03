@@ -3,22 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <None Update="module.wiki.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="module.wiki.tests.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\wg.shared.infrastructure\wg.shared.infrastructure.csproj" />
       <ProjectReference Include="..\wg.modules.wiki.application\wg.modules.wiki.application.csproj" />
-      <ProjectReference Include="..\wg.modules.wiki.infrastructure\wg.modules.wiki.infrastructure.csproj" />
+      <ProjectReference Include="..\wg.modules.wiki.domain\wg.modules.wiki.domain.csproj" />
     </ItemGroup>
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="wg.tests.shared"/>
+    </ItemGroup>
 </Project>

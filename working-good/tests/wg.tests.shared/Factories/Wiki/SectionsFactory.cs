@@ -1,5 +1,5 @@
 using Bogus;
-using wg.modules.wiki.core.Entities;
+using wg.modules.wiki.domain.Entities;
 
 namespace wg.tests.shared.Factories.Wiki;
 

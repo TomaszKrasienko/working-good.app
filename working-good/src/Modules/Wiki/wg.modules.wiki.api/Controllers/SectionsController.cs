@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
-using wg.modules.wiki.core.DAL;
 using wg.modules.wiki.core.DTOs;
-using wg.modules.wiki.core.Mappers;
 using wg.modules.wiki.core.Services.Abstractions;
 using wg.modules.wiki.core.Services.Commands;
+using wg.modules.wiki.infrastructure.DAL;
+using wg.modules.wiki.infrastructure.Mappers;
 using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.wiki.api.Controllers;
