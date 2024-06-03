@@ -53,8 +53,8 @@
         <InternalsVisibleTo Include="wg.modules.activities.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.infrastructure.tests"/>
         <InternalsVisibleTo Include="wg.modules.activities.integration.tests"/>
-        <InternalsVisibleTo Include="wg.modules.wiki.core.tests"/>
         <InternalsVisibleTo Include="wg.modules.wiki.domain.tests"/>
+        <InternalsVisibleTo Include="wg.modules.wiki.application.tests"/>
         <InternalsVisibleTo Include="wg.modules.wiki.integration.tests"/>
         <InternalsVisibleTo Include="wg.shared.infrastructure.tests"/>       
     </ItemGroup>

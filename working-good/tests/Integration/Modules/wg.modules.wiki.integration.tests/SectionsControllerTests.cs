@@ -3,7 +3,8 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
-using wg.modules.wiki.core.Services.Commands;
+using wg.modules.wiki.application.CQRS.Sections.Commands;
+using wg.modules.wiki.application.CQRS.Sections.Commands.ChangeParent;
 using wg.modules.wiki.domain.Entities;
 using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
@@ -11,6 +12,7 @@ using Xunit;
 
 namespace wg.modules.wiki.integration.tests;
 
+[Collection("#1")]
 public sealed class SectionsControllerTests : BaseTestsController
 {
     [Fact]
@@ -71,7 +73,7 @@ public sealed class SectionsControllerTests : BaseTestsController
         var section = await AddSection();
         var parentSection = await AddSection();
 
-        var command = new ChangeParentSectionCommand(Guid.Empty, parentSection.Id);
+        var command = new ChangeParentCommand(Guid.Empty, parentSection.Id);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -88,7 +90,7 @@ public sealed class SectionsControllerTests : BaseTestsController
     public async Task ChangeParent_GivenNotExistingSection_ShouldReturn400BadRequestStatusCode()
     {
         //arrange
-        var command = new ChangeParentSectionCommand(Guid.Empty, null);
+        var command = new ChangeParentCommand(Guid.Empty, null);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -102,7 +104,7 @@ public sealed class SectionsControllerTests : BaseTestsController
     public async Task ChangeParent_Unauthorized_ShouldReturn401UnauthorizedSatusCode()
     {
         //arrange
-        var command = new ChangeParentSectionCommand(Guid.Empty, null);
+        var command = new ChangeParentCommand(Guid.Empty, null);
         
         //act
         var response = await HttpClient.PatchAsJsonAsync($"wiki-module/sections/{Guid.NewGuid()}/change-parent", command);

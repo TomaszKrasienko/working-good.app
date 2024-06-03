@@ -24,4 +24,14 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Modules\Wiki\wg.modules.wiki.application\wg.modules.wiki.application.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Modules\Wiki\wg.modules.wiki.domain\wg.modules.wiki.domain.csproj" />
+      <ProjectReference Include="..\..\..\wg.tests.shared\wg.tests.shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\" />
+    </ItemGroup>
+
 </Project>

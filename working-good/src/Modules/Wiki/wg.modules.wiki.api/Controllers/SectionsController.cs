@@ -3,17 +3,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
+using wg.modules.wiki.application.CQRS.Sections.Commands;
+using wg.modules.wiki.application.CQRS.Sections.Commands.ChangeParent;
 using wg.modules.wiki.core.DTOs;
-using wg.modules.wiki.core.Services.Abstractions;
-using wg.modules.wiki.core.Services.Commands;
 using wg.modules.wiki.infrastructure.DAL;
 using wg.modules.wiki.infrastructure.Mappers;
+using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.wiki.api.Controllers;
 
 internal sealed class SectionsController(
-    ISectionService sectionService,
+    ICommandDispatcher commandDispatcher,
     WikiDbContext dbContext) : BaseController
 {
     [HttpGet("{sectionId}")]
@@ -35,7 +36,7 @@ internal sealed class SectionsController(
     public async Task<ActionResult> Add(AddSectionCommand command, CancellationToken cancellationToken)
     {
         var sectionId = Guid.NewGuid();
-        await sectionService.AddAsync(command with { Id = sectionId }, cancellationToken);
+        await commandDispatcher.SendAsync(command with { Id = sectionId }, cancellationToken);
         AddResourceHeader(sectionId);
         return CreatedAtAction(nameof(GetById), new {sectionId = sectionId}, null);
     }
@@ -46,10 +47,10 @@ internal sealed class SectionsController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Changes parent for section")]
-    public async Task<ActionResult> ChangeParent(Guid sectionId, ChangeParentSectionCommand command,
+    public async Task<ActionResult> ChangeParent(Guid sectionId, ChangeParentCommand command,
         CancellationToken cancellationToken)
     {
-        await sectionService.ChangeParentAsync(command with {SectionId = sectionId}, cancellationToken);
+        await commandDispatcher.SendAsync(command with {SectionId = sectionId}, cancellationToken);
         return Ok();
     }
 }

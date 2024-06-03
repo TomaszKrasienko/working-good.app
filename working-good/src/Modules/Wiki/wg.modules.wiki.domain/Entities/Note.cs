@@ -8,14 +8,14 @@ public sealed class Note
     public EntityId Id { get; }
     public Title Title { get; private set; }
     public Content Content { get; private set; }
-    public EntityId Section { get; private set; }
+    public EntityId SectionId { get; private set; }
 
     private Note(EntityId id)
     {
         Id = id;
     }
 
-    public static Note Create(Guid id, string title, string content)
+    internal static Note Create(Guid id, string title, string content)
     {
         var note = new Note(id);
         note.ChangeTitle(title);

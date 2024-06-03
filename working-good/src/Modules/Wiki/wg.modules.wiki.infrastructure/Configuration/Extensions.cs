@@ -5,7 +5,7 @@ namespace wg.modules.wiki.infrastructure.Configuration;
 
 public static class Extensions
 {
-    public static IServiceCollection AddCore(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         => services
             .AddDal();
 }

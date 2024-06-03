@@ -11,7 +11,7 @@ internal sealed class WikiModule : IModule
     public string Name { get; } = "Wiki";
 
     public void Register(IServiceCollection services)
-        => services.AddCore();
+        => services.AddInfrastructure();
 
     public void Use(WebApplication app)
     {
