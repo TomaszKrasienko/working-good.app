@@ -25,7 +25,6 @@ internal sealed class SectionsController(
         => (await dbContext
             .Sections
             .AsNoTracking()
-            .Include(x => x.Children)
             .FirstOrDefaultAsync(x => x.Id.Equals(sectionId), cancellationToken)).AsDto();
     
     [HttpPost("add")]

@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using wg.modules.wiki.core.Entities;
@@ -20,7 +21,7 @@ internal sealed class SectionTypeConfiguration : IEntityTypeConfiguration<Sectio
             .Property(x => x.Name)
             .HasConversion(x => x.Value, y => new Name(y))
             .IsRequired();
-
+        
         builder
             .HasOne<Section>(x => x.Parent)
             .WithMany();

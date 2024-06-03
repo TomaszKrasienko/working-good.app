@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -65,6 +66,53 @@ public sealed class SectionsControllerTests : BaseTestsController
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
+    [Fact]
+    public async Task ChangeParent_GivenExistingSections_ShouldReturn200OkStatusCodeAndUpdateSection()
+    {
+        //arrange
+        var section = await AddSection();
+        var parentSection = await AddSection();
+
+        var command = new ChangeParentSectionCommand(Guid.Empty, parentSection.Id);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"wiki-module/sections/{section.Id.Value}/change-parent", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var updatedSection = await GetSectionAsync(section.Id);
+        updatedSection.Parent.Id.ShouldBe(parentSection.Id);
+    }
+
+    [Fact]
+    public async Task ChangeParent_GivenNotExistingSection_ShouldReturn400BadRequestStatusCode()
+    {
+        //arrange
+        var command = new ChangeParentSectionCommand(Guid.Empty, null);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"wiki-module/sections/{Guid.NewGuid()}/change-parent", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ChangeParent_Unauthorized_ShouldReturn401UnauthorizedSatusCode()
+    {
+        //arrange
+        var command = new ChangeParentSectionCommand(Guid.Empty, null);
+        
+        //act
+        var response = await HttpClient.PatchAsJsonAsync($"wiki-module/sections/{Guid.NewGuid()}/change-parent", command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
     private async Task<Section> AddSection()
     {
         var section = SectionsFactory.Get();
@@ -77,5 +125,6 @@ public sealed class SectionsControllerTests : BaseTestsController
         => await WikiDbContext
             .Sections
             .AsNoTracking()
+            .Include(x => x.Parent)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
 }

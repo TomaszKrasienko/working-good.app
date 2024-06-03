@@ -6,11 +6,9 @@ namespace wg.modules.wiki.core.Entities;
 
 public sealed class Section
 {
-    private List<Section> _children = new List<Section>();
     public EntityId Id { get; }
     public Name Name { get; private set; }
     public Section Parent { get; private set; }
-    public IReadOnlyCollection<Section> Children => _children; 
 
     private Section(EntityId id)
     {

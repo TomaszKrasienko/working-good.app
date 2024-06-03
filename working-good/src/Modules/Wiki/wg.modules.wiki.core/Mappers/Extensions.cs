@@ -9,7 +9,6 @@ public static class Extensions
         => new SectionDto()
         {
             Id = section.Id,
-            Name = section.Name,
-            Children = section.Children.Select(x => x?.AsDto()).ToList()
+            Name = section.Name
         };
 }
