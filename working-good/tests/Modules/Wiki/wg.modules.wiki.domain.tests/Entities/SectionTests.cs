@@ -34,7 +34,23 @@ public sealed class SectionTests
         //assert
         section.Notes.Any(x => x.Id.Equals(noteId)).ShouldBeTrue();   
     }
-
+    
+    [Fact]
+    public void AddNote_GivenNotExistingNoteWithOrigin_ShouldAddToNotes()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var noteId = Guid.NewGuid();
+        
+        //act
+        section.AddNote(noteId, "Title", "Content");
+        
+        //assert
+        var updatedSection = section.Notes.FirstOrDefault(x => x.Id.Equals(noteId));
+        updatedSection.ShouldNotBeNull();
+        updatedSection.Origin.ShouldNotBeNull();
+    }
+    
     [Fact]
     public void AddNote_GivenAlreadyExistingNoteId_ShouldThrowNoteAlreadyBelongsToSection()
     {

@@ -35,14 +35,23 @@ public sealed class Section : AggregateRoot
     public void ChangeParent(Section parent)
         => Parent = parent;
 
-    internal void AddNote(Guid id, string title, string content)
+    internal void AddNote(Guid id, string title, string content,
+        string originType = null, string originId = null)
     {
         if (_notes.Any(x => x.Id.Equals(id)))
         {
             throw new NoteAlreadyBelongsToSection(id);
         }
 
-        var note = Note.Create(id, title, content);
-        _notes.Add(note);
+        if (string.IsNullOrWhiteSpace(originType) || string.IsNullOrWhiteSpace(originId))
+        {
+            var note = Note.Create(id, title, content);
+            _notes.Add(note);
+        }
+        else
+        {
+            var note = Note.Create(id, title, content, originType, originId);
+            _notes.Add(note);
+        }
     }
 }
