@@ -26,11 +26,6 @@ internal sealed class SectionTypeConfiguration : IEntityTypeConfiguration<Sectio
             .WithMany();
         
         builder
-            .HasMany<Note>(x => x.Notes)
-            .WithOne()
-            .HasForeignKey(x => x.SectionId);
-        
-        builder
             .HasIndex(x => x.Name)
             .IsUnique();
     }

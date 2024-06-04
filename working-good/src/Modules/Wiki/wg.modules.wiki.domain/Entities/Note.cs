@@ -8,7 +8,6 @@ public sealed class Note
     public EntityId Id { get; }
     public Title Title { get; private set; }
     public Content Content { get; private set; }
-    public EntityId SectionId { get; private set; }
 
     private Note(EntityId id)
     {
