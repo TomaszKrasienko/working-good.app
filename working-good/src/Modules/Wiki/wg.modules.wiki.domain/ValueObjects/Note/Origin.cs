@@ -25,9 +25,9 @@ public sealed record Origin
     }
     
 
-    public static string TicketOrigin()
+    public static string Ticket()
         => "Ticket";
 
-    public static string ClientOrigin()
+    public static string Client()
         => "Client";
 }

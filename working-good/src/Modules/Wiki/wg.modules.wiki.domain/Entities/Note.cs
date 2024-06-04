@@ -8,6 +8,7 @@ public sealed class Note
     public EntityId Id { get; }
     public Title Title { get; private set; }
     public Content Content { get; private set; }
+    public Origin Origin { get; private set; }
 
     private Note(EntityId id)
     {
@@ -21,6 +22,16 @@ public sealed class Note
         note.ChangeContent(content);
         return note;
     }
+
+    internal static Note Create(Guid id, string title, string content, string originType, string originId)
+    {
+        var note = Create(id, title, content);
+        note.ChangeOrigin(originType, originId);
+        return note;
+    }
+
+    private void ChangeOrigin(string type, string id)
+        => Origin = new Origin(type, id);
     
     private void ChangeTitle(string title)
         => Title = title;
