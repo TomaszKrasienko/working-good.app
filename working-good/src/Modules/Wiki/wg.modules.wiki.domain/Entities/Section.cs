@@ -10,7 +10,7 @@ public sealed class Section : AggregateRoot
     public EntityId Id { get; }
     public Name Name { get; private set; }
     public Section Parent { get; private set; }
-    public IReadOnlyList<Note> Notes { get; set; }
+    public IReadOnlyList<Note> Notes => _notes;
 
     private Section(EntityId id)
     {
