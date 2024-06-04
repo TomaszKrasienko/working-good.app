@@ -1,5 +1,6 @@
 using Shouldly;
 using wg.modules.wiki.domain.Exceptions;
+using wg.modules.wiki.domain.ValueObjects.Note;
 using wg.tests.shared.Factories.Wiki;
 using Xunit;
 
@@ -43,7 +44,8 @@ public sealed class SectionTests
         var noteId = Guid.NewGuid();
         
         //act
-        section.AddNote(noteId, "Title", "Content");
+        section.AddNote(noteId, "Title", "Content",
+            Origin.Client(), Guid.NewGuid().ToString());
         
         //assert
         var updatedSection = section.Notes.FirstOrDefault(x => x.Id.Equals(noteId));
