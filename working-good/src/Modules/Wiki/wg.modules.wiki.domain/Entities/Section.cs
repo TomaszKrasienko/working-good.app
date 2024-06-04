@@ -1,9 +1,10 @@
+using wg.modules.wiki.domain.Exceptions;
 using wg.modules.wiki.domain.ValueObjects.Section;
 using wg.shared.abstractions.Kernel.Types;
 
 namespace wg.modules.wiki.domain.Entities;
 
-public sealed class Section
+public sealed class Section : AggregateRoot
 {
     private readonly List<Note> _notes = new List<Note>();
     public EntityId Id { get; }
@@ -34,8 +35,14 @@ public sealed class Section
     public void ChangeParent(Section parent)
         => Parent = parent;
 
-    internal void AddNote(Note note)
+    internal void AddNote(Guid id, string title, string content)
     {
-        
+        if (_notes.Any(x => x.Id.Equals(id)))
+        {
+            throw new NoteAlreadyBelongsToSection(id);
+        }
+
+        var note = Note.Create(id, title, content);
+        _notes.Add(note);
     }
 }

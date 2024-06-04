@@ -1,4 +1,5 @@
 using Shouldly;
+using wg.modules.wiki.domain.Exceptions;
 using wg.tests.shared.Factories.Wiki;
 using Xunit;
 
@@ -21,10 +22,31 @@ public sealed class SectionTests
     }
 
     [Fact]
+    public void AddNote_GivenNotExistingNote_ShouldAddToNotes()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var noteId = Guid.NewGuid();
+        
+        //act
+        section.AddNote(noteId, "Title", "Content");
+        
+        //assert
+        section.Notes.Any(x => x.Id.Equals(noteId)).ShouldBeTrue();   
+    }
+
+    [Fact]
     public void AddNote_GivenAlreadyExistingNoteId_ShouldThrowNoteAlreadyBelongsToSection()
     {
         //arrange
         var section = SectionsFactory.Get();
+        var noteId = Guid.NewGuid();
+        section.AddNote(noteId, "Title", "Content");
         
+        //act
+        var exception = Record.Exception(() => section.AddNote(noteId, "Title", "Content"));
+
+        //assert
+        exception.ShouldBeOfType<NoteAlreadyBelongsToSection>();
     }
 }
