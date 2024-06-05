@@ -30,8 +30,4 @@
       <ProjectReference Include="..\..\..\wg.tests.shared\wg.tests.shared.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Strategies\Origins\" />
-    </ItemGroup>
-
 </Project>
