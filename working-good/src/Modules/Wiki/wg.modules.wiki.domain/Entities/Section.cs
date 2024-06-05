@@ -35,7 +35,7 @@ public sealed class Section : AggregateRoot
     public void ChangeParent(Section parent)
         => Parent = parent;
 
-    internal void AddNote(Guid id, string title, string content,
+    public void AddNote(Guid id, string title, string content,
         string originType = null, string originId = null)
     {
         if (_notes.Any(x => x.Id.Equals(id)))

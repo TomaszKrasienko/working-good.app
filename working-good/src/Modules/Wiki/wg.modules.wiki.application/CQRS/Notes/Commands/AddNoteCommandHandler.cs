@@ -19,18 +19,25 @@ internal sealed class AddNoteCommandHandler(
             throw new SectionNotFoundException(command.Id);
         }
 
-        var originCheckingStrategy = originCheckingStrategies.SingleOrDefault(x
-            => x.CanByApply(command.OriginType));
-
-        if (originCheckingStrategy is null)
+        if (!string.IsNullOrWhiteSpace(command.OriginId) && !string.IsNullOrWhiteSpace(command.OriginType))
         {
-            throw new OriginTypeNoteAvailableException(command.OriginType);
-        }
 
-        var isOriginExist = await originCheckingStrategy.IsExists(command.OriginId);
-        if (!isOriginExist)
-        {
-            throw new OriginDoesNotExistException(command.OriginId, command.OriginType);
+            var originCheckingStrategy = originCheckingStrategies.SingleOrDefault(x
+                => x.CanByApply(command.OriginType));
+
+            if (originCheckingStrategy is null)
+            {
+                throw new OriginTypeNoteAvailableException(command.OriginType);
+            }
+
+            var isOriginExist = await originCheckingStrategy.IsExists(command.OriginId);
+            if (!isOriginExist)
+            {
+                throw new OriginDoesNotExistException(command.OriginId, command.OriginType);
+            }
         }
+        
+        section.AddNote(command.Id, command.Title, command.Content, command.OriginType, command.OriginId);
+        await sectionRepository.UpdateAsync(section, cancellationToken);
     }
 }

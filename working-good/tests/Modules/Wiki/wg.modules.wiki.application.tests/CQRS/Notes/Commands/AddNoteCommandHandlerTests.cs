@@ -23,6 +23,93 @@ public sealed class AddNoteCommandHandlerTests
     private Task Act(AddNoteCommand command) => _handler.HandleAsync(command, default);
 
     [Fact]
+    public async Task HandleAsync_GivenWithTicketOrigin_ShouldAddNoteToSectionAndUpdateSection()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var originId = Guid.NewGuid();
+        var command = new AddNoteCommand(Guid.NewGuid(), "Title", "Content", section.Id,
+            Origin.Ticket(), originId.ToString());
+        
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+
+        _ticketsApiClient
+            .IsTicketExistsAsync(new TicketIdDto(originId))
+            .Returns(new IsTicketExistsDto(true));
+        
+        //act
+        await Act(command);
+        
+        //assert
+        section.Notes.Any(x => x.Id.Equals(command.Id)).ShouldBeTrue();
+
+        await _sectionRepository
+            .Received(1)
+            .UpdateAsync(section, default);
+
+
+        await _ticketsApiClient
+            .Received(1)
+            .IsTicketExistsAsync(new TicketIdDto(originId));
+    }
+
+    [Fact]
+    public async Task HandleAsync_GivenWithClientOrigin_ShouldAddNoteToSectionAndUpdateSection()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var originId = Guid.NewGuid();
+        var command = new AddNoteCommand(Guid.NewGuid(), "Title", "Content", section.Id,
+            Origin.Client(), originId.ToString());
+        
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+
+        _companiesApiClient
+            .IsActiveCompanyExistsAsync(new CompanyIdDto(originId))
+            .Returns(new IsActiveCompanyExistsDto(true));
+        
+        //act
+        await Act(command);
+        
+        //assert
+        section.Notes.Any(x => x.Id.Equals(command.Id)).ShouldBeTrue();
+
+        await _sectionRepository
+            .Received(1)
+            .UpdateAsync(section, default);
+
+        await _companiesApiClient
+            .Received(1)
+            .IsActiveCompanyExistsAsync(new CompanyIdDto(originId));
+    }
+    
+    [Fact]
+    public async Task HandleAsync_GivenWithoutOrigin_ShouldAddNoteToSectionAndUpdateSection()
+    {
+        //arrange 
+        var section = SectionsFactory.Get();
+        var command = new AddNoteCommand(Guid.NewGuid(), "Title", "Content", section.Id);
+        
+        _sectionRepository
+            .GetByIdAsync(command.SectionId, default)
+            .Returns(section);
+        
+        //act
+        await Act(command);
+        
+        //assert
+        section.Notes.Any(x => x.Id.Equals(command.Id)).ShouldBeTrue();
+
+        await _sectionRepository
+            .Received(1)
+            .UpdateAsync(section, default);
+    }
+    
+    [Fact]
     public async Task HandleAsync_GivenTicketNotExistingOrigin_ShouldThrowOriginDoesNotExistException()
     {
         //arrange
