@@ -7,7 +7,7 @@ using wg.modules.wiki.application.CQRS.Sections.Commands;
 using wg.modules.wiki.application.CQRS.Sections.Commands.ChangeParent;
 using wg.modules.wiki.core.DTOs;
 using wg.modules.wiki.infrastructure.DAL;
-using wg.modules.wiki.infrastructure.Mappers;
+using wg.modules.wiki.infrastructure.Queries.Mappers;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.infrastructure.Exceptions.DTOs;
 

@@ -4,13 +4,13 @@ namespace wg.modules.wiki.domain.ValueObjects.Note;
 
 public sealed record Origin
 {
-    private readonly List<string> _availableOrigins = ["Ticket", "Client"];
+    public static readonly List<string> AvailableOrigins = ["Ticket", "Client"];
     public string Type { get; }
     public string Id { get; }
 
     public Origin(string type, string id)
     {
-        if (!_availableOrigins.Contains(type))
+        if (!AvailableOrigins.Contains(type))
         {
             throw new OriginTypeNoteAvailableException(type);
         }
