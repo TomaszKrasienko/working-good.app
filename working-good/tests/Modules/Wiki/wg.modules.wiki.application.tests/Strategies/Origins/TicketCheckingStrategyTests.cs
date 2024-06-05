@@ -4,12 +4,39 @@ using wg.modules.wiki.application.Clients.Tickets;
 using wg.modules.wiki.application.Clients.Tickets.DTOs;
 using wg.modules.wiki.application.Exceptions;
 using wg.modules.wiki.application.Strategies.Origins;
+using wg.modules.wiki.domain.ValueObjects.Note;
 using Xunit;
 
 namespace wg.modules.wiki.application.tests.Strategies.Origins;
 
 public sealed class TicketCheckingStrategyTests
 {
+    [Fact]
+    public void CanByApply_GivenTicketOriginType_ShouldReturnTrue()
+    {
+        //arrange
+        var originType = Origin.Ticket();
+        
+        //act
+        var result = _strategy.CanByApply(originType);
+        
+        //assert
+        result.ShouldBeTrue();
+    }
+    
+    [Fact]
+    public void CanByApply_GivenClientOriginType_ShouldReturnFalse()
+    {
+        //arrange
+        var originType = Origin.Client();
+        
+        //act
+        var result = _strategy.CanByApply(originType);
+        
+        //assert
+        result.ShouldBeFalse();
+    }
+    
     [Fact]
     public async Task IsExists_GivenExistingTicket_ShouldReturnTrue()
     {
@@ -62,7 +89,7 @@ public sealed class TicketCheckingStrategyTests
     public TicketCheckingStrategyTests()
     {
         _ticketsApiClient = Substitute.For<ITicketsApiClient>();
-        _strategy = new TicketCheckingStrategy(_ticketsApiClient);
+        _strategy = new TicketsCheckingStrategy(_ticketsApiClient);
     }
     #endregion
 }

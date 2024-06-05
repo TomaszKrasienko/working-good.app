@@ -8,5 +8,5 @@ internal static class Extensions
     internal static IServiceCollection AddStrategies(this IServiceCollection services)
         => services
             .AddScoped<IOriginCheckingStrategy, ClientCheckingStrategy>()
-            .AddScoped<IOriginCheckingStrategy, TicketCheckingStrategy>();
+            .AddScoped<IOriginCheckingStrategy, TicketsCheckingStrategy>();
 }
