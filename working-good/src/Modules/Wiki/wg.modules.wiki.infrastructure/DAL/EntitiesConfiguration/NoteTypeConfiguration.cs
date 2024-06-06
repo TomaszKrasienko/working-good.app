@@ -24,5 +24,16 @@ internal sealed class NoteTypeConfiguration : IEntityTypeConfiguration<Note>
             .Property(x => x.Content)
             .HasConversion(x => x.Value, y => new Content(y))
             .IsRequired();
+
+        builder.OwnsOne(x => x.Origin, options =>
+        {
+            options
+                .Property(y => y.Id)
+                .HasColumnName("OriginId");
+
+            options
+                .Property(y => y.Type)
+                .HasColumnName("OriginType");
+        });
     }
 }
