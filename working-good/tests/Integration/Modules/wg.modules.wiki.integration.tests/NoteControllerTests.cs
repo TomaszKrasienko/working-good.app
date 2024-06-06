@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
@@ -9,6 +10,7 @@ using Xunit;
 
 namespace wg.modules.wiki.integration.tests;
 
+[Collection("#1")]
 public sealed class NoteControllerTests : BaseTestsController
 {
     [Fact]
@@ -25,6 +27,30 @@ public sealed class NoteControllerTests : BaseTestsController
         //assert
         result.ShouldBeOfType<NoteDto>();
         result.Id.ShouldBe(note.Id.Value);
+    }
+    
+    [Fact]
+    public async Task GetById_GivenNotExistingNote_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act 
+        var result = await HttpClient.GetAsync($"wiki-module/notes/{Guid.NewGuid()}");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+
+
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act 
+        var result = await HttpClient.GetAsync($"wiki-module/notes/{Guid.NewGuid()}");
+
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     private async Task<Section> AddSection()
