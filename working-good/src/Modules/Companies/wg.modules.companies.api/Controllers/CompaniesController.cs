@@ -42,6 +42,14 @@ internal sealed class CompaniesController(
         => Ok(await queryDispatcher.SendAsync(new GetCompanyByIdQuery(id), cancellationToken));
 
     [Authorize]
+    [HttpGet("{id}/is-active")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets existing of active company")]
+    public async Task<ActionResult<IsExistsDto>> IsActive(Guid id, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new IsActiveCompanyExistsQuery(id), cancellationToken);
+
+    [Authorize]
     [HttpGet("sla-time/{employeeId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

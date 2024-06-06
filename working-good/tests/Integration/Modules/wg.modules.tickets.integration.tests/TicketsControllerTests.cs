@@ -162,6 +162,43 @@ public sealed class TicketsControllerTests : BaseTestsController
          //assert
          response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
      }
+
+     [Fact]
+     public async Task IsExists_GivenExistingTicket_ShouldReturnIsExistsDtoWithTrueValue()
+     {
+         //arrange
+         var ticket = await AddTicket();
+         Authorize(Guid.NewGuid(), Role.User());
+         
+         //act
+         var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"tickets-module/tickets/{ticket.Id.Value}/is-exists");
+         
+         //assert
+         result.Value.ShouldBeTrue();
+     }
+     
+     [Fact]
+     public async Task IsExists_GivenNotExistingTicket_ShouldReturnIsExistsDtoWithFalseValue()
+     {
+         //arrange
+         Authorize(Guid.NewGuid(), Role.User());
+         
+         //act
+         var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"tickets-module/tickets/{Guid.NewGuid()}/is-exists");
+         
+         //assert
+         result.Value.ShouldBeFalse();
+     }
+     
+     [Fact]
+     public async Task IsExists_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+     {
+         //act
+         var result = await HttpClient.GetAsync($"tickets-module/tickets/{Guid.NewGuid()}/is-exists");
+         
+         //assert
+         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+     }
      
      [Fact]
      public async Task AddTicket_GivenValidArguments_ShouldReturn201StatusCodeWithResourceIdAndLocationHeaderAndAddTicketToDdb()

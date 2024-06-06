@@ -3,4 +3,4 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.application.CQRS.Tickets.Queries;
 
-public record IsTicketAvailableForChangesExistsQuery(Guid TicketId) : IQuery<IsExistsDto>;
+public sealed record IsTicketExistsQuery(Guid Id) : IQuery<IsExistsDto>;

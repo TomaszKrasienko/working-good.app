@@ -3,11 +3,13 @@ using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
+using wg.modules.tickets.domain.Entities;
 using wg.modules.wiki.application.CQRS.Notes.Commands;
 using wg.modules.wiki.application.DTOs;
 using wg.modules.wiki.domain.Entities;
 using wg.modules.wiki.domain.ValueObjects.Note;
 using wg.tests.shared.Factories.Companies;
+using wg.tests.shared.Factories.Tickets;
 using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -91,6 +93,33 @@ public sealed class NoteControllerTests : BaseTestsController
         await CompaniesDbContext.SaveChangesAsync();
         var command = new AddNoteCommand(Guid.Empty, "Test title", "Test content",
             Guid.Empty, Origin.Client(), client.Id.Value.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync<AddNoteCommand>($"wiki-module/notes/section/{section.Id.Value}/add",
+            command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
+
+        var note = await GetNoteById(resourceId.Value);
+        note.ShouldNotBeNull();
+    }
+    
+    [Fact]
+    public async Task Add_GivenExistingSectionWithTicketOrigin_ShouldReturn201CreatedStatusCode()
+    {
+        //arrange
+        var section = await AddSection();
+        var ticket = TicketsFactory.Get();
+        await TicketsDbContext.Tickets.AddAsync(ticket);
+        await TicketsDbContext.SaveChangesAsync();
+        var command = new AddNoteCommand(Guid.Empty, "Test title", "Test content",
+            Guid.Empty, Origin.Ticket(), ticket.Id.Value.ToString());
         Authorize(Guid.NewGuid(), Role.User());
         
         //act

@@ -17,6 +17,7 @@ using wg.tests.shared.Db;
 using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Integration;
 using Xunit;
+using IsExistsDto = wg.modules.owner.application.DTOs.IsExistsDto;
 
 namespace wg.modules.companies.integration.tests;
 
@@ -88,6 +89,47 @@ public sealed class CompaniesControllerTests : BaseTestsController
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
+    [Fact]
+    public async Task IsExists_GivenActiveCompanyId_ShouldReturnIsExistsDtoWithTrue()
+    {
+        //arrange
+        var company = await AddCompanyAsync(false, false, false, false);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/Companies/{company.Id.Value}/is-active");
+        
+        //assert
+        result.Value.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task IsExists_GivenNotActiveCompanyId_ShouldReturnIsExistsDtoWithFalse()
+    {
+        //arrange
+        var company = await AddCompanyAsync(false, false, false, false);
+        company.Deactivate();
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<IsExistsDto>($"companies-module/Companies/{company.Id.Value}/is-active");
+        
+        //assert
+        result.Value.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task IsExists_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var result = await HttpClient.GetAsync($"companies-module/Companies/{Guid.NewGuid()}/is-active");
+        
+        //assert
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
     [Fact]
     public async Task GetSlaTimeByEmployeeId_GivenExistingCompany_ShouldReturnSlaTimeDto()
     {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using wg.modules.wiki.application.Configuration;
 using wg.modules.wiki.infrastructure.Configuration;
 using wg.shared.abstractions.Modules;
 
@@ -11,7 +12,9 @@ internal sealed class WikiModule : IModule
     public string Name { get; } = "Wiki";
 
     public void Register(IServiceCollection services)
-        => services.AddInfrastructure();
+        => services
+            .AddApplication()
+            .AddInfrastructure();
 
     public void Use(WebApplication app)
     {

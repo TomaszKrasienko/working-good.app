@@ -1,6 +1,6 @@
 namespace wg.modules.tickets.application.DTOs;
 
-public class TicketExistsDto
+public class IsExistsDto
 {
     public bool Value { get; set; }
 }

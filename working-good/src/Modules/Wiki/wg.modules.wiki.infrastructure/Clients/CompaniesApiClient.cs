@@ -4,9 +4,9 @@ using wg.shared.abstractions.Modules;
 
 namespace wg.modules.wiki.infrastructure.Clients;
 
-// internal sealed class CompaniesApiClient(
-//     IModuleClient moduleClient): ICompaniesApiClient
-// {
-//     public Task<IsActiveCompanyExistsDto> IsActiveCompanyExistsAsync(CompanyIdDto dto)
-//         => moduleClient.SendAsync<>()
-// }
+internal sealed class CompaniesApiClient(
+    IModuleClient moduleClient): ICompaniesApiClient
+{
+    public Task<IsActiveCompanyExistsDto> IsActiveCompanyExistsAsync(CompanyIdDto dto)
+        => moduleClient.SendAsync<IsActiveCompanyExistsDto>("companies/is-exists/get", dto);
+}

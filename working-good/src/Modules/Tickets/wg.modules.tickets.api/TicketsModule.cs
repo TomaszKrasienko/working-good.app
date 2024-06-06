@@ -26,8 +26,10 @@ internal sealed class TicketsModule : IModule
     {
         app
             .UseModuleRequest()
-            .Subscribe<IsTicketAvailableForChangesExistsQuery, TicketExistsDto>(
+            .Subscribe<IsTicketAvailableForChangesExistsQuery, IsExistsDto>(
                 "tickets/is-exists/get/available-for-changes",
+                (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default))
+            .Subscribe<IsTicketExistsQuery, IsExistsDto>("tickets/is-exists/get", 
                 (query, sp) => sp.GetRequiredService<IQueryDispatcher>().SendAsync(query, default));
     }
 }
