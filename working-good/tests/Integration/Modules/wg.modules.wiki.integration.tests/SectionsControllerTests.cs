@@ -5,6 +5,7 @@ using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
 using wg.modules.wiki.application.CQRS.Sections.Commands;
 using wg.modules.wiki.application.CQRS.Sections.Commands.ChangeParent;
+using wg.modules.wiki.application.DTOs;
 using wg.modules.wiki.domain.Entities;
 using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
@@ -15,6 +16,46 @@ namespace wg.modules.wiki.integration.tests;
 [Collection("#1")]
 public sealed class SectionsControllerTests : BaseTestsController
 {
+    [Fact]
+    public async Task GetById_GivenExistingSection_ShouldReturnSectionDto()
+    {
+        //arrange
+        var section = await AddSection();
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var result = await HttpClient.GetFromJsonAsync<SectionDto>($"wiki-module/sections/{section.Id.Value}");
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(section.Id.Value);
+        result.Name.ShouldBe(section.Name.Value);
+        result.Notes.ShouldBeEmpty();
+    }
+    
+    [Fact]
+    public async Task GetById_GivenNotExistingSection_ShouldReturn204NoContentStatusCode()
+    {
+        //arrange
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.GetAsync($"wiki-module/sections/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+    }
+    
+    [Fact]
+    public async Task GetById_Unauthorized_ShouldReturn401UnauthorizedStatusCode()
+    {
+        //act
+        var response = await HttpClient.GetAsync($"wiki-module/sections/{Guid.NewGuid()}");
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+    
     [Fact]
     public async Task Add_GivenValidArguments_ShouldReturn201CreatedStatusCode()
     {

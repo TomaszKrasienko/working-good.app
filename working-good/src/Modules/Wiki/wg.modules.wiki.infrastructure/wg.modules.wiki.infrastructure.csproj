@@ -12,5 +12,6 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="wg.tests.shared"/>
+        <InternalsVisibleTo Include="wg.modules.wiki.integration.tests"/>
     </ItemGroup>
 </Project>

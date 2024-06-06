@@ -1,5 +1,4 @@
 using wg.modules.wiki.application.DTOs;
-using wg.modules.wiki.core.DTOs;
 using wg.modules.wiki.domain.Entities;
 
 namespace wg.modules.wiki.infrastructure.Queries.Mappers;
@@ -10,7 +9,8 @@ public static class Extensions
         => new SectionDto()
         {
             Id = section.Id,
-            Name = section.Name
+            Name = section.Name,
+            Notes = section.Notes?.Select(x => x.AsDto()).ToList()
         };
 
     public static NoteDto AsDto(this Note note)

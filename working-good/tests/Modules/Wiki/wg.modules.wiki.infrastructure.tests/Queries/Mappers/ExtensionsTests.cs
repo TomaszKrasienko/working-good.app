@@ -8,6 +8,37 @@ namespace wg.modules.wiki.infrastructure.tests.Queries.Mappers;
 public sealed class ExtensionsTests
 {
     [Fact]
+    public void AsDto_GivenSectionWithNotes_ShouldReturnSectionDtoWithNotesDto()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        var note = NotesFactory.GetInSection(true, section);
+        
+        //act
+        var result = section.AsDto();
+        
+        //assert
+        result.Id.ShouldBe(section.Id.Value);
+        result.Name.ShouldBe(section.Name.Value);
+        result.Notes.ShouldNotBeEmpty();
+    }
+    
+    [Fact]
+    public void AsDto_GivenSectionWithoutNotes_ShouldReturnSectionDtoWithoutNotesDto()
+    {
+        //arrange
+        var section = SectionsFactory.Get();
+        
+        //act
+        var result = section.AsDto();
+        
+        //assert
+        result.Id.ShouldBe(section.Id.Value);
+        result.Name.ShouldBe(section.Name.Value);
+        result.Notes.ShouldBeEmpty();
+    }
+    
+    [Fact]
     public void AsDto_GivenNoteWithoutOrigin_ShouldReturnNoteDto()
     {
         //arrange

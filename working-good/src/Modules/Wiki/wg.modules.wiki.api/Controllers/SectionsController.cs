@@ -1,21 +1,20 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.wiki.application.CQRS.Sections.Commands;
 using wg.modules.wiki.application.CQRS.Sections.Commands.ChangeParent;
-using wg.modules.wiki.core.DTOs;
-using wg.modules.wiki.infrastructure.DAL;
-using wg.modules.wiki.infrastructure.Queries.Mappers;
+using wg.modules.wiki.application.CQRS.Sections.Queries;
+using wg.modules.wiki.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
+using wg.shared.abstractions.CQRS.Queries;
 using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.wiki.api.Controllers;
 
 internal sealed class SectionsController(
     ICommandDispatcher commandDispatcher,
-    WikiDbContext dbContext) : BaseController
+    IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{sectionId}")]
     [Authorize]
@@ -23,10 +22,7 @@ internal sealed class SectionsController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<SectionDto>> GetById(Guid sectionId, CancellationToken cancellationToken)
-        => (await dbContext
-            .Sections
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id.Equals(sectionId), cancellationToken)).AsDto();
+        => await queryDispatcher.SendAsync(new GetSectionByIdQuery(sectionId), cancellationToken);
     
     [HttpPost("add")]
     [Authorize]
