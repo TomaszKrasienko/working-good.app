@@ -19,8 +19,9 @@ internal sealed class SectionsController(
     [HttpGet("{sectionId}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets section by \"ID\"")]
     public async Task<ActionResult<SectionDto>> GetById(Guid sectionId, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetSectionByIdQuery(sectionId), cancellationToken);
     
@@ -29,6 +30,7 @@ internal sealed class SectionsController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Adds section")]
     public async Task<ActionResult> Add(AddSectionCommand command, CancellationToken cancellationToken)
     {
         var sectionId = Guid.NewGuid();
