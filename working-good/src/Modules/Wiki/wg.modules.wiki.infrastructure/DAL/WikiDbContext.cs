@@ -6,6 +6,7 @@ namespace wg.modules.wiki.infrastructure.DAL;
 public sealed class WikiDbContext : DbContext
 {
     public DbSet<Section> Sections { get; set; }
+    public DbSet<Note> Notes { get; set; }
 
     public WikiDbContext(DbContextOptions<WikiDbContext> dbContextOptions) : base(dbContextOptions)
     {

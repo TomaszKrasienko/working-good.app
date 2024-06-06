@@ -13,7 +13,4 @@
     <ItemGroup>
         <InternalsVisibleTo Include="wg.tests.shared"/>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Queries\" />
-    </ItemGroup>
 </Project>

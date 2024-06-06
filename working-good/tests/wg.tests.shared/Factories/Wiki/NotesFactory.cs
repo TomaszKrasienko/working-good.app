@@ -6,9 +6,18 @@ namespace wg.tests.shared.Factories.Wiki;
 
 internal static class NotesFactory
 {
+    internal static Note GetInSection(bool withOrigin, Section section)
+    {
+        var note = Get(withOrigin);
+        section.AddNote(note.Id, note.Title, note.Content, 
+            note.Origin?.Type, note.Origin?.Id );
+        return section.Notes.First(x => x.Id.Equals(note.Id));
+    }
+
     internal static Note Get(bool withOrigin)
         => Get(1, withOrigin).Single();
-    
+
+
     internal static List<Note> Get(int count, bool withOrigin)
         => withOrigin
             ? GetFullFaker().Generate(count)
