@@ -1,9 +1,13 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using wg.modules.owner.domain.ValueObjects.User;
+using wg.modules.wiki.application.CQRS.Notes.Commands;
 using wg.modules.wiki.application.DTOs;
 using wg.modules.wiki.domain.Entities;
+using wg.modules.wiki.domain.ValueObjects.Note;
+using wg.tests.shared.Factories.Companies;
 using wg.tests.shared.Factories.Wiki;
 using wg.tests.shared.Integration;
 using Xunit;
@@ -53,6 +57,57 @@ public sealed class NoteControllerTests : BaseTestsController
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
+    [Fact]
+    public async Task Add_GivenExistingSectionWithoutOrigin_ShouldReturn201CreatedStatusCode()
+    {
+        //arrange
+        var section = await AddSection();
+        var command = new AddNoteCommand(Guid.Empty, "Test title", "Test content",
+            Guid.Empty);
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync<AddNoteCommand>($"wiki-module/notes/section/{section.Id.Value}/add",
+                command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
+
+        var note = await GetNoteById(resourceId.Value);
+        note.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Add_GivenExistingSectionWithClientOrigin_ShouldReturn201CreatedStatusCode()
+    {
+        //arrange
+        var section = await AddSection();
+        var client = CompanyFactory.Get();
+        await CompaniesDbContext.Companies.AddAsync(client);
+        await CompaniesDbContext.SaveChangesAsync();
+        var command = new AddNoteCommand(Guid.Empty, "Test title", "Test content",
+            Guid.Empty, Origin.Client(), client.Id.Value.ToString());
+        Authorize(Guid.NewGuid(), Role.User());
+        
+        //act
+        var response = await HttpClient.PostAsJsonAsync<AddNoteCommand>($"wiki-module/notes/section/{section.Id.Value}/add",
+            command);
+        
+        //assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        
+        var resourceId = GetResourceIdFromHeader(response);
+        resourceId.ShouldNotBeNull();
+        resourceId.ShouldNotBe(Guid.Empty);
+
+        var note = await GetNoteById(resourceId.Value);
+        note.ShouldNotBeNull();
+    }
+
     private async Task<Section> AddSection()
     {
         var section = SectionsFactory.Get();
@@ -68,4 +123,9 @@ public sealed class NoteControllerTests : BaseTestsController
         await WikiDbContext.SaveChangesAsync();
         return note;
     }
+
+    private async Task<Note> GetNoteById(Guid id)
+        => await WikiDbContext
+            .Notes
+            .FirstOrDefaultAsync(x => x.Id.Equals(id));
 }
