@@ -1,9 +1,11 @@
 using NSubstitute;
 using Shouldly;
 using wg.modules.companies.application.CQRS.Companies.Commands.AddCompany;
+using wg.modules.companies.application.Events;
 using wg.modules.companies.application.Exceptions;
 using wg.modules.companies.domain.Entities;
 using wg.modules.companies.domain.Repositories;
+using wg.shared.abstractions.Messaging;
 using Xunit;
 
 namespace wg.modules.companies.application.tests.CQRS.Companies.Commands;
@@ -35,6 +37,12 @@ public sealed class AddCompanyCommandHandlerTests
                    && arg.EmailDomain == command.EmailDomain
                    && arg.Name == command.Name
                    && arg.SlaTime.Value == command.SlaTime));
+
+        await _messageBroker
+            .Received(1)
+            .PublishAsync(Arg.Is<CompanyAdded>(arg
+                => arg.Id == command.Id
+                   && arg.Name == command.Name));
     }
 
     [Fact]
@@ -74,11 +82,13 @@ public sealed class AddCompanyCommandHandlerTests
 
     #region arrange
     private readonly ICompanyRepository _companyRepository;
+    private readonly IMessageBroker _messageBroker;
     private readonly AddCompanyCommandHandler _handler;
     public AddCompanyCommandHandlerTests()
     {
         _companyRepository = Substitute.For<ICompanyRepository>();
-        _handler = new AddCompanyCommandHandler(_companyRepository);
+        _messageBroker = Substitute.For<IMessageBroker>();
+        _handler = new AddCompanyCommandHandler(_companyRepository, _messageBroker);
     }
     #endregion
 }
