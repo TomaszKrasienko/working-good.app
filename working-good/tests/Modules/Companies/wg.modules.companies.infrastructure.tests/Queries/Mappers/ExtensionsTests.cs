@@ -9,9 +9,8 @@ namespace wg.modules.companies.infrastructure.tests.Queries.Mappers;
 public sealed class ExtensionsTests
 {
     [Fact]
-    public void AsDto_GivenCompany_ShouldReturnCompanyDto()
+    public void AsDto_GivenCompanyWithEmployeeAndProject_ShouldReturnCompanyDto()
     {
-        //Todo: Add unit tests withoud employee and project
         //arrange
         var company = CompanyFactory.Get();
         EmployeeFactory.GetInCompany(company);
@@ -28,6 +27,25 @@ public sealed class ExtensionsTests
         result.EmailDomain.ShouldBe(company.EmailDomain.Value);
         result.Employees.ShouldNotBeEmpty();
         result.Projects.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public void AsDto_GivenCompany_ShouldReturnCompanyDto()
+    {
+        //arrange
+        var company = CompanyFactory.Get();
+        
+        //act
+        var result = company.AsDto();
+        
+        //assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(company.Id.Value);
+        result.Name.ShouldBe(company.Name.Value);
+        result.SlaTime.ShouldBe(company.SlaTime.Value);
+        result.EmailDomain.ShouldBe(company.EmailDomain.Value);
+        result.Employees.ShouldBeEmpty();
+        result.Projects.ShouldBeEmpty();
     }
     
     [Fact]
