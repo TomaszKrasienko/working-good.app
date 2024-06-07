@@ -17,7 +17,7 @@ internal sealed class GroupsController(
 {
     [HttpGet("{groupId:guid}/{userId:guid}/is-membership-exists")]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IsExistsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets existing of membership user in group")]
     public async Task<ActionResult<IsExistsDto>> IsMembershipExists(Guid groupId, Guid userId, CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ internal sealed class GroupsController(
     
     [HttpPost("{groupId:guid}/add-user")]
     [Authorize(Roles = "Manager")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
@@ -33,8 +33,6 @@ internal sealed class GroupsController(
     public async Task<ActionResult> AddUserToGroup(Guid groupId, AddUserToGroupCommand command, CancellationToken cancellationToken)
     {
         await commandDispatcher.SendAsync(command with { GroupId = groupId }, cancellationToken);
-        return NoContent();
+        return Ok();
     }
-    
-    
 }

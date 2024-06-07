@@ -8,45 +8,47 @@ using wg.modules.companies.application.CQRS.Employees.Queries;
 using wg.modules.companies.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.companies.api.Controllers;
 
+[Authorize]
 internal sealed class EmployeesController(
     ICommandDispatcher commandDispatcher, 
     IQueryDispatcher queryDispatcher) : BaseController
 {
-    [HttpGet("{id:guid}")]
-    [Authorize]
+    [HttpGet("{employeeId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<EmployeeDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(id), cancellationToken));
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets employee by \"ID\"")]
+    public async Task<ActionResult<EmployeeDto>> GetById(Guid employeeId, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(employeeId), cancellationToken);
 
-    [HttpGet("{id:guid}/active")]
-    [Authorize]
+    [HttpGet("{employeeId:guid}/active")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets active employee by \"ID\"")]
-    public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid id, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetActiveEmployeeByIdQuery(id), cancellationToken);
+    public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid employeeId, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new GetActiveEmployeeByIdQuery(employeeId), cancellationToken);
 
 
-    [HttpGet("{id:guid}/is-active")]
-    [Authorize]
+    [HttpGet("{employeeId:guid}/is-active")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<IsExistsDto>> IsEmployeeActiveById(Guid id, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(id), cancellationToken);
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets activity of employee by \"ID\"")]
+    public async Task<ActionResult<IsExistsDto>> IsEmployeeActiveById(Guid employeeId, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(employeeId), cancellationToken);
     
-    [HttpPost("companies/{companyId}/add")]
+    [HttpPost("companies/{companyId:guid}/add")]
     [Authorize(Roles = "Manager")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [SwaggerOperation("Adds employee to company")]
     public async Task<ActionResult> AddEmployee(Guid companyId, AddEmployeeCommand command, CancellationToken cancellationToken)
     {
         var employeeId = Guid.NewGuid();
@@ -55,15 +57,16 @@ internal sealed class EmployeesController(
         return CreatedAtAction(nameof(GetById), new { id = companyId }, null);
     }
 
-    [HttpPatch("deactivate/{id:guid}")]
+    [HttpPatch("deactivate/{employeeId:guid}")]
     [Authorize(Roles = "Manager")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> DeactivateEmployee(Guid id, DeactivateEmployeeCommand command, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [SwaggerOperation("Deactivates employee by \"ID\"")]
+    public async Task<ActionResult> DeactivateEmployee(Guid employeeId, DeactivateEmployeeCommand command, CancellationToken cancellationToken)
     {
-        await commandDispatcher.SendAsync(command with { Id = id }, cancellationToken);
+        await commandDispatcher.SendAsync(command with { Id = employeeId }, cancellationToken);
         return Ok();
     }
 }

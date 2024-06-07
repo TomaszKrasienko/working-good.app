@@ -20,6 +20,7 @@ using wg.shared.infrastructure.Pagination.Mappers;
 
 namespace wg.modules.owner.api.Controllers;
 
+[Authorize]
 internal sealed class UsersController(
     ICommandDispatcher commandDispatcher, 
     IQueryDispatcher queryDispatcher,
@@ -27,7 +28,6 @@ internal sealed class UsersController(
     IIdentityContext identityContext) : BaseController()
 {
     [HttpGet]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -40,25 +40,22 @@ internal sealed class UsersController(
         return result.Any() ? Ok(result) : NoContent();
     }
 
-    [HttpGet("group/{id:guid}")]
-    [Authorize]
+    [HttpGet("group/{groupId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets all users by group membership")]
-    public async Task<ActionResult<UserDto>> GetForGroup([FromRoute] Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetUsersByGroupQuery(id), cancellationToken));
+    public async Task<ActionResult<UserDto>> GetForGroup([FromRoute] Guid groupId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetUsersByGroupQuery(groupId), cancellationToken));
 
-    [HttpGet("{id:guid}/active")]
-    [Authorize]
+    [HttpGet("{userId:guid}/active")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets user by \"ID\" only if user state is active")]
-    public async Task<ActionResult<UserDto>> GetActiveUserById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(id), cancellationToken));
+    public async Task<ActionResult<UserDto>> GetActiveUserById(Guid userId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetActiveUserByIdQuery(userId), cancellationToken));
 
     [HttpGet("{id:guid}/is-active-exists")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets existing of active user be \"ID\"")]
@@ -66,7 +63,6 @@ internal sealed class UsersController(
         => Ok(await queryDispatcher.SendAsync(new IsActiveUserExistsQuery(id), cancellationToken));
     
     [HttpGet("me")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets user by token in header")]
@@ -78,6 +74,7 @@ internal sealed class UsersController(
     }
     
     [HttpPost("sign-up")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Registers user")]
@@ -88,6 +85,7 @@ internal sealed class UsersController(
     }
 
     [HttpPost("verify")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Verifies user after register")]
@@ -98,6 +96,7 @@ internal sealed class UsersController(
     }
 
     [HttpPost("sign-in")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Logs in user")]

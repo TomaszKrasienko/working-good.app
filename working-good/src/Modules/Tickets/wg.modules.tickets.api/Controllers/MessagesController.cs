@@ -11,19 +11,19 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.tickets.api.Controllers;
 
+[Authorize]
 internal sealed class MessagesController(
     ICommandDispatcher commandDispatcher,   
     IQueryDispatcher queryDispatcher,   
     IIdentityContext identityContext): BaseController
 {
-    [HttpGet("{id:guid}")]
-    [Authorize]
+    [HttpGet("{messageId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets message by \"ID\"")]
-    public async Task<ActionResult<MessageDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetMessageByIdQuery(id), cancellationToken));
+    public async Task<ActionResult<MessageDto>> GetById(Guid messageId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetMessageByIdQuery(messageId), cancellationToken));
 
     [HttpPost("ticket/{ticketId:guid}/add")]
     [Authorize]
