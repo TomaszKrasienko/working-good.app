@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
@@ -94,7 +95,10 @@ public static class Extensions
     public static IHostBuilder ConfigureModules(this IHostBuilder builder)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
         {
-            foreach (var settings in GetSettings("*"))
+            var baseEnvironmentPattern = "module.[A-Za-z]+.json";
+            var baseEnvironmentRegex = new Regex(baseEnvironmentPattern);
+            
+            foreach (var settings in GetSettings("*").Where(x => baseEnvironmentRegex.IsMatch(x)))
             {
                 cfg.AddJsonFile(settings);
             }

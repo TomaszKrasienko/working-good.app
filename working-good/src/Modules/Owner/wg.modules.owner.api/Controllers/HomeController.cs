@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace wg.modules.owner.api.Controllers;
 
@@ -7,5 +8,6 @@ namespace wg.modules.owner.api.Controllers;
 internal sealed class HomeController : ControllerBase
 {
     [HttpGet]
+    [SwaggerOperation("Healthcheck for owner module")]
     public ActionResult<string> Get() => "Owner API!";
 }
