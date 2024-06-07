@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using wg.modules.owner.application.CQRS.Groups.Commands.AddUserToGroup;
 using wg.modules.owner.application.CQRS.Groups.Queries;
+using wg.modules.owner.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
 using wg.shared.infrastructure.Exceptions.DTOs;
@@ -17,9 +18,10 @@ internal sealed class GroupsController(
     [HttpGet("{groupId:guid}/{userId:guid}/is-membership-exists")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> IsMembershipExists(Guid groupId, Guid userId, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new IsMembershipExistsQuery(userId, groupId), cancellationToken));
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Gets existing of membership user in group")]
+    public async Task<ActionResult<IsExistsDto>> IsMembershipExists(Guid groupId, Guid userId, CancellationToken cancellationToken)
+        => await queryDispatcher.SendAsync(new IsMembershipExistsQuery(userId, groupId), cancellationToken);
     
     [HttpPost("{groupId:guid}/add-user")]
     [Authorize(Roles = "Manager")]
