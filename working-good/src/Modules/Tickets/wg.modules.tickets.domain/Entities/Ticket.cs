@@ -10,7 +10,6 @@ namespace wg.modules.tickets.domain.Entities;
 
 public sealed class Ticket : AggregateRoot<AggregateId>
 {
-    //TODO: Add change priority with unit tests
     public Number Number { get; }
     public Subject Subject { get; private set; }
     public Content Content { get; private set; }

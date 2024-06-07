@@ -21,7 +21,6 @@ public sealed class SignInCommandHandlerTests
     [Fact]
     public async Task Handle_GivenExistingEmailWithValidPassword_ShouldSaveTokenInStorage()
     {
-        //TODO: Refactor
         //arrange
         var owner = OwnerFactory.Get();
         var user = UserFactory.GetInOwner(owner, Role.Manager());
