@@ -33,10 +33,10 @@ internal sealed class MessagesController(
     [SwaggerOperation("Adds message to ticket")]
     public async Task<ActionResult> AddMessage(AddMessageCommand command, Guid ticketId, CancellationToken cancellationToken)
     {
-        var id = Guid.NewGuid();
+        var messageId = Guid.NewGuid();
         var userId = identityContext.UserId;
-        await commandDispatcher.SendAsync(command with { Id = id, TicketId = ticketId, UserId = userId }, cancellationToken);
-        AddResourceHeader(id);
-        return CreatedAtAction(nameof(GetById), new { id = id }, null);
+        await commandDispatcher.SendAsync(command with { Id = messageId, TicketId = ticketId, UserId = userId }, cancellationToken);
+        AddResourceHeader(messageId);
+        return CreatedAtAction(nameof(GetById), new { messageId = messageId }, null);
     }
 }

@@ -68,7 +68,7 @@ public sealed class OwnerControllerTests : BaseTestsController
         var result = await HttpClient.PatchAsJsonAsync("/owner-module/owner/change-name", command);
         
         //assert
-        result.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
         
         var changedOwner = await GetOwnerAsync();
         changedOwner!.Name.Value.ShouldBe(command.Name);

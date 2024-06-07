@@ -42,6 +42,6 @@ internal sealed class ActivitiesController(
         var activityId = Guid.NewGuid();
         await commandDispatcher.SendAsync(command with { Id = activityId }, cancellationToken);
         AddResourceHeader(activityId);
-        return CreatedAtAction(nameof(GetById), new {id = activityId}, null);
+        return CreatedAtAction(nameof(GetById), new {activityId = activityId}, null);
     }
 }

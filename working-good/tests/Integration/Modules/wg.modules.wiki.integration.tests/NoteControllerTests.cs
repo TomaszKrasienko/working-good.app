@@ -26,6 +26,9 @@ public sealed class NoteControllerTests : BaseTestsController
         var section = await AddSection();
         var note = await AddNote(section);
         Authorize(Guid.NewGuid(), Role.User());
+        var response = await HttpClient.GetAsync($"wiki-module/notes/{note.Id.Value}");
+        var test = await response.Content.ReadAsStringAsync();
+
         
         //act 
         var result = await HttpClient.GetFromJsonAsync<NoteDto>($"wiki-module/notes/{note.Id.Value}");

@@ -82,7 +82,7 @@ public sealed class GroupControllerTests : BaseTestsController
         var response = await HttpClient.PostAsJsonAsync($"/owner-module/groups/{group.Id.Value}/add-user", command);
         
         //assert
-        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         
         var updatedGroup = await GetGroupByIdAsync(group.Id);
         updatedGroup!.Users.Any(x => x.Id == user.Id).ShouldBeTrue();

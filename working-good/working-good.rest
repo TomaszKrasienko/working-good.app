@@ -316,3 +316,34 @@ Content-Type: application/json
 {
     "name":"Test 1"
 }
+
+###
+# @name add_section
+POST {{url}}/wiki-module/sections/add
+Authorization: bearer {{token_manager}}
+Content-Type: application/json
+
+{
+    "name": "Test"
+}
+
+###
+@section_id = {{add_section.response.headers.x-resource-id}}
+
+###
+# @name add_note
+POST {{url}}/wiki-module/notes/section/{{section_id}}/add
+Authorization: bearer {{token_manager}}
+Content-Type: application/json
+
+{
+    "title": "Test",
+    "content": "Test content"
+}
+
+###
+@note_id = {{add_note.response.headers.x-resource-id}}
+
+###
+GET {{url}}/wiki-module/notes/{{note_id}}
+Authorization: bearer {{token_manager}}

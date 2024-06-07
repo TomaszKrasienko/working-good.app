@@ -19,8 +19,8 @@ internal sealed class NotesController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<NoteDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetNoteByIdQuery(id), cancellationToken));
+    public async Task<ActionResult<NoteDto>> GetById(Guid noteId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetNoteByIdQuery(noteId), cancellationToken));
 
     [HttpPost("section/{sectionId:guid}/add")]
     [ProducesResponseType(StatusCodes.Status200OK)]
