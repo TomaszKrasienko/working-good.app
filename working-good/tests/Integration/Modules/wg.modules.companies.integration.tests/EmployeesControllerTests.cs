@@ -17,15 +17,12 @@ namespace wg.modules.companies.integration.tests;
 [Collection("#1")]
 public sealed class EmployeesControllerTests : BaseTestsController
 {
-    //TODO: Adding employee in method
     [Fact]
     public async Task GetById_GivenExistingId_ShouldReturnEmployeeDto()
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
-        CompaniesDbContext.Companies.Update(company);
-        await CompaniesDbContext.SaveChangesAsync();
+        var employee = await AddEmployeeInCompanyAsync(company);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -64,9 +61,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
-        CompaniesDbContext.Companies.Update(company);
-        await CompaniesDbContext.SaveChangesAsync();
+        var employee = await AddEmployeeInCompanyAsync(company);
         
         Authorize(Guid.NewGuid(), Role.User());
         
@@ -83,7 +78,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
+        var employee = await AddEmployeeInCompanyAsync(company);
         employee.Deactivate();
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
@@ -112,9 +107,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
-        CompaniesDbContext.Companies.Update(company);
-        await CompaniesDbContext.SaveChangesAsync();
+        var employee = await AddEmployeeInCompanyAsync(company);
         Authorize(Guid.NewGuid(), Role.User());
         
         //act
@@ -129,7 +122,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
+        var employee = await AddEmployeeInCompanyAsync(company);
         employee.Deactivate();
         CompaniesDbContext.Companies.Update(company);
         await CompaniesDbContext.SaveChangesAsync();
@@ -246,9 +239,7 @@ public sealed class EmployeesControllerTests : BaseTestsController
     {
         //arrange
         var company = await AddCompanyAsync();
-        var employee = EmployeeFactory.GetInCompany(company);
-        CompaniesDbContext.Companies.Update(company);
-        await CompaniesDbContext.SaveChangesAsync();
+        var employee = await AddEmployeeInCompanyAsync(company);
         var command = new DeactivateEmployeeCommand(Guid.Empty, Guid.NewGuid());
         Authorize(Guid.NewGuid(), Role.Manager());
         
@@ -295,6 +286,14 @@ public sealed class EmployeesControllerTests : BaseTestsController
         await CompaniesDbContext.Companies.AddAsync(company);
         await CompaniesDbContext.SaveChangesAsync();
         return company;
+    }
+
+    private async Task<Employee> AddEmployeeInCompanyAsync(Company company)
+    {
+        var employee = EmployeeFactory.GetInCompany(company);
+        CompaniesDbContext.Companies.Update(company);
+        await CompaniesDbContext.SaveChangesAsync();
+        return employee;
     }
     
     private Task<Employee> GetEmployeeByIdAsync(Guid id)

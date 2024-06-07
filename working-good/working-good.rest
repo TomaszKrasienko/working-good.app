@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 ###
-@manager_verification_token = L4MHbTXhVQ3+DAIiZJLuuS8xmBQrJ1jlnObcQSeUH9nskbXRH8qwl8a2JTgQrrxKh2S3TQKALvcMr2Vt51UQw
+@manager_verification_token = DIqINSpVM1uu+PyafE5nHyig4XO0CzaWixHOdFVDFJ8WlmIgdBaNGQOSTplxr2YwPJkJ8r+GRUmaDRHrggYZw
 
 ###
 POST {{url}}/owner-module/users/verify

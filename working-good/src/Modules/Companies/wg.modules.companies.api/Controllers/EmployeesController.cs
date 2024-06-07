@@ -54,7 +54,7 @@ internal sealed class EmployeesController(
         var employeeId = Guid.NewGuid();
         await commandDispatcher.SendAsync(command with { CompanyId = companyId, Id = employeeId }, cancellationToken);
         AddResourceHeader(employeeId);
-        return CreatedAtAction(nameof(GetById), new { id = companyId }, null);
+        return CreatedAtAction(nameof(GetById), new { employeeId = employeeId }, null);
     }
 
     [HttpPatch("deactivate/{employeeId:guid}")]
