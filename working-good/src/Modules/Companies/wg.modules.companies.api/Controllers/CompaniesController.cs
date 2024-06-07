@@ -20,8 +20,8 @@ internal sealed class CompaniesController(
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(IEnumerable<CompanyDto>),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets all companies by filters and pagination")]
     public async Task<ActionResult<IEnumerable<CompanyDto>>> GetAll([FromQuery] GetCompaniesQuery query, CancellationToken cancellationToken)
@@ -33,23 +33,23 @@ internal sealed class CompaniesController(
     }
     
     [HttpGet("{companyId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CompanyDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets company by \"ID\"")]
     public async Task<ActionResult<CompanyDto>> GetById(Guid companyId, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetCompanyByIdQuery(companyId), cancellationToken);
 
     [HttpGet("{companyId:guid}/is-active")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IsExistsDto),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets existing of active company")]
     public async Task<ActionResult<IsExistsDto>> IsActive(Guid companyId, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new IsActiveCompanyExistsQuery(companyId), cancellationToken);
 
     [HttpGet("sla-time/{employeeId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(SlaTimeDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets sla time by \"EmployeeId\"")]
     public async Task<ActionResult<SlaTimeDto>> GetSlaTimeByEmployeeId(Guid employeeId, CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ internal sealed class CompaniesController(
     
     [Authorize(Roles = "Manager")]
     [HttpPost("add")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
@@ -72,7 +72,7 @@ internal sealed class CompaniesController(
 
     [Authorize(Roles = "Manager")]
     [HttpPut("{companyId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]

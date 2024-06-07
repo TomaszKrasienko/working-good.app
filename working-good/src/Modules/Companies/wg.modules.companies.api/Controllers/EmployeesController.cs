@@ -18,16 +18,16 @@ internal sealed class EmployeesController(
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{employeeId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EmployeeDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets employee by \"ID\"")]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid employeeId, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(employeeId), cancellationToken);
 
     [HttpGet("{employeeId:guid}/active")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EmployeeDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets active employee by \"ID\"")]
     public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid employeeId, CancellationToken cancellationToken)
@@ -35,8 +35,8 @@ internal sealed class EmployeesController(
 
 
     [HttpGet("{employeeId:guid}/is-active")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(IsExistsDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets activity of employee by \"ID\"")]
     public async Task<ActionResult<IsExistsDto>> IsEmployeeActiveById(Guid employeeId, CancellationToken cancellationToken)
@@ -44,7 +44,7 @@ internal sealed class EmployeesController(
     
     [HttpPost("companies/{companyId:guid}/add")]
     [Authorize(Roles = "Manager")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
@@ -59,7 +59,7 @@ internal sealed class EmployeesController(
 
     [HttpPatch("deactivate/{employeeId:guid}")]
     [Authorize(Roles = "Manager")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]

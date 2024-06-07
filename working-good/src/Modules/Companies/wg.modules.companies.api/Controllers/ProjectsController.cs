@@ -13,30 +13,28 @@ using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.companies.api.Controllers;
 
+[Authorize]
 internal sealed class ProjectsController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{projectId:guid}")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProjectDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets project by \"ID\"")]
     public async Task<ActionResult<ProjectDto>> GetById(Guid projectId, CancellationToken cancellationToken)
         => await queryDispatcher.SendAsync(new GetProjectByIdQuery(projectId), cancellationToken);
 
     [HttpGet("{projectId:guid}/active")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IsExistsDto),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets whether there is an active project")]
     public async Task<ActionResult<IsExistsDto>> IsProjectActive(Guid projectId, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new IsProjectActiveQuery(projectId), cancellationToken));
 
     [HttpGet("{projectId:guid}/employee/{employeeId:guid}/active")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IsExistsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets whether there is an active project for company with employee")]
     public async Task<ActionResult<IsExistsDto>> IsActiveProjectForEmployeeExists(Guid projectId, Guid employeeId,
@@ -45,7 +43,7 @@ internal sealed class ProjectsController(
     
     [HttpPost("companies/{companyId:guid}/add")]
     [Authorize(Roles = "Manager")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
