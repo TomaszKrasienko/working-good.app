@@ -12,21 +12,20 @@ using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.wiki.api.Controllers;
 
+[Authorize]
 internal sealed class SectionsController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet("{sectionId}")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets section by \"ID\"")]
     public async Task<ActionResult<SectionDto>> GetById(Guid sectionId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetSectionByIdQuery(sectionId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetSectionByIdQuery(sectionId), cancellationToken));
     
     [HttpPost("add")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -40,10 +39,9 @@ internal sealed class SectionsController(
     }
 
     [HttpPatch("{sectionId:guid}/change-parent")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Changes parent for section")]
     public async Task<ActionResult> ChangeParent(Guid sectionId, ChangeParentCommand command,
         CancellationToken cancellationToken)

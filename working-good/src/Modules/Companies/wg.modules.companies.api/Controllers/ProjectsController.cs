@@ -24,7 +24,7 @@ internal sealed class ProjectsController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets project by \"ID\"")]
     public async Task<ActionResult<ProjectDto>> GetById(Guid projectId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetProjectByIdQuery(projectId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetProjectByIdQuery(projectId), cancellationToken));
 
     [HttpGet("{projectId:guid}/active")]
     [ProducesResponseType(typeof(IsExistsDto),StatusCodes.Status200OK)]

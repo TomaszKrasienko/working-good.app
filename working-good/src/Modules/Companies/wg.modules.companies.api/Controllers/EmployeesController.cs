@@ -23,7 +23,7 @@ internal sealed class EmployeesController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets employee by \"ID\"")]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid employeeId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(employeeId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetEmployeeByIdQuery(employeeId), cancellationToken));
 
     [HttpGet("{employeeId:guid}/active")]
     [ProducesResponseType(typeof(EmployeeDto),StatusCodes.Status200OK)]
@@ -31,7 +31,7 @@ internal sealed class EmployeesController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets active employee by \"ID\"")]
     public async Task<ActionResult<EmployeeDto>> GetActiveById(Guid employeeId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetActiveEmployeeByIdQuery(employeeId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetActiveEmployeeByIdQuery(employeeId), cancellationToken));
 
 
     [HttpGet("{employeeId:guid}/is-active")]
@@ -40,7 +40,7 @@ internal sealed class EmployeesController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets activity of employee by \"ID\"")]
     public async Task<ActionResult<IsExistsDto>> IsEmployeeActiveById(Guid employeeId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(employeeId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new IsActiveEmployeeExistsQuery(employeeId), cancellationToken));
     
     [HttpPost("companies/{companyId:guid}/add")]
     [Authorize(Roles = "Manager")]

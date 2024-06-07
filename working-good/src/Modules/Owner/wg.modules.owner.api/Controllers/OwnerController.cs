@@ -23,7 +23,7 @@ internal sealed class OwnerController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets owner")]
     public async Task<ActionResult<OwnerDto>> GetOwner([FromQuery]GetOwnerQuery query, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(query, cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(query, cancellationToken));
     
     [HttpPost("add")]
     [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]

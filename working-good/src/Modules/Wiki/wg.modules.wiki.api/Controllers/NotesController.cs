@@ -10,20 +10,19 @@ using wg.shared.abstractions.CQRS.Queries;
 
 namespace wg.modules.wiki.api.Controllers;
 
+[Authorize]
 internal sealed class NotesController(
     IQueryDispatcher queryDispatcher,
     ICommandDispatcher commandDispatcher) : BaseController
 {
     [HttpGet("{noteId}")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<NoteDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetNoteByIdQuery(id), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetNoteByIdQuery(id), cancellationToken));
 
     [HttpPost("section/{sectionId:guid}/add")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]

@@ -38,14 +38,14 @@ internal sealed class CompaniesController(
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets company by \"ID\"")]
     public async Task<ActionResult<CompanyDto>> GetById(Guid companyId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetCompanyByIdQuery(companyId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetCompanyByIdQuery(companyId), cancellationToken));
 
     [HttpGet("{companyId:guid}/is-active")]
     [ProducesResponseType(typeof(IsExistsDto),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets existing of active company")]
     public async Task<ActionResult<IsExistsDto>> IsActive(Guid companyId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new IsActiveCompanyExistsQuery(companyId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new IsActiveCompanyExistsQuery(companyId), cancellationToken));
 
     [HttpGet("sla-time/{employeeId:guid}")]
     [ProducesResponseType(typeof(SlaTimeDto),StatusCodes.Status200OK)]
@@ -67,7 +67,7 @@ internal sealed class CompaniesController(
         var companyId = Guid.NewGuid();
         await commandDispatcher.SendAsync(command with { Id = companyId }, cancellationToken);
         AddResourceHeader(companyId);
-        return CreatedAtAction(nameof(GetById), new { id = companyId }, null);
+        return CreatedAtAction(nameof(GetById), new { companyId = companyId }, null);
     }
 
     [Authorize(Roles = "Manager")]

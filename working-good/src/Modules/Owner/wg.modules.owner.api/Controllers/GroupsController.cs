@@ -11,6 +11,7 @@ using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.owner.api.Controllers;
 
+[Authorize]
 internal sealed class GroupsController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
@@ -21,7 +22,7 @@ internal sealed class GroupsController(
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Gets existing of membership user in group")]
     public async Task<ActionResult<IsExistsDto>> IsMembershipExists(Guid groupId, Guid userId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new IsMembershipExistsQuery(userId, groupId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new IsMembershipExistsQuery(userId, groupId), cancellationToken));
     
     [HttpPost("{groupId:guid}/add-user")]
     [Authorize(Roles = "Manager")]

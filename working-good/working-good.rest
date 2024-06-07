@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 ###
-@manager_verification_token = 5zVR0Pcc8fx7b+GMqu0ycu1KCSK4Jbpr7SfKrDYKLuteUtawG9nrrQrvUkSwuuoY+hpahortd7PK+rtmcW5dyw
+@manager_verification_token = L4MHbTXhVQ3+DAIiZJLuuS8xmBQrJ1jlnObcQSeUH9nskbXRH8qwl8a2JTgQrrxKh2S3TQKALvcMr2Vt51UQw
 
 ###
 POST {{url}}/owner-module/users/verify
@@ -89,7 +89,7 @@ Content-Type: application/json
 }
 
 ###
-@user_verification_token = S0QOl8G5JkdGxVFPiALecC1SWFuXqIMUSx6nwG1A3TWYiv9wJ+LAxNB4pymIvQKYxfhqW1YAWjiAGGCFAF1aQ
+@user_verification_token = 7oh6A8EiGETUinf74Ev7t26R0ypvrQdWvV4ecBick1XpAj3TDYOzk1blKchF+LkVVs93wzovo5LSi1RLQ8Jw
 
 ###
 POST {{url}}/owner-module/users/verify

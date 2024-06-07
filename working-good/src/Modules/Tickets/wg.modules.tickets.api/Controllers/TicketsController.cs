@@ -47,14 +47,14 @@ internal sealed class TicketsController(
     [ProducesResponseType(typeof(void),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TicketDto>> GetById(Guid ticketId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new GetTicketByIdQuery(ticketId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new GetTicketByIdQuery(ticketId), cancellationToken));
 
     [HttpGet("{ticketId:guid}/is-exists")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation("Get existing of ticket")]
     public async Task<ActionResult<IsExistsDto>> IsExists(Guid ticketId, CancellationToken cancellationToken)
-        => await queryDispatcher.SendAsync(new IsTicketExistsQuery(ticketId), cancellationToken);
+        => Ok(await queryDispatcher.SendAsync(new IsTicketExistsQuery(ticketId), cancellationToken));
     
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status201Created)]

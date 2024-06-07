@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace wg.modules.wiki.api.Controllers;
 
@@ -7,5 +9,7 @@ namespace wg.modules.wiki.api.Controllers;
 internal sealed class HomeController : ControllerBase
 {
     [HttpGet]
+    [ProducesResponseType(typeof(string),StatusCodes.Status200OK)]
+    [SwaggerOperation("Healthcheck for wiki module")]
     public ActionResult<string> Get() => "Wiki API!";
 }

@@ -8,37 +8,35 @@ using wg.modules.activities.application.CQRS.Activities.Queries;
 using wg.modules.activities.application.DTOs;
 using wg.shared.abstractions.CQRS.Commands;
 using wg.shared.abstractions.CQRS.Queries;
+using wg.shared.infrastructure.Exceptions.DTOs;
 
 namespace wg.modules.activities.api.Controllers;
 
+[Authorize]
 internal sealed class ActivitiesController(
     ICommandDispatcher commandDispatcher,
     IQueryDispatcher queryDispatcher) : BaseController
 {
-    [HttpGet("{id:guid}")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [SwaggerOperation(Summary = "Gets activity by identifier")]
-    public async Task<ActionResult<ActivityDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await queryDispatcher.SendAsync(new GetActivityById(id), cancellationToken));
+    [HttpGet("{activityId:guid}")]
+    [ProducesResponseType(typeof(ActivityDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation(Summary = "Gets activity by \"ID\"")]
+    public async Task<ActionResult<ActivityDto>> GetById(Guid activityId, CancellationToken cancellationToken)
+        => Ok(await queryDispatcher.SendAsync(new GetActivityById(activityId), cancellationToken));
 
     [HttpGet("ticket/{ticketId:guid}")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ActivityDto>),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [SwaggerOperation(Summary = "Gets activities by \"TicketId\"")]
-    public async Task<ActionResult<List<ActivityDto>>> GetByTicketId(Guid ticketId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyCollection<ActivityDto>>> GetByTicketId(Guid ticketId, CancellationToken cancellationToken)
         => Ok(await queryDispatcher.SendAsync(new GetActivitiesByTicketIdQueryQuery(ticketId), cancellationToken));
     
     [HttpPost("add")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [SwaggerOperation(Summary = "Adding new activity", Description = @"Endpoint for adding new activity
-        to ticket for user")]
+    [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+    [SwaggerOperation("Adds new activity")]
     public async Task<ActionResult> AddActivity(AddActivityCommand command, CancellationToken cancellationToken)
     {
         var activityId = Guid.NewGuid();
