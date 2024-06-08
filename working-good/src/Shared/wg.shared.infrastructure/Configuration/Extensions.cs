@@ -15,7 +15,6 @@ using wg.shared.infrastructure.DAL.Configuration;
 using wg.shared.infrastructure.Events.Configuration;
 using wg.shared.infrastructure.Exceptions.Configuration;
 using wg.shared.infrastructure.Logging.Configuration;
-using wg.shared.infrastructure.Mailbox.Configuration;
 using wg.shared.infrastructure.Messaging.Configuration;
 using wg.shared.infrastructure.Metrics.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
@@ -45,7 +44,6 @@ public static class Extensions
             .AddMessaging()
             .AddEvents(assemblies)
             .AddIdentityContext()
-            .AddMailbox(configuration)
             .AddAppMetrics()
             .AddLogging(assemblies)
             .AddUiDocumentation(configuration)
