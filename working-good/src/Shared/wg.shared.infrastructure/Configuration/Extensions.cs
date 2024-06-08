@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Figgle;
@@ -79,7 +80,9 @@ public static class Extensions
             .UseAuth();
 
     public static WebApplicationBuilder UseInfrastructure(this WebApplicationBuilder app)
-        => app.UseSerilog();
+        => app
+            //.AddVault(app.Configuration)
+            .UseSerilog();
     
     private static WebApplication UseUiDocumentation(this WebApplication app)
     {
