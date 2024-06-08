@@ -1,9 +1,6 @@
-using System.Collections.Immutable;
 using System.Reflection;
-using System.Runtime.Serialization;
 using Figgle;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +26,8 @@ namespace wg.shared.infrastructure.Configuration;
 
 public static class Extensions
 {
-
+    private const string SectionName = "App";
+    
     public static IHostBuilder AddInfrastructure(this IHostBuilder hostBuilder, IConfiguration configuration)
         => hostBuilder
             .AddVault(configuration);
@@ -50,25 +48,26 @@ public static class Extensions
             .AddMailbox(configuration)
             .AddAppMetrics()
             .AddLogging(assemblies)
-            .AddUiDocumentation()
+            .AddUiDocumentation(configuration)
             .AddBanner(configuration);
 
-    private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
+    private static IServiceCollection AddUiDocumentation(this IServiceCollection services, IConfiguration configuration)
         => services.AddSwaggerGen(swagger =>
         {
+            var options = configuration.GetOptions<AppOptions>(SectionName);
             swagger.EnableAnnotations();
             swagger.CustomSchemaIds(x => x.FullName);
             swagger.SwaggerDoc("v1", new OpenApiInfo()
             {
-                Title = "working-good",
+                Title = options.Name,
                 Version = "v1"
             });
         });
 
     private static IServiceCollection AddBanner(this IServiceCollection services, IConfiguration configuration)
     {
-        var appOptions = configuration.GetOptions<AppOptions>("App");
-        Console.WriteLine(FiggleFonts.Doom.Render("working-good"));
+        var appOptions = configuration.GetOptions<AppOptions>(SectionName);
+        Console.WriteLine(FiggleFonts.Doom.Render(appOptions.Name));
         return services;
     }
 
@@ -93,17 +92,19 @@ public static class Extensions
     
     private static WebApplication UseUiDocumentation(this WebApplication app)
     {
+        var options = app.Configuration.GetOptions<AppOptions>(SectionName);
+        
         app.UseSwagger();
         app.UseSwaggerUI(swagger =>
         {
             swagger.RoutePrefix = "swagger";
-            swagger.DocumentTitle = "working-good.API";
+            swagger.DocumentTitle = $"{options.Name}.API";
         });
         app.UseReDoc(reDoc =>
         {
             reDoc.RoutePrefix = "redoc";
             reDoc.SpecUrl("/swagger/v1/swagger.json");
-            reDoc.DocumentTitle = "working-good.API";
+            reDoc.DocumentTitle = $"{options.Name}.API";
         });
         return app;
     }
