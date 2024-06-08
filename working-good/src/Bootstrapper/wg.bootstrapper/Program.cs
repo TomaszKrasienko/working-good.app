@@ -1,11 +1,10 @@
 using wg.bootstrapper;
 using wg.shared.infrastructure.Configuration;
 using wg.shared.infrastructure.Modules.Configuration;
-using wg.shared.infrastructure.Vault.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
-builder.Host.AddVault(builder.Configuration);
+builder.Host.AddInfrastructure(builder.Configuration);
 builder.Host.ConfigureModules();
 builder.Services.AddHealthChecks();
 var assemblies = ModuleLoader.GetAssemblies(builder.Configuration);

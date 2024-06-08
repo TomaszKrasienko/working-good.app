@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using wg.shared.infrastructure.Auth.Configuration;
 using wg.shared.infrastructure.Cache.Configuration;
+using wg.shared.infrastructure.Configuration.Models;
 using wg.shared.infrastructure.Context.Configuration;
 using wg.shared.infrastructure.CQRS.Configuration;
 using wg.shared.infrastructure.DAL.Configuration;
@@ -27,6 +29,11 @@ namespace wg.shared.infrastructure.Configuration;
 
 public static class Extensions
 {
+
+    public static IHostBuilder AddInfrastructure(this IHostBuilder hostBuilder, IConfiguration configuration)
+        => hostBuilder
+            .AddVault(configuration);
+    
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IList<Assembly> assemblies,
         IConfiguration configuration)
         => services
@@ -44,7 +51,7 @@ public static class Extensions
             .AddAppMetrics()
             .AddLogging(assemblies)
             .AddUiDocumentation()
-            .AddBanner();
+            .AddBanner(configuration);
 
     private static IServiceCollection AddUiDocumentation(this IServiceCollection services)
         => services.AddSwaggerGen(swagger =>
@@ -58,8 +65,9 @@ public static class Extensions
             });
         });
 
-    private static IServiceCollection AddBanner(this IServiceCollection services)
+    private static IServiceCollection AddBanner(this IServiceCollection services, IConfiguration configuration)
     {
+        var appOptions = configuration.GetOptions<AppOptions>("App");
         Console.WriteLine(FiggleFonts.Doom.Render("working-good"));
         return services;
     }
@@ -81,7 +89,6 @@ public static class Extensions
 
     public static WebApplicationBuilder UseInfrastructure(this WebApplicationBuilder app)
         => app
-            //.AddVault(app.Configuration)
             .UseSerilog();
     
     private static WebApplication UseUiDocumentation(this WebApplication app)
