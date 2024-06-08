@@ -13,7 +13,6 @@ internal sealed class VaultStore(VaultOptions options)
     {
 
         var settings = new VaultClientSettings(options.Url, GetAuthMethodInfo());
-        //var settings = new VaultClientSettings(options.Url, new TokenAuthMethodInfo(options.Secret));
         var client = new VaultClient(settings);
         var secret = await client.V1.Secrets.KeyValue.V2.ReadSecretAsync(key, mountPoint:"kv");
         return secret.Data.Data;
