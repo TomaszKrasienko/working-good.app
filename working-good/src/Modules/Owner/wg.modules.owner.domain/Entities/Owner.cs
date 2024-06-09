@@ -64,6 +64,24 @@ public sealed class Owner : AggregateRoot<AggregateId>
         user.Verify(verificationDateTime);
     }
 
+    public void EditUser(Guid userId, string email, string firstName, string lastName, string role)
+    {
+        var user = _users.FirstOrDefault(x => x.Id.Equals(userId));
+        if (user is null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+
+        if (!_users.Any() && role == Role.User())
+        {
+            throw new InvalidFirstUserRoleException(userId);
+        }
+
+        user.ChangeEmail(email);
+        user.ChangeFullName(firstName, lastName);
+        user.ChangeRole(role);
+    }
+
     public bool IsUserActive(string email)
     {
         var user = _users.FirstOrDefault(x => x.Email == email);

@@ -45,16 +45,16 @@ public sealed class User
         return user;
     }
 
-    private void ChangeEmail(string email)
+    internal void ChangeEmail(string email)
         => Email = email;
 
-    private void ChangeFullName(string firstName, string lastName)
+    internal void ChangeFullName(string firstName, string lastName)
         => FullName = new FullName(firstName, lastName);
 
     private void ChangePassword(string password)
         => Password = password;
 
-    private void ChangeRole(string role)
+    internal void ChangeRole(string role)
         => Role = role;
     
     internal void Verify(DateTime verificationDateTime)

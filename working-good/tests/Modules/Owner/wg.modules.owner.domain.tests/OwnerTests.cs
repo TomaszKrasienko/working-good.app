@@ -1,3 +1,4 @@
+using Microsoft.SqlServer.Server;
 using Shouldly;
 using wg.modules.owner.domain.Entities;
 using wg.modules.owner.domain.Exceptions;
@@ -15,25 +16,25 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var newName = Guid.NewGuid().ToString("N");
-        
+
         //act
         owner.ChangeName(newName);
-        
+
         //assert
         owner.Name.Value.ShouldBe(newName);
     }
-    
+
     [Fact]
     public void AddUser_GivenFirstUserAsManager_ShouldAddToUsersAndReturnUser()
     {
         //arrange
         var owner = OwnerFactory.Get();
         Guid userId = Guid.NewGuid();
-        
+
         //act
         var user = owner.AddUser(userId, "test@test.pl", "Joe", "Doe",
             "Pass123!", Role.Manager());
-        
+
         //assert
         user.ShouldNotBeNull();
     }
@@ -44,11 +45,11 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         Guid userId = Guid.NewGuid();
-        
+
         //act
-        var exception = Record.Exception( () => owner.AddUser(userId, "test@test.pl", "Joe", "Doe",
+        var exception = Record.Exception(() => owner.AddUser(userId, "test@test.pl", "Joe", "Doe",
             "Pass123!", Role.User()));
-        
+
         //assert
         exception.ShouldBeOfType<InvalidFirstUserRoleException>();
     }
@@ -61,15 +62,15 @@ public sealed class OwnerTests
 
         var userId = Guid.NewGuid();
         owner.AddUser(userId, "joe@doe.pl", "Joe", "Doe", "Pass123!", Role.Manager());
-        
+
         //act
         var exception = Record.Exception(() => owner.AddUser(userId, "new@user.pl", "Jan", "Bastian", "Pass123!",
             Role.User()));
-        
+
         //assert
         exception.ShouldBeOfType<UserAlreadyRegisteredException>();
     }
-    
+
     [Fact]
     public void AddUser_GivenExistingEmail_ShouldThrowUserAlreadyRegisteredException()
     {
@@ -78,11 +79,11 @@ public sealed class OwnerTests
 
         var userId = Guid.NewGuid();
         owner.AddUser(userId, "joe@doe.pl", "Joe", "Doe", "Pass123!", Role.Manager());
-        
+
         //act
         var exception = Record.Exception(() => owner.AddUser(userId, "new@user.pl", "Jan", "Bastian", "Pass123!",
             Role.User()));
-        
+
         //assert
         exception.ShouldBeOfType<UserAlreadyRegisteredException>();
     }
@@ -98,7 +99,7 @@ public sealed class OwnerTests
         //act
         owner.AddUser(userId, "new@user.pl", "Jan", "Bastian", "Pass123!",
             Role.User());
-        
+
         //assert
         var user = owner.Users.FirstOrDefault(x => x.Id.Value == userId);
         user.ShouldNotBeNull();
@@ -111,10 +112,10 @@ public sealed class OwnerTests
         var owner = OwnerFactory.Get();
         owner.AddUser(Guid.NewGuid(), "test@test.pl", "Joe", "Doe", "Pass123!", Role.Manager());
         var userVerificationToken = owner.Users.Single().VerificationToken.Token;
-        
+
         //act
         owner.VerifyUser(userVerificationToken, DateTime.Now);
-        
+
         //assert
         var user = owner.Users.Single();
         user.State.Value.ShouldBe("Active");
@@ -126,12 +127,63 @@ public sealed class OwnerTests
     {
         //arrange
         var owner = OwnerFactory.Get();
-        
+
         //act
         var exception = Record.Exception(() => owner.VerifyUser("invalid_token", DateTime.Now));
-        
+
         //assert
         exception.ShouldBeOfType<VerificationTokenNotFoundException>();
+    }
+
+    [Fact]
+    public void EditUser_GivenExistingUser_ShouldChangeUser()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var users = UserFactory.GetInOwner(owner, Role.Manager(), 2).ToList();
+        //var user = UserFactory.GetInOwner(owner, Role.Manager());
+        var email = "new@test.pl";
+        var firstName = "NewFirstName";
+        var lastName = "NewLastName";
+        var role = Role.User();
+
+        //act
+        owner.EditUser(users[0].Id, email, firstName, lastName, role);
+
+        //assert
+        users[0].Email.Value.ShouldBe(email);
+        users[0].FullName.FirstName.ShouldBe(firstName);
+        users[0].FullName.LastName.ShouldBe(lastName);
+        users[0].Role.Value.ShouldBe(role);
+    }
+
+    [Fact]
+    public void EditUser_GivenFirstUserAndUserRole_ShouldThrowInvalidFirstUserRoleException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        var user = UserFactory.GetInOwner(owner, Role.Manager());
+
+        //act
+        var exception = Record.Exception(() => owner.EditUser(user.Id, "new@test.pl", "NewFirstName",
+            "NewLastName", Role.User()));
+
+        //assert
+        exception.ShouldBeOfType<InvalidFirstUserRoleException>();
+    }
+
+    [Fact]
+    public void EditUser_GivenNotExistingUser_ShouldThrowUserNotFoundException()
+    {
+        //arrange
+        var owner = OwnerFactory.Get();
+        
+        //act
+        var exception = Record.Exception(() => owner.EditUser(
+            Guid.NewGuid(), "new@test.pl", "NewName", "NewLastName", Role.Manager()));
+        
+        //assert
+        exception.ShouldBeOfType<UserNotFoundException>();
     }
 
     [Fact]
