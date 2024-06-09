@@ -11,7 +11,6 @@ internal sealed class VaultStore(VaultOptions options)
 {
     public async Task<IDictionary<string, object>> GetAsync(string key)
     {
-
         var settings = new VaultClientSettings(options.Url, GetAuthMethodInfo());
         var client = new VaultClient(settings);
         var secret = await client.V1.Secrets.KeyValue.V2.ReadSecretAsync(key, mountPoint:"kv");

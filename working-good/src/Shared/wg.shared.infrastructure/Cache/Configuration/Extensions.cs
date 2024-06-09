@@ -15,15 +15,6 @@ internal static class Extensions
         => services
             .AddOptions(configuration)
             .AddRedisConnection(configuration);
-    
-            
-    private static IServiceCollection AddConnection(this IServiceCollection services)
-        => services.AddSingleton<IDatabase>(sp =>
-        {
-            var options = sp.GetRequiredService<IOptions<RedisOptions>>().Value;
-            var cluster = ConnectionMultiplexer.Connect(options.Host);
-            return cluster.GetDatabase();
-        });
 
     private static IServiceCollection AddRedisConnection(this IServiceCollection services, IConfiguration configuration)
     {
