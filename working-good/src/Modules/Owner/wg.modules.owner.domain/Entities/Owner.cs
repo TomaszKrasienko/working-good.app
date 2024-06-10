@@ -72,7 +72,7 @@ public sealed class Owner : AggregateRoot<AggregateId>
             throw new UserNotFoundException(userId);
         }
 
-        if (!_users.Any() && role == Role.User())
+        if (_users.All(x => x.Id.Equals(userId)) && role == Role.User())
         {
             throw new InvalidFirstUserRoleException(userId);
         }

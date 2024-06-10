@@ -141,7 +141,6 @@ public sealed class OwnerTests
         //arrange
         var owner = OwnerFactory.Get();
         var users = UserFactory.GetInOwner(owner, Role.Manager(), 2).ToList();
-        //var user = UserFactory.GetInOwner(owner, Role.Manager());
         var email = "new@test.pl";
         var firstName = "NewFirstName";
         var lastName = "NewLastName";

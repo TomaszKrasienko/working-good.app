@@ -38,6 +38,10 @@ public sealed class EditUserCommandHandlerTests
         user.FullName.FirstName.ShouldBe(command.FirstName);
         user.FullName.LastName.ShouldBe(command.LastName);
         user.Role.Value.ShouldBe(command.Role);
+
+        await _ownerRepository
+            .Received(1)
+            .UpdateAsync(owner);
     }
 
     [Fact]

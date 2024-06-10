@@ -17,6 +17,8 @@ internal sealed class EditUserCommandHandler(
             throw new OwnerNotFoundException();
         }
         
+        owner.EditUser(command.Id, command.Email, command.FirstName, command.LastName, command.Role);
+        await ownerRepository.UpdateAsync(owner);
         
     }
 }
